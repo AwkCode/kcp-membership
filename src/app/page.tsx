@@ -23,7 +23,7 @@ export default function Home() {
           Become a member. Skip the line. Unlock exclusive perks.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-16 sm:mb-24 w-full sm:w-auto px-4 sm:px-0">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0">
           <Link
             href="/join"
             className="px-8 py-3.5 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
@@ -36,6 +36,32 @@ export default function Home() {
           >
             View Perks
           </Link>
+        </div>
+
+        {/* Staff access — visible but subtle */}
+        <div className="mt-8 sm:mt-10 mb-16 sm:mb-24 flex items-center gap-3">
+          <span className="text-white/25 text-xs tracking-wide uppercase">Staff</span>
+          <div className="w-px h-3 bg-white/15" />
+          <div className="flex gap-2">
+            <Link
+              href="/scan"
+              className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
+            >
+              Scanner
+            </Link>
+            <Link
+              href="/door"
+              className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
+            >
+              Door
+            </Link>
+            <Link
+              href="/admin"
+              className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
+            >
+              Admin
+            </Link>
+          </div>
         </div>
 
         {/* Feature cards — Apple style glass */}
@@ -68,32 +94,6 @@ export default function Home() {
             </div>
             <h3 className="font-medium text-white mb-1.5 text-sm">Digital Card</h3>
             <p className="text-white/40 text-xs leading-relaxed">Your membership lives on your phone. Always ready.</p>
-          </div>
-        </div>
-
-        {/* Staff access — subtle bottom section */}
-        <div className="mt-16 sm:mt-24 pb-4">
-          <div className="w-12 h-px bg-white/10 mx-auto mb-6" />
-          <p className="text-white/30 text-xs mb-4 tracking-wide uppercase">Staff</p>
-          <div className="flex gap-3">
-            <Link
-              href="/scan"
-              className="px-5 py-2.5 bg-white/[0.06] backdrop-blur-sm text-white/60 border border-white/[0.08] rounded-full text-xs font-medium hover:bg-white/10 hover:text-white/80 transition"
-            >
-              Scanner
-            </Link>
-            <Link
-              href="/door"
-              className="px-5 py-2.5 bg-white/[0.06] backdrop-blur-sm text-white/60 border border-white/[0.08] rounded-full text-xs font-medium hover:bg-white/10 hover:text-white/80 transition"
-            >
-              Door
-            </Link>
-            <Link
-              href="/admin"
-              className="px-5 py-2.5 bg-white/[0.06] backdrop-blur-sm text-white/60 border border-white/[0.08] rounded-full text-xs font-medium hover:bg-white/10 hover:text-white/80 transition"
-            >
-              Admin
-            </Link>
           </div>
         </div>
       </main>
