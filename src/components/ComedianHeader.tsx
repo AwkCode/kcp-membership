@@ -20,7 +20,10 @@ export default function ComedianHeader() {
             Comedian
           </span>
         </Link>
-        <nav className="flex items-center gap-4 sm:gap-5 text-sm font-medium text-white/50">
+        <nav className="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-medium text-white/50">
+          <Link href="/" className="hover:text-white transition">
+            Home
+          </Link>
           <Link href="/shows" className="hover:text-white transition">
             Shows
           </Link>
