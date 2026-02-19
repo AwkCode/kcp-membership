@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kings Court — Instant Check-In Membership
 
-## Getting Started
+A lightweight membership system with QR-based check-in for Kings Court.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router) + TypeScript + Tailwind CSS
+- **Supabase** Postgres + Auth (staff login)
+- **SendGrid** transactional email
+- **qrcode** server-side QR generation
+
+## Setup
+
+### 1. Clone and install
+
+```bash
+cd kcp-membership
+npm install
+```
+
+### 2. Create Supabase project
+
+1. Go to [supabase.com](https://supabase.com) and create a new project.
+2. In the SQL Editor, run the migration file:
+
+```bash
+# Copy and paste the contents of:
+supabase/migrations/001_create_tables.sql
+```
+
+3. Create a staff user in Supabase Dashboard → Authentication → Users → Add User (email + password).
+
+### 3. Configure environment
+
+```bash
+cp .env.local.example .env.local
+```
+
+Fill in your values:
+
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only) |
+| `SENDGRID_API_KEY` | SendGrid API key |
+| `SENDGRID_FROM_EMAIL` | Verified sender email in SendGrid |
+| `NEXT_PUBLIC_BASE_URL` | Your app URL (e.g., `http://localhost:3000`) |
+
+### 4. Run
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Routes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Public
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Route | Description |
+|---|---|
+| `/join` | Membership signup form |
+| `/m/[token]` | Digital member card with QR code |
 
-## Learn More
+### Staff-only (requires login)
 
-To learn more about Next.js, take a look at the following resources:
+| Route | Description |
+|---|---|
+| `/scan` | Camera QR scanner → check in members |
+| `/door` | Search members by name/email/phone → check in |
+| `/admin` | List all members, edit status/notes, rotate tokens |
+| `/login` | Staff authentication |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### API
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Endpoint | Auth | Description |
+|---|---|---|
+| `POST /api/join` | Public | Create member, send welcome email |
+| `GET /api/scan/m/[token]` | Staff | Look up member by token |
+| `POST /api/checkin` | Staff | Log a check-in |
+| `GET /api/members` | Staff | List all members |
+| `GET /api/members/search?q=` | Staff | Search members (ILIKE) |
+| `PATCH /api/members/[id]` | Staff | Update member status/notes |
+| `POST /api/members/[id]/rotate-token` | Staff | Generate new membership token |
 
-## Deploy on Vercel
+## How it works
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Visitor** fills out the form at `/join`
+2. System creates their member record, generates a secure token, and emails them a QR code + link to their digital card
+3. **At the door**, staff opens `/scan` on their phone, scans the member's QR code
+4. System looks up the member, shows their info and status
+5. Staff taps **Check In** to log the visit
+6. If camera scanning isn't available, staff uses `/door` to search by name/email/phone
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## QR Scanner Browser Support
+
+The `/scan` page uses the [BarcodeDetector API](https://developer.mozilla.org/en-US/docs/Web/API/BarcodeDetector). This is supported natively in:
+
+- Chrome on Android
+- Chrome on macOS (v83+)
+- Safari on iOS 15.4+
+
+For unsupported browsers, use the `/door` manual search page instead.
+
+## Deployment
+
+Deploy to Vercel:
+
+```bash
+npx vercel
+```
+
+Set all environment variables in the Vercel dashboard. Make sure `NEXT_PUBLIC_BASE_URL` points to your production domain.
