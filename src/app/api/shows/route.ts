@@ -1,0 +1,111 @@
+import { NextRequest, NextResponse } from "next/server";
+import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
+
+// GET: List shows (authenticated users — staff or comedians)
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = await createSupabaseServer();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const admin = createSupabaseAdmin();
+    const url = new URL(request.url);
+    const upcoming = url.searchParams.get("upcoming");
+
+    let query = admin
+      .from("shows")
+      .select(`
+        *,
+        show_lineup(count),
+        booking_requests(count)
+      `)
+      .order("show_date", { ascending: true })
+      .order("start_time", { ascending: true });
+
+    if (upcoming === "true") {
+      const today = new Date().toISOString().split("T")[0];
+      query = query.gte("show_date", today).neq("status", "canceled");
+    }
+
+    const { data: shows, error } = await query;
+    if (error) throw error;
+
+    return NextResponse.json({ shows });
+  } catch (err) {
+    console.error("Get shows error:", err);
+    return NextResponse.json({ error: "Failed to load shows" }, { status: 500 });
+  }
+}
+
+// POST: Create show (staff only)
+export async function POST(request: NextRequest) {
+  try {
+    const supabase = await createSupabaseServer();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const body = await request.json();
+    const { show_name, show_date, start_time, venue, capacity_slots, notes } = body;
+
+    if (!show_name || !show_date || !start_time) {
+      return NextResponse.json(
+        { error: "Show name, date, and start time are required" },
+        { status: 400 }
+      );
+    }
+
+    const admin = createSupabaseAdmin();
+    const { data: show, error } = await admin
+      .from("shows")
+      .insert({
+        show_name: show_name.trim(),
+        show_date,
+        start_time,
+        venue: venue?.trim() || "Kings Court Boston",
+        capacity_slots: capacity_slots || 8,
+        notes: notes?.trim() || "",
+        created_by: user.id,
+        status: "scheduled",
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json({ show });
+  } catch (err) {
+    console.error("Create show error:", err);
+    return NextResponse.json({ error: "Failed to create show" }, { status: 500 });
+  }
+}
+
+// PATCH: Update show (staff only)
+export async function PATCH(request: NextRequest) {
+  try {
+    const supabase = await createSupabaseServer();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const body = await request.json();
+    const { id, ...updates } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "Show ID is required" }, { status: 400 });
+    }
+
+    const admin = createSupabaseAdmin();
+    const { data: show, error } = await admin
+      .from("shows")
+      .update(updates)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json({ show });
+  } catch (err) {
+    console.error("Update show error:", err);
+    return NextResponse.json({ error: "Failed to update show" }, { status: 500 });
+  }
+}

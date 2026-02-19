@@ -38,29 +38,49 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Staff access — visible but subtle */}
-        <div className="mt-8 sm:mt-10 mb-16 sm:mb-24 flex items-center gap-3">
-          <span className="text-white/25 text-xs tracking-wide uppercase">Staff</span>
-          <div className="w-px h-3 bg-white/15" />
-          <div className="flex gap-2">
-            <Link
-              href="/scan"
-              className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
-            >
-              Scanner
-            </Link>
-            <Link
-              href="/door"
-              className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
-            >
-              Door
-            </Link>
-            <Link
-              href="/admin"
-              className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
-            >
-              Admin
-            </Link>
+        {/* Comedian + Staff access — visible but subtle */}
+        <div className="mt-8 sm:mt-10 mb-16 sm:mb-24 flex flex-col items-center gap-3">
+          <div className="flex items-center gap-3">
+            <span className="text-white/25 text-xs tracking-wide uppercase">Comedians</span>
+            <div className="w-px h-3 bg-white/15" />
+            <div className="flex gap-2">
+              <Link
+                href="/comedians/login"
+                className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
+              >
+                Login
+              </Link>
+              <Link
+                href="/comedians/join"
+                className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
+              >
+                Sign Up
+              </Link>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-white/25 text-xs tracking-wide uppercase">Staff</span>
+            <div className="w-px h-3 bg-white/15" />
+            <div className="flex gap-2">
+              <Link
+                href="/scan"
+                className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
+              >
+                Scanner
+              </Link>
+              <Link
+                href="/door"
+                className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
+              >
+                Door
+              </Link>
+              <Link
+                href="/admin"
+                className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
+              >
+                Admin
+              </Link>
+            </div>
           </div>
         </div>
 

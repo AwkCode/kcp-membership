@@ -30,13 +30,25 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const staffRoutes = ["/scan", "/door", "/admin"];
+  const comedianRoutes = ["/comedians/profile", "/comedians/bookings"];
+
   const isStaffRoute = staffRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  );
+  const isComedianRoute = comedianRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
 
   if (isStaffRoute && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
+    url.searchParams.set("redirect", request.nextUrl.pathname);
+    return NextResponse.redirect(url);
+  }
+
+  if (isComedianRoute && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/comedians/login";
     url.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(url);
   }

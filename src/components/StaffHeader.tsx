@@ -20,7 +20,7 @@ export default function StaffHeader() {
             Staff
           </span>
         </Link>
-        <nav className="flex items-center gap-5 text-sm font-medium text-white/50">
+        <nav className="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-medium text-white/50">
           <Link href="/scan" className="hover:text-white transition">
             Scan
           </Link>
@@ -28,7 +28,13 @@ export default function StaffHeader() {
             Door
           </Link>
           <Link href="/admin" className="hover:text-white transition">
-            Admin
+            Members
+          </Link>
+          <Link href="/admin/shows" className="hover:text-white transition">
+            Shows
+          </Link>
+          <Link href="/admin/comedians" className="hover:text-white transition">
+            Comics
           </Link>
         </nav>
       </div>
