@@ -234,28 +234,28 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                   </svg>
                 </div>
-                <h3 className="font-medium text-white mb-1.5 text-sm">Instant QR Check-In</h3>
-                <p className="text-white/40 text-xs leading-relaxed">Show your QR at the door. Walk right in.</p>
+                <h3 className="font-medium text-white mb-1.5 text-sm">QR Member Check-In</h3>
+                <p className="text-white/40 text-xs leading-relaxed">Members scan in at the door. Staff verify instantly.</p>
               </div>
 
               <div className="bg-white/[0.08] backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-white/[0.08] text-center">
                 <div className="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 mx-auto">
                   <svg className="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 className="font-medium text-white mb-1.5 text-sm">Exclusive Perks</h3>
-                <p className="text-white/40 text-xs leading-relaxed">Discounts, priority seating, members-only events.</p>
+                <h3 className="font-medium text-white mb-1.5 text-sm">Show Booking</h3>
+                <p className="text-white/40 text-xs leading-relaxed">Comics request spots. Staff approve lineups. No more DMs.</p>
               </div>
 
               <div className="bg-white/[0.08] backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-white/[0.08] text-center">
                 <div className="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 mx-auto">
                   <svg className="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
-                <h3 className="font-medium text-white mb-1.5 text-sm">Digital Card</h3>
-                <p className="text-white/40 text-xs leading-relaxed">Your membership lives on your phone. Always ready.</p>
+                <h3 className="font-medium text-white mb-1.5 text-sm">Lineup Management</h3>
+                <p className="text-white/40 text-xs leading-relaxed">Build lineups, set order, assign roles. All in one place.</p>
               </div>
             </div>
           </>
