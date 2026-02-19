@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { member_id } = await request.json();
+    const { member_id, notes } = await request.json();
 
     if (!member_id) {
       return NextResponse.json({ error: "member_id is required" }, { status: 400 });
@@ -38,12 +38,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const insertData: Record<string, string> = {
+      member_id,
+      checked_in_by: user.id,
+    };
+    if (notes) insertData.notes = notes;
+
     const { data: checkin, error } = await admin
       .from("checkins")
-      .insert({
-        member_id,
-        checked_in_by: user.id,
-      })
+      .insert(insertData)
       .select()
       .single();
 

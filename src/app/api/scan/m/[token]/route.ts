@@ -39,6 +39,12 @@ export async function GET(
       .limit(1)
       .single();
 
+    // Get total visit count
+    const { count } = await admin
+      .from("checkins")
+      .select("*", { count: "exact", head: true })
+      .eq("member_id", member.id);
+
     return NextResponse.json({
       member: {
         id: member.id,
@@ -48,6 +54,7 @@ export async function GET(
         notes: member.notes,
         created_at: member.created_at,
         last_checkin: lastCheckin?.created_at || null,
+        visit_count: count || 0,
       },
     });
   } catch (err) {

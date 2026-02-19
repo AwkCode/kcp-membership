@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Header from "@/components/Header";
 import PageShell from "@/components/PageShell";
 
@@ -12,6 +13,7 @@ export default function JoinPage() {
     email: "",
     phone: "",
   });
+  const [agreed, setAgreed] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -130,13 +132,29 @@ export default function JoinPage() {
                 />
               </div>
 
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-0.5 rounded border-white/20 bg-white/[0.06] text-white focus:ring-white/20"
+                  required
+                />
+                <span className="text-white/40 text-xs leading-relaxed">
+                  I agree to the{" "}
+                  <Link href="/terms" target="_blank" className="text-white/60 underline">
+                    Terms of Service & Privacy Policy
+                  </Link>
+                </span>
+              </label>
+
               {status === "error" && (
                 <p className="text-red-400 text-sm">{errorMsg}</p>
               )}
 
               <button
                 type="submit"
-                disabled={status === "loading"}
+                disabled={status === "loading" || !agreed}
                 className="w-full py-3 bg-white text-black rounded-xl font-semibold hover:bg-white/90 transition disabled:opacity-50 text-sm mt-2"
               >
                 {status === "loading" ? "Joining..." : "Join Now"}
