@@ -30,6 +30,7 @@ export default function AdminShowsPage() {
     venue: "Kings Court Boston",
     capacity_slots: "8",
     notes: "",
+    eventbrite_url: "",
   });
 
   const fetchShows = useCallback(async () => {
@@ -66,7 +67,7 @@ export default function AdminShowsPage() {
         throw new Error(data.error);
       }
       setCreating(false);
-      setForm({ show_name: "", show_date: "", start_time: "", venue: "Kings Court Boston", capacity_slots: "8", notes: "" });
+      setForm({ show_name: "", show_date: "", start_time: "", venue: "Kings Court Boston", capacity_slots: "8", notes: "", eventbrite_url: "" });
       fetchShows();
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : "Failed to create show");
@@ -178,6 +179,16 @@ export default function AdminShowsPage() {
                   max={20}
                 />
               </div>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-white/60 mb-1.5">Eventbrite Link <span className="text-white/30">(optional)</span></label>
+              <input
+                type="url"
+                value={form.eventbrite_url}
+                onChange={(e) => setForm({ ...form, eventbrite_url: e.target.value })}
+                className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white text-sm"
+                placeholder="https://eventbrite.com/e/..."
+              />
             </div>
             <div>
               <label className="block text-xs font-medium text-white/60 mb-1.5">Notes</label>

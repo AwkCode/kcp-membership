@@ -14,6 +14,7 @@ interface Show {
   capacity_slots: number;
   status: string;
   notes: string;
+  eventbrite_url: string;
 }
 
 interface MyRequest {
@@ -160,6 +161,19 @@ export default function ShowDetailPage() {
               <h1 className="text-xl font-bold text-white mb-1">{show.show_name}</h1>
               <p className="text-white/50 text-sm">{formatDate(show.show_date)} at {formatTime(show.start_time)}</p>
               <p className="text-white/30 text-xs mt-1">{show.venue}</p>
+              {show.eventbrite_url && (
+                <a
+                  href={show.eventbrite_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/20 rounded-lg text-xs font-medium hover:bg-orange-500/20 transition"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  View on Eventbrite
+                </a>
+              )}
               {show.notes && <p className="text-white/40 text-sm mt-3">{show.notes}</p>}
               <div className="mt-3">
                 <span className="text-white/30 text-xs">{show.capacity_slots} spots total</span>

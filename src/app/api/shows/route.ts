@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await request.json();
-    const { show_name, show_date, start_time, venue, capacity_slots, notes } = body;
+    const { show_name, show_date, start_time, venue, capacity_slots, notes, eventbrite_url } = body;
 
     if (!show_name || !show_date || !start_time) {
       return NextResponse.json(
@@ -64,6 +64,7 @@ export async function POST(request: NextRequest) {
         venue: venue?.trim() || "Kings Court Boston",
         capacity_slots: capacity_slots || 8,
         notes: notes?.trim() || "",
+        eventbrite_url: eventbrite_url?.trim() || "",
         created_by: user.id,
         status: "scheduled",
       })

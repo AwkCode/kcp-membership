@@ -14,6 +14,7 @@ interface Show {
   capacity_slots: number;
   status: string;
   notes: string;
+  eventbrite_url: string;
   show_lineup: { count: number }[];
   booking_requests: { count: number }[];
 }
@@ -82,6 +83,20 @@ export default function ShowsPage() {
                           {formatDate(show.show_date)} at {formatTime(show.start_time)}
                         </p>
                         <p className="text-white/30 text-xs mt-0.5">{show.venue}</p>
+                        {show.eventbrite_url && (
+                          <a
+                            href={show.eventbrite_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 text-orange-400 text-xs mt-1 hover:text-orange-300 transition"
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            Eventbrite
+                          </a>
+                        )}
                       </div>
                       <div className="text-right">
                         {isClosed ? (
