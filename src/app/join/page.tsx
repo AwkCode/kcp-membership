@@ -1,3 +1,4 @@
+// Kings Court Boston - Join Page
 "use client";
 
 import { useState } from "react";
