@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import jsQR from "jsqr";
 import StaffHeader from "@/components/StaffHeader";
 import PageShell from "@/components/PageShell";
+
+const VALID_STATUSES = ["active", "vip", "staff", "comp"];
 
 interface MemberInfo {
   id: string;
@@ -25,22 +28,18 @@ export default function ScanPage() {
   const [checkingIn, setCheckingIn] = useState(false);
   const [checkinNotes, setCheckinNotes] = useState("");
   const scanningRef = useRef(true);
-  const [hasBarcodeDetector, setHasBarcodeDetector] = useState(true);
-
-  useEffect(() => {
-    setHasBarcodeDetector("BarcodeDetector" in window);
-  }, []);
+  const lastScannedRef = useRef("");
 
   const startCamera = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
+        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
       });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
     } catch {
-      setError("Could not access camera");
+      setError("Could not access camera. Make sure you allow camera access.");
     }
   }, []);
 
@@ -52,6 +51,8 @@ export default function ScanPage() {
   }, []);
 
   const lookupToken = useCallback(async (token: string) => {
+    if (token === lastScannedRef.current) return;
+    lastScannedRef.current = token;
     setError("");
     try {
       const res = await fetch(`/api/scan/m/${token}`);
@@ -65,6 +66,7 @@ export default function ScanPage() {
       scanningRef.current = false;
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Lookup failed");
+      lastScannedRef.current = "";
     }
   }, []);
 
@@ -72,8 +74,9 @@ export default function ScanPage() {
     startCamera();
 
     let animationId: number;
+    let frameCount = 0;
 
-    const scanFrame = async () => {
+    const scanFrame = () => {
       if (!scanningRef.current || !videoRef.current || !canvasRef.current) {
         animationId = requestAnimationFrame(scanFrame);
         return;
@@ -87,29 +90,30 @@ export default function ScanPage() {
         return;
       }
 
+      // Scan every 3rd frame for performance
+      frameCount++;
+      if (frameCount % 3 !== 0) {
+        animationId = requestAnimationFrame(scanFrame);
+        return;
+      }
+
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const ctx = canvas.getContext("2d")!;
       ctx.drawImage(video, 0, 0);
 
-      try {
-        if ("BarcodeDetector" in window) {
-          const detector = new (window as unknown as { BarcodeDetector: new (opts: { formats: string[] }) => { detect: (src: HTMLCanvasElement) => Promise<{ rawValue: string }[]> } }).BarcodeDetector({
-            formats: ["qr_code"],
-          });
-          const barcodes = await detector.detect(canvas);
-          if (barcodes.length > 0) {
-            const url = barcodes[0].rawValue;
-            const match = url.match(/\/scan\/m\/([A-Za-z0-9_-]+)/);
-            if (match) {
-              scanningRef.current = false;
-              await lookupToken(match[1]);
-              return;
-            }
-          }
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: "dontInvert",
+      });
+
+      if (code) {
+        const match = code.data.match(/\/scan\/m\/([A-Za-z0-9_-]+)/);
+        if (match) {
+          scanningRef.current = false;
+          lookupToken(match[1]);
+          return;
         }
-      } catch {
-        // BarcodeDetector not supported or failed
       }
 
       animationId = requestAnimationFrame(scanFrame);
@@ -137,6 +141,8 @@ export default function ScanPage() {
         throw new Error(data.error);
       }
       setCheckedIn(true);
+      // Auto-reset after 3 seconds for continuous scanning
+      setTimeout(() => resetScan(), 3000);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Check-in failed");
     } finally {
@@ -149,10 +155,23 @@ export default function ScanPage() {
     setError("");
     setCheckedIn(false);
     setCheckinNotes("");
+    lastScannedRef.current = "";
     setScanning(true);
     scanningRef.current = true;
     startCamera();
   }
+
+  const isValid = member && VALID_STATUSES.includes(member.status);
+
+  const statusLabel: Record<string, string> = {
+    active: "Verified Member",
+    vip: "VIP Member",
+    staff: "Staff",
+    comp: "Comp",
+    suspended: "Suspended",
+    expired: "Expired",
+    cancelled: "Cancelled",
+  };
 
   return (
     <PageShell>
@@ -161,7 +180,7 @@ export default function ScanPage() {
 
         {scanning && (
           <>
-            <div className="relative rounded-2xl overflow-hidden bg-black aspect-square">
+            <div className="relative rounded-2xl overflow-hidden bg-black aspect-[4/3]">
               <video
                 ref={videoRef}
                 autoPlay
@@ -170,65 +189,84 @@ export default function ScanPage() {
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 border border-white/10 rounded-2xl" />
-              <div className="absolute inset-[20%] border-2 border-white/40 rounded-lg" />
+              {/* Scanning crosshair */}
+              <div className="absolute inset-[15%] border-2 border-white/30 rounded-lg">
+                <div className="absolute -top-0.5 -left-0.5 w-6 h-6 border-t-2 border-l-2 border-white rounded-tl-lg" />
+                <div className="absolute -top-0.5 -right-0.5 w-6 h-6 border-t-2 border-r-2 border-white rounded-tr-lg" />
+                <div className="absolute -bottom-0.5 -left-0.5 w-6 h-6 border-b-2 border-l-2 border-white rounded-bl-lg" />
+                <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-2 border-r-2 border-white rounded-br-lg" />
+              </div>
+              <div className="absolute bottom-4 left-0 right-0 text-center">
+                <span className="bg-black/60 text-white/80 px-4 py-1.5 rounded-full text-xs backdrop-blur-sm">
+                  Scanning...
+                </span>
+              </div>
             </div>
             <canvas ref={canvasRef} className="hidden" />
-            <p className="text-center text-white/40 text-sm mt-4">
-              Point camera at member QR code
-            </p>
-            {!hasBarcodeDetector && (
-              <p className="text-center text-amber-400/80 text-xs mt-1">
-                BarcodeDetector not supported. Try Chrome on Android or use Door search.
-              </p>
-            )}
           </>
         )}
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mt-4 text-sm">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mt-4 text-sm text-center">
             {error}
+            <button onClick={resetScan} className="block mx-auto mt-2 text-white/40 text-xs underline">
+              Try again
+            </button>
           </div>
         )}
 
         {member && (
           <div className="mt-4">
             <div className="bg-white/[0.06] backdrop-blur-xl rounded-2xl border border-white/[0.06] overflow-hidden">
-              {/* Status banner */}
-              <div className={`px-6 py-6 text-center ${
-                member.status === "active"
+              {/* Status banner — large and clear */}
+              <div className={`px-6 py-8 text-center ${
+                isValid
                   ? "bg-green-500/10 border-b border-green-500/20"
                   : "bg-red-500/10 border-b border-red-500/20"
               }`}>
-                <div className={`w-14 h-14 mx-auto mb-3 rounded-full flex items-center justify-center ${
-                  member.status === "active" ? "bg-green-500/20" : "bg-red-500/20"
+                <div className={`w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center ${
+                  isValid ? "bg-green-500/20" : "bg-red-500/20"
                 }`}>
-                  {member.status === "active" ? (
-                    <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {isValid ? (
+                    <svg className="w-9 h-9 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   ) : (
-                    <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-9 h-9 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
                   )}
                 </div>
-                <h2 className={`text-base font-semibold ${
-                  member.status === "active" ? "text-green-400" : "text-red-400"
-                }`}>
-                  {member.status === "active"
-                    ? "Verified Kings Court Member"
-                    : `Membership ${member.status.charAt(0).toUpperCase() + member.status.slice(1)}`}
+                <h2 className={`text-lg font-bold ${isValid ? "text-green-400" : "text-red-400"}`}>
+                  {isValid ? statusLabel[member.status] || "Verified" : "NOT VALID"}
                 </h2>
+                {!isValid && (
+                  <p className="text-red-400/60 text-sm mt-1">
+                    {statusLabel[member.status] || member.status}
+                  </p>
+                )}
               </div>
 
-              {/* Member details */}
+              {/* Member name — large for door staff */}
               <div className="px-6 py-5">
-                <h3 className="text-2xl font-bold text-center text-white">
+                <h3 className="text-3xl font-bold text-center text-white">
                   {member.first_name} {member.last_name}
                 </h3>
 
+                {member.status !== "active" && member.status !== "cancelled" && member.status !== "expired" && member.status !== "suspended" && (
+                  <p className="text-center mt-1">
+                    <span className={`inline-block px-3 py-0.5 rounded-full text-xs font-medium ${
+                      member.status === "vip" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                        : member.status === "staff" ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                        : "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                    }`}>
+                      {member.status.toUpperCase()}
+                    </span>
+                  </p>
+                )}
+
                 {member.visit_count > 0 && (
-                  <p className="text-center text-white/50 text-sm mt-1">
+                  <p className="text-center text-white/50 text-sm mt-2">
                     Visit #{member.visit_count + 1}
                   </p>
                 )}
@@ -239,7 +277,7 @@ export default function ScanPage() {
                   </p>
                 )}
 
-                <div className="mt-4 flex items-center justify-center gap-1.5 text-white/30 text-xs">
+                <div className="mt-3 flex items-center justify-center gap-1.5 text-white/30 text-xs">
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -253,7 +291,7 @@ export default function ScanPage() {
 
               {/* Action area */}
               <div className="px-6 pb-5 space-y-3">
-                {!checkedIn && member.status === "active" && (
+                {!checkedIn && isValid && (
                   <input
                     type="text"
                     placeholder="Add a note (optional)..."
@@ -264,27 +302,31 @@ export default function ScanPage() {
                 )}
 
                 {checkedIn ? (
-                  <div className="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-4 rounded-xl text-center font-semibold text-lg flex items-center justify-center gap-2">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-5 rounded-xl text-center font-bold text-xl flex items-center justify-center gap-2">
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                     Checked In
                   </div>
-                ) : (
+                ) : isValid ? (
                   <button
                     onClick={handleCheckin}
-                    disabled={checkingIn || member.status !== "active"}
-                    className="w-full py-4 bg-white text-black rounded-xl font-semibold text-base hover:bg-white/90 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                    disabled={checkingIn}
+                    className="w-full py-4 bg-white text-black rounded-xl font-semibold text-lg hover:bg-white/90 transition disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {checkingIn ? "Checking in..." : "Check In"}
                   </button>
+                ) : (
+                  <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-4 rounded-xl text-center font-semibold">
+                    Cannot check in — membership {member.status}
+                  </div>
                 )}
               </div>
             </div>
 
             <button
               onClick={resetScan}
-              className="mt-3 w-full py-2 text-white/30 text-sm hover:text-white/60 transition"
+              className="mt-3 w-full py-3 text-white/40 text-sm hover:text-white/60 transition border border-white/10 rounded-xl"
             >
               Scan Another
             </button>

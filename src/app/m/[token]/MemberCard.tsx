@@ -43,7 +43,7 @@ export default function MemberCard({ firstName, lastName, status: initialStatus,
       </div>
 
       <div className="p-8 text-center">
-        {status === "active" && (
+        {["active", "vip", "staff", "comp"].includes(status) && (
           <div className="mb-5 bg-white rounded-xl p-4 inline-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={qrDataUrl} alt="Membership QR Code" className="w-48 h-48" />
@@ -56,24 +56,27 @@ export default function MemberCard({ firstName, lastName, status: initialStatus,
 
         <span
           className={`inline-block mt-2 px-3 py-1 rounded-full text-[10px] font-medium ${
-            status === "active"
-              ? "bg-green-500/10 text-green-400 border border-green-500/20"
+            ["active", "vip", "staff", "comp"].includes(status)
+              ? status === "vip" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                : status === "staff" ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                : status === "comp" ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                : "bg-green-500/10 text-green-400 border border-green-500/20"
               : "bg-red-500/10 text-red-400 border border-red-500/20"
           }`}
         >
-          {status}
+          {status === "vip" ? "VIP" : status}
         </span>
 
-        {status === "active" && (
+        {["active", "vip", "staff", "comp"].includes(status) && (
           <p className="text-white/30 text-xs mt-6">Show this QR code at check-in</p>
         )}
 
-        {status === "cancelled" && (
-          <p className="text-white/30 text-xs mt-6">Your membership has been cancelled.</p>
+        {["cancelled", "suspended", "expired"].includes(status) && (
+          <p className="text-white/30 text-xs mt-6">Your membership is {status}.</p>
         )}
       </div>
 
-      {status === "active" && (
+      {["active", "vip", "staff", "comp"].includes(status) && (
         <div className="px-6 pb-6 text-center">
           {!showConfirm ? (
             <button

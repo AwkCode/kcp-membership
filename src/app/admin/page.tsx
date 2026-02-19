@@ -128,7 +128,11 @@ export default function AdminPage() {
                         className="w-full px-3 py-2 bg-white/[0.06] border border-white/10 rounded-lg text-white text-sm"
                       >
                         <option value="active">Active</option>
+                        <option value="vip">VIP</option>
+                        <option value="staff">Staff</option>
+                        <option value="comp">Comp</option>
                         <option value="suspended">Suspended</option>
+                        <option value="expired">Expired</option>
                         <option value="cancelled">Cancelled</option>
                       </select>
                     </div>
@@ -169,10 +173,11 @@ export default function AdminPage() {
                       <div className="flex items-center gap-2 mt-1">
                         <span
                           className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                            m.status === "active"
-                              ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                              : m.status === "suspended"
-                              ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                            m.status === "active" ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                              : m.status === "vip" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                              : m.status === "staff" ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                              : m.status === "comp" ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                              : m.status === "suspended" ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
                               : "bg-red-500/10 text-red-400 border border-red-500/20"
                           }`}
                         >

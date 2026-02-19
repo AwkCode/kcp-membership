@@ -31,7 +31,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Member not found" }, { status: 404 });
     }
 
-    if (member.status !== "active") {
+    const validStatuses = ["active", "vip", "staff", "comp"];
+    if (!validStatuses.includes(member.status)) {
       return NextResponse.json(
         { error: `Member is ${member.status}` },
         { status: 403 }

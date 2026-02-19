@@ -99,8 +99,11 @@ export default function DoorPage() {
                 <p className="text-white/30 text-xs">{m.email}</p>
                 <span
                   className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                    m.status === "active"
-                      ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                    ["active", "vip", "staff", "comp"].includes(m.status)
+                      ? m.status === "vip" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                        : m.status === "staff" ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                        : m.status === "comp" ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                        : "bg-green-500/10 text-green-400 border border-green-500/20"
                       : "bg-red-500/10 text-red-400 border border-red-500/20"
                   }`}
                 >
@@ -113,7 +116,7 @@ export default function DoorPage() {
                 ) : (
                   <button
                     onClick={() => handleCheckin(m.id)}
-                    disabled={checkingInId === m.id || m.status !== "active"}
+                    disabled={checkingInId === m.id || !["active", "vip", "staff", "comp"].includes(m.status)}
                     className="px-4 py-2 bg-white text-black rounded-lg text-sm font-medium hover:bg-white/90 disabled:opacity-40 transition"
                   >
                     {checkingInId === m.id ? "..." : "Check In"}
