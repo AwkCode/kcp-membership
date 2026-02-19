@@ -70,6 +70,32 @@ export default function Home() {
             <p className="text-white/40 text-xs leading-relaxed">Your membership lives on your phone. Always ready.</p>
           </div>
         </div>
+
+        {/* Staff access — subtle bottom section */}
+        <div className="mt-16 sm:mt-24 pb-4">
+          <div className="w-12 h-px bg-white/10 mx-auto mb-6" />
+          <p className="text-white/30 text-xs mb-4 tracking-wide uppercase">Staff</p>
+          <div className="flex gap-3">
+            <Link
+              href="/scan"
+              className="px-5 py-2.5 bg-white/[0.06] backdrop-blur-sm text-white/60 border border-white/[0.08] rounded-full text-xs font-medium hover:bg-white/10 hover:text-white/80 transition"
+            >
+              Scanner
+            </Link>
+            <Link
+              href="/door"
+              className="px-5 py-2.5 bg-white/[0.06] backdrop-blur-sm text-white/60 border border-white/[0.08] rounded-full text-xs font-medium hover:bg-white/10 hover:text-white/80 transition"
+            >
+              Door
+            </Link>
+            <Link
+              href="/admin"
+              className="px-5 py-2.5 bg-white/[0.06] backdrop-blur-sm text-white/60 border border-white/[0.08] rounded-full text-xs font-medium hover:bg-white/10 hover:text-white/80 transition"
+            >
+              Admin
+            </Link>
+          </div>
+        </div>
       </main>
     </PageShell>
   );
