@@ -21,46 +21,57 @@ export async function POST(request: NextRequest) {
     }
 
     const admin = createSupabaseAdmin();
+    const normalizedEmail = email.trim().toLowerCase();
 
-    // Check if comedian with this email already exists
-    const { data: existing } = await admin
+    // Check if comedian profile with this email already exists
+    const { data: existingComedian } = await admin
       .from("comedians")
       .select("id")
-      .eq("email", email.trim().toLowerCase())
+      .eq("email", normalizedEmail)
       .single();
 
-    if (existing) {
+    if (existingComedian) {
       return NextResponse.json(
-        { error: "An account with this email already exists" },
+        { error: "A comedian account with this email already exists. Try logging in instead." },
         { status: 409 }
       );
     }
 
-    // Create Supabase Auth user
-    const { data: authData, error: authError } = await admin.auth.admin.createUser({
-      email: email.trim().toLowerCase(),
-      password,
-      email_confirm: true,
-      user_metadata: { role: "comedian" },
-    });
+    // Check if there's already a Supabase Auth user with this email
+    // (could be a staff user or a member who signed up)
+    let authUserId: string;
 
-    if (authError) {
-      if (authError.message?.includes("already been registered")) {
-        return NextResponse.json(
-          { error: "An account with this email already exists" },
-          { status: 409 }
-        );
+    const { data: existingUsers } = await admin.auth.admin.listUsers();
+    const existingAuth = existingUsers?.users?.find(
+      (u: { email?: string }) => u.email?.toLowerCase() === normalizedEmail
+    );
+
+    if (existingAuth) {
+      // Auth user already exists — link comedian profile to existing account
+      authUserId = existingAuth.id;
+    } else {
+      // Create new Supabase Auth user
+      const { data: authData, error: authError } = await admin.auth.admin.createUser({
+        email: normalizedEmail,
+        password,
+        email_confirm: true,
+        user_metadata: { role: "comedian" },
+      });
+
+      if (authError) {
+        throw authError;
       }
-      throw authError;
+
+      authUserId = authData.user.id;
     }
 
     // Create comedian profile
     const { error: profileError } = await admin
       .from("comedians")
       .insert({
-        auth_id: authData.user.id,
+        auth_id: authUserId,
         display_name: display_name.trim(),
-        email: email.trim().toLowerCase(),
+        email: normalizedEmail,
         phone: phone?.trim() || null,
         city: city?.trim() || null,
         state: state?.trim() || null,
@@ -70,12 +81,14 @@ export async function POST(request: NextRequest) {
       });
 
     if (profileError) {
-      // Clean up auth user if profile creation fails
-      await admin.auth.admin.deleteUser(authData.user.id);
+      // Only clean up auth user if we just created it (not if it was existing)
+      if (!existingAuth) {
+        await admin.auth.admin.deleteUser(authUserId);
+      }
       throw profileError;
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, existingAccount: !!existingAuth });
   } catch (err) {
     console.error("Comedian signup error:", err);
     return NextResponse.json(

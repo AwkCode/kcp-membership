@@ -19,6 +19,7 @@ export default function ComedianJoinPage() {
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [existingAccount, setExistingAccount] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -37,6 +38,8 @@ export default function ComedianJoinPage() {
         throw new Error(data.error || "Something went wrong");
       }
 
+      const data = await res.json();
+      setExistingAccount(data.existingAccount || false);
       setStatus("success");
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
@@ -58,7 +61,9 @@ export default function ComedianJoinPage() {
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">Account Created!</h1>
             <p className="text-white/50 text-sm mb-6">
-              Your profile is pending approval. We&apos;ll review it shortly. Once approved, you can browse shows and request spots.
+              {existingAccount
+                ? "Your comedian profile has been created and linked to your existing account. Log in with your existing password."
+                : "Your profile is pending approval. We'll review it shortly. Once approved, you can browse shows and request spots."}
             </p>
             <Link
               href="/comedians/login"
