@@ -5,7 +5,7 @@ export default function ComedianHeader() {
   return (
     <header className="w-full sticky top-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/10">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-        <Link href="/shows" className="flex items-center gap-2 sm:gap-3">
+        <Link href="/" className="flex items-center gap-2 sm:gap-3">
           <Image
             src="/kc-logo-v3.png"
             alt="Kings Court"
