@@ -1,57 +1,62 @@
-# Kings Court — Instant Check-In Membership
+# Kings Court Boston — Venue Operations Platform
 
-A lightweight membership system with QR-based check-in for Kings Court.
+A full-stack venue operations platform built for [Kings Court Boston](https://kingscourtboston.com), a comedy club in Boston, MA. Handles membership, comedian booking, and show lineup management in one system.
 
-## Stack
+**Live:** [kcp-membership.vercel.app](https://kcp-membership.vercel.app)
 
-- **Next.js 16** (App Router) + TypeScript + Tailwind CSS
-- **Supabase** Postgres + Auth (staff login)
-- **SendGrid** transactional email
-- **qrcode** server-side QR generation
+## What It Does
 
-## Setup
+### Membership System
+- Public signup with instant QR code delivery via email and SMS
+- Digital member cards at unique URLs with self-cancel option
+- Staff QR scanner (camera-based, works on iPhone/Safari via jsQR)
+- Door check-in with manual search by name, email, or phone
+- Admin panel: member management, status control (active, VIP, staff, comp, suspended), CSV export
+- Visit tracking and check-in history
 
-### 1. Clone and install
+### Comedian Portal
+- Comedian signup and login (shares auth with staff — same email can be both roles)
+- Profile management: display name, bio, Instagram, video links, tags
+- Browse upcoming shows with real-time spot availability
+- Self-serve spot requests with optional notes to the booker
+- "My Spots" dashboard to track request statuses and cancel
 
-```bash
-cd kcp-membership
-npm install
-```
+### Show Booking & Lineup Management
+- Staff create shows with date, time, venue, capacity, and optional Eventbrite link
+- Booking request queue: approve, reject, or waitlist incoming requests
+- Auto-waitlist when show hits capacity, auto-add to lineup on approval
+- Lineup builder with reordering, role assignment (performer, host, feature, headliner), and set length controls
+- Show lifecycle management: scheduled, closed, canceled
+- Comedian directory with search, filter, approve/ban
 
-### 2. Create Supabase project
+## Tech Stack
 
-1. Go to [supabase.com](https://supabase.com) and create a new project.
-2. In the SQL Editor, run the migration file:
-
-```bash
-# Copy and paste the contents of:
-supabase/migrations/001_create_tables.sql
-```
-
-3. Create a staff user in Supabase Dashboard → Authentication → Users → Add User (email + password).
-
-### 3. Configure environment
-
-```bash
-cp .env.local.example .env.local
-```
-
-Fill in your values:
-
-| Variable | Description |
+| Layer | Technology |
 |---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only) |
-| `SENDGRID_API_KEY` | SendGrid API key |
-| `SENDGRID_FROM_EMAIL` | Verified sender email in SendGrid |
-| `NEXT_PUBLIC_BASE_URL` | Your app URL (e.g., `http://localhost:3000`) |
+| Framework | Next.js 15 (App Router) + TypeScript |
+| Styling | Tailwind CSS |
+| Database | Supabase Postgres + Row Level Security |
+| Auth | Supabase Auth (multi-role) |
+| Email | SendGrid (domain-verified) |
+| SMS | Twilio |
+| QR | `qrcode` (generation) + `jsQR` (scanning) |
+| Hosting | Vercel |
 
-### 4. Run
+## How It Works
 
-```bash
-npm run dev
-```
+### Members
+1. Visitor signs up at `/join`
+2. System creates their record, generates a secure token, emails a QR code + card link
+3. At the door, staff opens `/scan` on their phone and scans the QR
+4. System verifies member status and staff taps **Check In**
+5. Fallback: staff uses `/door` to search by name/email/phone
+
+### Comedians
+1. Comic signs up at `/comedians/join` (existing members can use the same email)
+2. Browses upcoming shows at `/shows`, picks one, hits **Request Spot**
+3. Staff sees the request in `/admin/shows/[id]` and approves, rejects, or waitlists
+4. On approval, the comic is auto-added to the lineup
+5. Staff reorders the lineup, assigns roles, sets time lengths
 
 ## Routes
 
@@ -59,55 +64,120 @@ npm run dev
 
 | Route | Description |
 |---|---|
-| `/join` | Membership signup form |
+| `/` | Auth-aware homepage (personalized when logged in) |
+| `/join` | Membership signup |
+| `/perks` | Member benefits |
 | `/m/[token]` | Digital member card with QR code |
+| `/terms` | Terms of Service & Privacy Policy |
+| `/shows` | Upcoming shows (comedian view) |
+| `/shows/[id]` | Show detail + request spot |
 
-### Staff-only (requires login)
+### Staff (requires login)
 
 | Route | Description |
 |---|---|
-| `/scan` | Camera QR scanner → check in members |
-| `/door` | Search members by name/email/phone → check in |
-| `/admin` | List all members, edit status/notes, rotate tokens |
-| `/login` | Staff authentication |
+| `/scan` | Camera QR scanner |
+| `/door` | Search + manual check-in |
+| `/admin` | Member management + CSV export |
+| `/admin/shows` | Create and manage shows |
+| `/admin/shows/[id]` | Requests queue + lineup builder |
+| `/admin/comedians` | Comedian directory + approve/ban |
+
+### Comedian (requires login)
+
+| Route | Description |
+|---|---|
+| `/comedians/profile` | Edit profile |
+| `/comedians/bookings` | Track spot requests |
 
 ### API
 
-| Endpoint | Auth | Description |
-|---|---|---|
-| `POST /api/join` | Public | Create member, send welcome email |
-| `GET /api/scan/m/[token]` | Staff | Look up member by token |
-| `POST /api/checkin` | Staff | Log a check-in |
-| `GET /api/members` | Staff | List all members |
-| `GET /api/members/search?q=` | Staff | Search members (ILIKE) |
-| `PATCH /api/members/[id]` | Staff | Update member status/notes |
-| `POST /api/members/[id]/rotate-token` | Staff | Generate new membership token |
+| Endpoint | Description |
+|---|---|
+| `POST /api/join` | Create member + send email/SMS |
+| `GET /api/scan/m/[token]` | Look up member by token |
+| `POST /api/checkin` | Log a check-in |
+| `GET /api/members` | List all members |
+| `GET /api/members/search?q=` | Search members |
+| `PATCH /api/members/[id]` | Update member |
+| `POST /api/members/[id]/rotate-token` | New membership token |
+| `GET /api/members/export` | CSV export |
+| `POST /api/comedians/signup` | Create comedian account |
+| `GET/PATCH /api/comedians/me` | Comedian profile |
+| `GET/POST/PATCH /api/shows` | Show CRUD |
+| `GET/POST /api/requests` | Booking requests |
+| `PATCH /api/requests/[id]` | Approve/reject/waitlist |
+| `GET/PATCH/DELETE /api/lineup` | Lineup management |
 
-## How it works
+## Database
 
-1. **Visitor** fills out the form at `/join`
-2. System creates their member record, generates a secure token, and emails them a QR code + link to their digital card
-3. **At the door**, staff opens `/scan` on their phone, scans the member's QR code
-4. System looks up the member, shows their info and status
-5. Staff taps **Check In** to log the visit
-6. If camera scanning isn't available, staff uses `/door` to search by name/email/phone
+7 tables with Row Level Security:
 
-## QR Scanner Browser Support
+- **members** — profiles, tokens, statuses, contact info
+- **checkins** — check-in log with staff attribution
+- **comedians** — profiles linked to auth accounts
+- **shows** — schedule, capacity, status, Eventbrite links
+- **booking_requests** — spot requests with approval workflow
+- **show_lineup** — confirmed lineup with ordering and roles
+- **comedian_checkins** — show-day comedian check-ins
 
-The `/scan` page uses the [BarcodeDetector API](https://developer.mozilla.org/en-US/docs/Web/API/BarcodeDetector). This is supported natively in:
+## Setup
 
-- Chrome on Android
-- Chrome on macOS (v83+)
-- Safari on iOS 15.4+
+### Prerequisites
+- Node.js 18+
+- Supabase project
+- SendGrid account (verified sender/domain)
+- Twilio account
 
-For unsupported browsers, use the `/door` manual search page instead.
+### Install
 
-## Deployment
+```bash
+git clone https://github.com/AwkCode/kcp-membership.git
+cd kcp-membership
+npm install
+```
 
-Deploy to Vercel:
+### Configure
+
+Create `.env.local`:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+SENDGRID_API_KEY=your_sendgrid_key
+SENDGRID_FROM_EMAIL=your_verified_email
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+TWILIO_PHONE_NUMBER=your_twilio_number
+```
+
+### Database
+
+Run migrations in order in Supabase SQL Editor:
+
+1. `supabase/migrations/001_create_tables.sql`
+2. `supabase/migrations/002_checkin_notes.sql`
+3. `supabase/migrations/003_comedian_portal.sql`
+4. `supabase/migrations/004_show_eventbrite_url.sql`
+
+Create a staff user in Supabase Auth dashboard with `role: "staff"` in user metadata.
+
+### Run
+
+```bash
+npm run dev
+```
+
+### Deploy
 
 ```bash
 npx vercel
 ```
 
-Set all environment variables in the Vercel dashboard. Make sure `NEXT_PUBLIC_BASE_URL` points to your production domain.
+Set all environment variables in the Vercel dashboard.
+
+## License
+
+MIT
