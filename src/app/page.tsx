@@ -80,19 +80,19 @@ export default function Home() {
                 <>
                   <Link
                     href="/admin/dashboard"
-                    className="px-8 py-3.5 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
+                    className="px-8 py-3.5 bg-white text-black rounded-lg font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
                   >
                     Dashboard
                   </Link>
                   <Link
                     href="/admin/shows"
-                    className="px-8 py-3.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full font-semibold hover:bg-white/20 transition text-center text-sm"
+                    className="px-8 py-3.5 bg-white/10 text-white border border-white/20 rounded-lg font-semibold hover:bg-white/20 transition text-center text-sm"
                   >
                     Manage Shows
                   </Link>
                   <Link
                     href="/scan"
-                    className="px-8 py-3.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full font-semibold hover:bg-white/20 transition text-center text-sm"
+                    className="px-8 py-3.5 bg-white/10 text-white border border-white/20 rounded-lg font-semibold hover:bg-white/20 transition text-center text-sm"
                   >
                     Scanner
                   </Link>
@@ -103,19 +103,19 @@ export default function Home() {
                 <>
                   <Link
                     href="/shows"
-                    className="px-8 py-3.5 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
+                    className="px-8 py-3.5 bg-white text-black rounded-lg font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
                   >
                     Browse Shows
                   </Link>
                   <Link
                     href="/comedians/bookings"
-                    className="px-8 py-3.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full font-semibold hover:bg-white/20 transition text-center text-sm"
+                    className="px-8 py-3.5 bg-white/10 text-white border border-white/20 rounded-lg font-semibold hover:bg-white/20 transition text-center text-sm"
                   >
                     My Spots
                   </Link>
                   <Link
                     href="/comedians/profile"
-                    className="px-8 py-3.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full font-semibold hover:bg-white/20 transition text-center text-sm"
+                    className="px-8 py-3.5 bg-white/10 text-white border border-white/20 rounded-lg font-semibold hover:bg-white/20 transition text-center text-sm"
                   >
                     My Profile
                   </Link>
@@ -125,7 +125,7 @@ export default function Home() {
               {!user.isComedian && !user.isStaff && (
                 <Link
                   href="/join"
-                  className="px-8 py-3.5 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
+                  className="px-8 py-3.5 bg-white text-black rounded-lg font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
                 >
                   Become a Member
                 </Link>
@@ -172,13 +172,13 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0">
               <Link
                 href="/join"
-                className="px-8 py-3.5 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
+                className="px-8 py-3.5 bg-white text-black rounded-lg font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
               >
                 Become a Member
               </Link>
               <Link
                 href="/perks"
-                className="px-8 py-3.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full font-semibold hover:bg-white/20 transition text-center text-sm"
+                className="px-8 py-3.5 bg-white/10 text-white border border-white/20 rounded-lg font-semibold hover:bg-white/20 transition text-center text-sm"
               >
                 View Perks
               </Link>
@@ -230,9 +230,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Feature cards — Apple style glass */}
+            {/* Feature cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl w-full px-4 sm:px-0">
-              <div className="bg-white/[0.08] backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-white/[0.08] text-center">
+              <div className="bg-white/[0.05] rounded-2xl p-5 sm:p-6 border border-white/[0.06] text-center">
                 <div className="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 mx-auto">
                   <svg className="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
@@ -242,7 +242,7 @@ export default function Home() {
                 <p className="text-white/40 text-xs leading-relaxed">Members scan in at the door. Staff verify instantly.</p>
               </div>
 
-              <div className="bg-white/[0.08] backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-white/[0.08] text-center">
+              <div className="bg-white/[0.05] rounded-2xl p-5 sm:p-6 border border-white/[0.06] text-center">
                 <div className="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 mx-auto">
                   <svg className="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -252,7 +252,7 @@ export default function Home() {
                 <p className="text-white/40 text-xs leading-relaxed">Comics request spots. Staff approve lineups. No more DMs.</p>
               </div>
 
-              <div className="bg-white/[0.08] backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-white/[0.08] text-center">
+              <div className="bg-white/[0.05] rounded-2xl p-5 sm:p-6 border border-white/[0.06] text-center">
                 <div className="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 mx-auto">
                   <svg className="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />

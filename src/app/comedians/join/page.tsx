@@ -52,7 +52,7 @@ export default function ComedianJoinPage() {
       <PageShell>
         <Header />
         <main className="flex flex-col items-center justify-center px-6 pt-20 pb-24 min-h-screen">
-          <div className="max-w-md w-full bg-white/[0.06] backdrop-blur-xl rounded-2xl border border-white/[0.06] p-10 text-center">
+          <div className="max-w-md w-full bg-white/[0.06] rounded-2xl border border-white/[0.06] p-10 text-center">
             <Image src="/kc-logo-v3.png" alt="Kings Court" width={80} height={80} className="mx-auto mb-4 rounded" />
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
               <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@ export default function ComedianJoinPage() {
       <Header />
       <main className="flex flex-col items-center px-6 pt-12 pb-24">
         <div className="max-w-md w-full">
-          <div className="bg-white/[0.06] backdrop-blur-xl rounded-2xl border border-white/[0.06] p-8">
+          <div className="bg-white/[0.06] rounded-2xl border border-white/[0.06] p-8">
             <div className="text-center mb-6">
               <Image src="/kc-logo-v3.png" alt="Kings Court" width={64} height={64} className="mx-auto mb-3 rounded" />
               <h1 className="text-2xl font-bold text-white">Comedian Sign Up</h1>

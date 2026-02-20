@@ -62,7 +62,7 @@ export default function ShowsPage() {
         {loading ? (
           <p className="text-white/30 text-center py-8 text-sm">Loading...</p>
         ) : shows.length === 0 ? (
-          <div className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-8 text-center">
+          <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-8 text-center">
             <p className="text-white/40 text-sm">No upcoming shows right now.</p>
             <p className="text-white/20 text-xs mt-1">Check back soon!</p>
           </div>
@@ -75,7 +75,7 @@ export default function ShowsPage() {
 
               return (
                 <Link key={show.id} href={`/shows/${show.id}`}>
-                  <div className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.06] rounded-xl p-4 hover:bg-white/[0.1] transition cursor-pointer">
+                  <div className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4 hover:bg-white/[0.1] transition cursor-pointer">
                     <div className="flex items-start justify-between">
                       <div>
                         <h3 className="font-medium text-white text-sm">{show.show_name}</h3>

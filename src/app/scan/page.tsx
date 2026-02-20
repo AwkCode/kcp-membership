@@ -197,7 +197,7 @@ export default function ScanPage() {
                 <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-2 border-r-2 border-white rounded-br-lg" />
               </div>
               <div className="absolute bottom-4 left-0 right-0 text-center">
-                <span className="bg-black/60 text-white/80 px-4 py-1.5 rounded-full text-xs backdrop-blur-sm">
+                <span className="bg-black/60 text-white/80 px-4 py-1.5 rounded-full text-xs">
                   Scanning...
                 </span>
               </div>
@@ -217,7 +217,7 @@ export default function ScanPage() {
 
         {member && (
           <div className="mt-4">
-            <div className="bg-white/[0.06] backdrop-blur-xl rounded-2xl border border-white/[0.06] overflow-hidden">
+            <div className="bg-white/[0.06] rounded-2xl border border-white/[0.06] overflow-hidden">
               {/* Status banner — large and clear */}
               <div className={`px-6 py-8 text-center ${
                 isValid

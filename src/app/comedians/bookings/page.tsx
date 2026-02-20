@@ -85,14 +85,14 @@ export default function ComedianBookingsPage() {
         {loading ? (
           <p className="text-white/30 text-center py-8 text-sm">Loading...</p>
         ) : requests.length === 0 ? (
-          <div className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-8 text-center">
+          <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-8 text-center">
             <p className="text-white/40 text-sm">No spot requests yet.</p>
             <p className="text-white/20 text-xs mt-1">Browse upcoming shows to request a spot.</p>
           </div>
         ) : (
           <div className="space-y-3">
             {requests.map((req) => (
-              <div key={req.id} className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.06] rounded-xl p-4">
+              <div key={req.id} className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4">
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-medium text-white text-sm">{req.shows.show_name}</h3>

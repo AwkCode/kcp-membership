@@ -90,7 +90,7 @@ export default function DoorPage() {
           {results.map((m) => (
             <div
               key={m.id}
-              className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.06] rounded-xl p-4 flex items-center justify-between"
+              className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4 flex items-center justify-between"
             >
               <div>
                 <p className="font-medium text-white text-sm">

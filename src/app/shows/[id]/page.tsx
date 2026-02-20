@@ -157,7 +157,7 @@ export default function ShowDetailPage() {
         ) : (
           <>
             {/* Show Info */}
-            <div className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6 mb-4">
+            <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6 mb-4">
               <h1 className="text-xl font-bold text-white mb-1">{show.show_name}</h1>
               <p className="text-white/50 text-sm">{formatDate(show.show_date)} at {formatTime(show.start_time)}</p>
               <p className="text-white/30 text-xs mt-1">{show.venue}</p>
@@ -184,7 +184,7 @@ export default function ShowDetailPage() {
 
             {/* My Request Status or Request Form */}
             {myRequest && myRequest.status !== "canceled" ? (
-              <div className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6 mb-4">
+              <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6 mb-4">
                 <h2 className="text-sm font-medium text-white mb-3">Your Request</h2>
                 <div className="flex items-center gap-2 mb-2">
                   <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium border ${requestStatusColors[myRequest.status]}`}>
@@ -210,7 +210,7 @@ export default function ShowDetailPage() {
                 )}
               </div>
             ) : show.status !== "canceled" && show.status !== "closed" ? (
-              <div className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6 mb-4">
+              <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6 mb-4">
                 <h2 className="text-sm font-medium text-white mb-3">Request a Spot</h2>
 
                 <div className="space-y-3">
@@ -252,7 +252,7 @@ export default function ShowDetailPage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6 mb-4 text-center">
+              <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6 mb-4 text-center">
                 <p className="text-white/40 text-sm">
                   {show.status === "canceled" ? "This show has been canceled." : "This show is no longer accepting requests."}
                 </p>
@@ -261,7 +261,7 @@ export default function ShowDetailPage() {
 
             {/* Confirmed Lineup */}
             {lineup.length > 0 && (
-              <div className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6">
+              <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6">
                 <h2 className="text-sm font-medium text-white mb-3">Lineup</h2>
                 <div className="space-y-2">
                   {lineup.map((entry, i) => (

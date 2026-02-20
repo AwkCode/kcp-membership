@@ -78,7 +78,7 @@ export default function PerksPage() {
             {perks.map((perk, i) => (
               <div
                 key={i}
-                className="bg-white/[0.06] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06] flex items-start gap-4"
+                className="bg-white/[0.06] rounded-2xl p-5 border border-white/[0.06] flex items-start gap-4"
               >
                 <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white/70 shrink-0">
                   {perk.icon}
@@ -92,7 +92,7 @@ export default function PerksPage() {
           </div>
 
           <div className="mt-14 text-center">
-            <div className="bg-white/[0.06] backdrop-blur-xl rounded-2xl p-10 border border-white/[0.06]">
+            <div className="bg-white/[0.06] rounded-2xl p-10 border border-white/[0.06]">
               <h2 className="text-2xl font-bold text-white mb-2">Ready to join?</h2>
               <p className="text-white/40 mb-6 text-sm">
                 Free membership. Instant access. Takes 30 seconds.

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function StaffHeader() {
   return (
-    <header className="w-full sticky top-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/10">
+    <header className="w-full sticky top-0 z-50 bg-black border-b border-white/[0.08]">
       <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <Image
