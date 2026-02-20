@@ -20,7 +20,10 @@ export default function StaffHeader() {
             Staff
           </span>
         </Link>
-        <nav className="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-medium text-white/50">
+        <nav className="flex items-center gap-2 sm:gap-5 text-xs sm:text-sm font-medium text-white/50">
+          <Link href="/admin/dashboard" className="hover:text-white transition">
+            Home
+          </Link>
           <Link href="/scan" className="hover:text-white transition">
             Scan
           </Link>
