@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
 
-// POST: Comedian requests a spot on a show
+// POST: Artist requests a spot on a show
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer();
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!comedian) {
-      return NextResponse.json({ error: "Comedian profile not found" }, { status: 404 });
+      return NextResponse.json({ error: "Artist profile not found" }, { status: 404 });
     }
 
     if (comedian.status !== "approved") {

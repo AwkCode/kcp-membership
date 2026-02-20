@@ -6,7 +6,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import PageShell from "@/components/PageShell";
 
-export default function ComedianJoinPage() {
+export default function ArtistJoinPage() {
   const [form, setForm] = useState({
     display_name: "",
     email: "",
@@ -27,7 +27,7 @@ export default function ComedianJoinPage() {
     setErrorMsg("");
 
     try {
-      const res = await fetch("/api/comedians/signup", {
+      const res = await fetch("/api/artists/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -62,11 +62,11 @@ export default function ComedianJoinPage() {
             <h1 className="text-2xl font-bold text-white mb-2">Account Created!</h1>
             <p className="text-white/50 text-sm mb-6">
               {existingAccount
-                ? "Your comedian profile has been created and linked to your existing account. Log in with your existing password."
+                ? "Your artist profile has been created and linked to your existing account. Log in with your existing password."
                 : "Your profile is pending approval. We'll review it shortly. Once approved, you can browse shows and request spots."}
             </p>
             <Link
-              href="/comedians/login"
+              href="/artists/login"
               className="inline-block px-6 py-3 bg-white text-black rounded-xl font-semibold hover:bg-white/90 transition text-sm"
             >
               Go to Login
@@ -85,7 +85,7 @@ export default function ComedianJoinPage() {
           <div className="bg-white/[0.06] rounded-2xl border border-white/[0.06] p-8">
             <div className="text-center mb-6">
               <Image src="/kc-logo-v3.png" alt="Kings Court" width={64} height={64} className="mx-auto mb-3 rounded" />
-              <h1 className="text-2xl font-bold text-white">Comedian Sign Up</h1>
+              <h1 className="text-2xl font-bold text-white">Artist Sign Up</h1>
               <p className="text-white/40 text-sm mt-1">Create your profile to request spots</p>
             </div>
 
@@ -177,7 +177,7 @@ export default function ComedianJoinPage() {
                   onChange={(e) => setForm({ ...form, bio: e.target.value })}
                   className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white placeholder-white/20 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm"
                   rows={3}
-                  placeholder="Quick intro about your comedy style..."
+                  placeholder="Quick intro about your style..."
                 />
               </div>
 
@@ -195,7 +195,7 @@ export default function ComedianJoinPage() {
 
               <p className="text-white/30 text-xs text-center">
                 Already have an account?{" "}
-                <Link href="/comedians/login" className="text-white/60 underline">
+                <Link href="/artists/login" className="text-white/60 underline">
                   Sign in
                 </Link>
               </p>

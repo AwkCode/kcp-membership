@@ -9,7 +9,7 @@ import { createSupabaseBrowser } from "@/lib/supabase/client";
 
 interface UserInfo {
   displayName: string;
-  isComedian: boolean;
+  isArtist: boolean;
   isStaff: boolean;
 }
 
@@ -28,8 +28,8 @@ export default function Home() {
           return;
         }
 
-        // Check if they have a comedian profile
-        const { data: comedian } = await supabase
+        // Check if they have an artist profile
+        const { data: artist } = await supabase
           .from("comedians")
           .select("display_name")
           .eq("auth_id", authUser.id)
@@ -39,8 +39,8 @@ export default function Home() {
         const role = authUser.user_metadata?.role;
 
         setUser({
-          displayName: comedian?.display_name || authUser.email?.split("@")[0] || "there",
-          isComedian: !!comedian,
+          displayName: artist?.display_name || authUser.email?.split("@")[0] || "there",
+          isArtist: !!artist,
           isStaff: role === "staff" || role === "admin",
         });
       } catch {
@@ -99,7 +99,7 @@ export default function Home() {
                 </>
               )}
 
-              {user.isComedian && !user.isStaff && (
+              {user.isArtist && !user.isStaff && (
                 <>
                   <Link
                     href="/shows"
@@ -108,13 +108,13 @@ export default function Home() {
                     Browse Shows
                   </Link>
                   <Link
-                    href="/comedians/bookings"
+                    href="/artists/bookings"
                     className="px-8 py-3.5 bg-white/10 text-white border border-white/20 rounded-lg font-semibold hover:bg-white/20 transition text-center text-sm"
                   >
                     My Spots
                   </Link>
                   <Link
-                    href="/comedians/profile"
+                    href="/artists/profile"
                     className="px-8 py-3.5 bg-white/10 text-white border border-white/20 rounded-lg font-semibold hover:bg-white/20 transition text-center text-sm"
                   >
                     My Profile
@@ -122,7 +122,7 @@ export default function Home() {
                 </>
               )}
 
-              {!user.isComedian && !user.isStaff && (
+              {!user.isArtist && !user.isStaff && (
                 <Link
                   href="/join"
                   className="px-8 py-3.5 bg-white text-black rounded-lg font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
@@ -137,22 +137,22 @@ export default function Home() {
               <Link href="/perks" className="text-white/30 text-xs hover:text-white/60 transition">
                 Perks
               </Link>
-              {user.isStaff && user.isComedian && (
+              {user.isStaff && user.isArtist && (
                 <>
                   <Link href="/shows" className="text-white/30 text-xs hover:text-white/60 transition">
                     Browse Shows
                   </Link>
-                  <Link href="/comedians/bookings" className="text-white/30 text-xs hover:text-white/60 transition">
+                  <Link href="/artists/bookings" className="text-white/30 text-xs hover:text-white/60 transition">
                     My Spots
                   </Link>
                 </>
               )}
-              {!user.isComedian && (
-                <Link href="/comedians/join" className="text-white/30 text-xs hover:text-white/60 transition">
-                  Comedian Sign Up
+              {!user.isArtist && (
+                <Link href="/artists/join" className="text-white/30 text-xs hover:text-white/60 transition">
+                  Artist Sign Up
                 </Link>
               )}
-              {user.isComedian && !user.isStaff && (
+              {user.isArtist && !user.isStaff && (
                 <Link href="/join" className="text-white/30 text-xs hover:text-white/60 transition">
                   Become a Member
                 </Link>
@@ -184,54 +184,8 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Comedian + Staff access — visible but subtle */}
-            <div className="mt-8 sm:mt-10 mb-16 sm:mb-24 flex flex-col items-center gap-3">
-              <div className="flex items-center gap-3">
-                <span className="text-white/25 text-xs tracking-wide uppercase">Comedians</span>
-                <div className="w-px h-3 bg-white/15" />
-                <div className="flex gap-2">
-                  <Link
-                    href="/comedians/login"
-                    className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href="/comedians/join"
-                    className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-white/25 text-xs tracking-wide uppercase">Staff</span>
-                <div className="w-px h-3 bg-white/15" />
-                <div className="flex gap-2">
-                  <Link
-                    href="/scan"
-                    className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
-                  >
-                    Scanner
-                  </Link>
-                  <Link
-                    href="/door"
-                    className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
-                  >
-                    Door
-                  </Link>
-                  <Link
-                    href="/admin"
-                    className="px-4 py-1.5 text-white/40 text-xs font-medium hover:text-white/70 transition"
-                  >
-                    Admin
-                  </Link>
-                </div>
-              </div>
-            </div>
-
             {/* Feature cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl w-full px-4 sm:px-0">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl w-full px-4 sm:px-0 mt-16 sm:mt-24">
               <div className="bg-white/[0.05] rounded-2xl p-5 sm:p-6 border border-white/[0.06] text-center">
                 <div className="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 mx-auto">
                   <svg className="w-5 h-5 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -249,7 +203,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="font-medium text-white mb-1.5 text-sm">Show Booking</h3>
-                <p className="text-white/40 text-xs leading-relaxed">Comics request spots. Staff approve lineups. No more DMs.</p>
+                <p className="text-white/40 text-xs leading-relaxed">Artists request spots. Staff approve lineups. No more DMs.</p>
               </div>
 
               <div className="bg-white/[0.05] rounded-2xl p-5 sm:p-6 border border-white/[0.06] text-center">

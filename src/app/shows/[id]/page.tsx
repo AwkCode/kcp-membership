@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
-import ComedianHeader from "@/components/ComedianHeader";
+import ArtistHeader from "@/components/ArtistHeader";
 import PageShell from "@/components/PageShell";
 
 interface Show {
@@ -148,7 +148,7 @@ export default function ShowDetailPage() {
 
   return (
     <PageShell>
-      <ComedianHeader />
+      <ArtistHeader />
       <div className="max-w-2xl mx-auto p-4 sm:p-6">
         {loading ? (
           <p className="text-white/30 text-center py-8 text-sm">Loading...</p>

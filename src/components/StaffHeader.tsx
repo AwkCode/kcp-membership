@@ -36,8 +36,8 @@ export default function StaffHeader() {
           <Link href="/admin/shows" className="hover:text-white transition">
             Shows
           </Link>
-          <Link href="/admin/comedians" className="hover:text-white transition">
-            Comics
+          <Link href="/admin/artists" className="hover:text-white transition">
+            Artists
           </Link>
         </nav>
       </div>

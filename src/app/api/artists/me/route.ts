@@ -8,19 +8,19 @@ export async function GET() {
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const admin = createSupabaseAdmin();
-    const { data: comedian } = await admin
+    const { data: artist } = await admin
       .from("comedians")
       .select("*")
       .eq("auth_id", user.id)
       .single();
 
-    if (!comedian) {
+    if (!artist) {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ comedian });
+    return NextResponse.json({ artist });
   } catch (err) {
-    console.error("Get comedian profile error:", err);
+    console.error("Get artist profile error:", err);
     return NextResponse.json({ error: "Failed to load profile" }, { status: 500 });
   }
 }
@@ -33,14 +33,14 @@ export async function PATCH(request: NextRequest) {
 
     const admin = createSupabaseAdmin();
 
-    // Get comedian ID
-    const { data: comedian } = await admin
+    // Get artist ID
+    const { data: artist } = await admin
       .from("comedians")
       .select("id")
       .eq("auth_id", user.id)
       .single();
 
-    if (!comedian) {
+    if (!artist) {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
@@ -64,15 +64,15 @@ export async function PATCH(request: NextRequest) {
     const { data, error } = await admin
       .from("comedians")
       .update(updates)
-      .eq("id", comedian.id)
+      .eq("id", artist.id)
       .select()
       .single();
 
     if (error) throw error;
 
-    return NextResponse.json({ comedian: data });
+    return NextResponse.json({ artist: data });
   } catch (err) {
-    console.error("Update comedian profile error:", err);
+    console.error("Update artist profile error:", err);
     return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }
 }

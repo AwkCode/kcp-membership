@@ -18,7 +18,7 @@ export async function requireStaff() {
   return user;
 }
 
-export async function requireComedian() {
+export async function requireArtist() {
   const supabase = await createSupabaseServer();
   const {
     data: { user },
@@ -28,19 +28,19 @@ export async function requireComedian() {
     throw new Error("Unauthorized");
   }
 
-  // Look up comedian profile linked to this auth user
+  // Look up artist profile linked to this auth user
   const admin = createSupabaseAdmin();
-  const { data: comedian } = await admin
+  const { data: artist } = await admin
     .from("comedians")
     .select("*")
     .eq("auth_id", user.id)
     .single();
 
-  if (!comedian) {
-    throw new Error("Comedian profile not found");
+  if (!artist) {
+    throw new Error("Artist profile not found");
   }
 
-  return { user, comedian };
+  return { user, artist };
 }
 
 export async function getAuthUser() {

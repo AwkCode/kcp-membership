@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import ComedianHeader from "@/components/ComedianHeader";
+import ArtistHeader from "@/components/ArtistHeader";
 import PageShell from "@/components/PageShell";
 import { createSupabaseBrowser } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
-interface ComedianProfile {
+interface ArtistProfile {
   id: string;
   display_name: string;
   legal_name: string | null;
@@ -22,21 +22,21 @@ interface ComedianProfile {
   created_at: string;
 }
 
-export default function ComedianProfilePage() {
-  const [comedian, setComedian] = useState<ComedianProfile | null>(null);
+export default function ArtistProfilePage() {
+  const [artist, setArtist] = useState<ArtistProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState<Partial<ComedianProfile>>({});
+  const [form, setForm] = useState<Partial<ArtistProfile>>({});
   const [videoInput, setVideoInput] = useState("");
   const router = useRouter();
 
   const fetchProfile = useCallback(async () => {
     try {
-      const res = await fetch("/api/comedians/me");
+      const res = await fetch("/api/artists/me");
       if (!res.ok) throw new Error();
       const data = await res.json();
-      setComedian(data.comedian);
+      setArtist(data.artist);
     } catch {
       // ignore
     } finally {
@@ -49,17 +49,17 @@ export default function ComedianProfilePage() {
   }, [fetchProfile]);
 
   function startEdit() {
-    if (!comedian) return;
+    if (!artist) return;
     setForm({
-      display_name: comedian.display_name,
-      legal_name: comedian.legal_name || "",
-      phone: comedian.phone || "",
-      city: comedian.city || "",
-      state: comedian.state || "",
-      bio: comedian.bio || "",
-      instagram: comedian.instagram || "",
-      video_links: comedian.video_links || [],
-      tags: comedian.tags || [],
+      display_name: artist.display_name,
+      legal_name: artist.legal_name || "",
+      phone: artist.phone || "",
+      city: artist.city || "",
+      state: artist.state || "",
+      bio: artist.bio || "",
+      instagram: artist.instagram || "",
+      video_links: artist.video_links || [],
+      tags: artist.tags || [],
     });
     setEditing(true);
   }
@@ -67,7 +67,7 @@ export default function ComedianProfilePage() {
   async function saveProfile() {
     setSaving(true);
     try {
-      const res = await fetch("/api/comedians/me", {
+      const res = await fetch("/api/artists/me", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -98,7 +98,7 @@ export default function ComedianProfilePage() {
   async function handleLogout() {
     const supabase = createSupabaseBrowser();
     await supabase.auth.signOut();
-    router.push("/comedians/login");
+    router.push("/artists/login");
   }
 
   const statusColors: Record<string, string> = {
@@ -109,11 +109,11 @@ export default function ComedianProfilePage() {
 
   return (
     <PageShell>
-      <ComedianHeader />
+      <ArtistHeader />
       <div className="max-w-2xl mx-auto p-4 sm:p-6">
         {loading ? (
           <p className="text-white/30 text-center py-8 text-sm">Loading...</p>
-        ) : !comedian ? (
+        ) : !artist ? (
           <p className="text-white/30 text-center py-8 text-sm">Profile not found</p>
         ) : editing ? (
           <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6 space-y-4">
@@ -237,16 +237,16 @@ export default function ComedianProfilePage() {
           <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6">
             <div className="flex items-start justify-between mb-6">
               <div>
-                <h1 className="text-xl font-bold text-white">{comedian.display_name}</h1>
-                {comedian.legal_name && (
-                  <p className="text-white/30 text-xs">{comedian.legal_name}</p>
+                <h1 className="text-xl font-bold text-white">{artist.display_name}</h1>
+                {artist.legal_name && (
+                  <p className="text-white/30 text-xs">{artist.legal_name}</p>
                 )}
                 <div className="flex items-center gap-2 mt-2">
-                  <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-medium border ${statusColors[comedian.status] || "bg-white/10 text-white/60 border-white/10"}`}>
-                    {comedian.status}
+                  <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-medium border ${statusColors[artist.status] || "bg-white/10 text-white/60 border-white/10"}`}>
+                    {artist.status}
                   </span>
-                  {comedian.city && comedian.state && (
-                    <span className="text-white/30 text-xs">{comedian.city}, {comedian.state}</span>
+                  {artist.city && artist.state && (
+                    <span className="text-white/30 text-xs">{artist.city}, {artist.state}</span>
                   )}
                 </div>
               </div>
@@ -261,30 +261,30 @@ export default function ComedianProfilePage() {
             <div className="space-y-4">
               <div>
                 <p className="text-white/40 text-xs uppercase tracking-wide mb-1">Email</p>
-                <p className="text-white text-sm">{comedian.email}</p>
+                <p className="text-white text-sm">{artist.email}</p>
               </div>
-              {comedian.phone && (
+              {artist.phone && (
                 <div>
                   <p className="text-white/40 text-xs uppercase tracking-wide mb-1">Phone</p>
-                  <p className="text-white text-sm">{comedian.phone}</p>
+                  <p className="text-white text-sm">{artist.phone}</p>
                 </div>
               )}
-              {comedian.instagram && (
+              {artist.instagram && (
                 <div>
                   <p className="text-white/40 text-xs uppercase tracking-wide mb-1">Instagram</p>
-                  <p className="text-white text-sm">{comedian.instagram}</p>
+                  <p className="text-white text-sm">{artist.instagram}</p>
                 </div>
               )}
-              {comedian.bio && (
+              {artist.bio && (
                 <div>
                   <p className="text-white/40 text-xs uppercase tracking-wide mb-1">Bio</p>
-                  <p className="text-white/70 text-sm">{comedian.bio}</p>
+                  <p className="text-white/70 text-sm">{artist.bio}</p>
                 </div>
               )}
-              {comedian.video_links && comedian.video_links.length > 0 && (
+              {artist.video_links && artist.video_links.length > 0 && (
                 <div>
                   <p className="text-white/40 text-xs uppercase tracking-wide mb-1">Videos</p>
-                  {comedian.video_links.map((link, i) => (
+                  {artist.video_links.map((link, i) => (
                     <a key={i} href={link} target="_blank" rel="noopener noreferrer"
                       className="block text-blue-400 text-sm underline truncate hover:text-blue-300">
                       {link}
@@ -294,7 +294,7 @@ export default function ComedianProfilePage() {
               )}
               <div>
                 <p className="text-white/40 text-xs uppercase tracking-wide mb-1">Member Since</p>
-                <p className="text-white/50 text-sm">{new Date(comedian.created_at).toLocaleDateString()}</p>
+                <p className="text-white/50 text-sm">{new Date(artist.created_at).toLocaleDateString()}</p>
               </div>
             </div>
 

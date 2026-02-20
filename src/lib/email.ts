@@ -63,7 +63,7 @@ export async function sendMembershipEmail({
 
 interface SendBookingEmailParams {
   to: string;
-  comedianName: string;
+  artistName: string;
   showName: string;
   showDate: string;
   startTime: string;
@@ -72,7 +72,7 @@ interface SendBookingEmailParams {
 
 export async function sendBookingStatusEmail({
   to,
-  comedianName,
+  artistName,
   showName,
   showDate,
   startTime,
@@ -86,7 +86,7 @@ export async function sendBookingStatusEmail({
       heading: "You're In!",
       message: `Your spot has been approved for <strong>${showName}</strong> on <strong>${showDate}</strong> at <strong>${startTime}</strong>. Check your bookings for details.`,
       color: "#22c55e",
-      cta: { text: "View My Spots", url: `${baseUrl}/comedians/bookings` },
+      cta: { text: "View My Spots", url: `${baseUrl}/artists/bookings` },
     },
     rejected: {
       subject: `Booking update — ${showName}`,
@@ -100,7 +100,7 @@ export async function sendBookingStatusEmail({
       heading: "Waitlisted",
       message: `The lineup for <strong>${showName}</strong> on <strong>${showDate}</strong> is currently full. You're on the waitlist — we'll let you know if a spot opens up.`,
       color: "#eab308",
-      cta: { text: "View My Spots", url: `${baseUrl}/comedians/bookings` },
+      cta: { text: "View My Spots", url: `${baseUrl}/artists/bookings` },
     },
   };
 
@@ -115,7 +115,7 @@ export async function sendBookingStatusEmail({
         <h1 style="color: #1a1a2e; text-align: center;">Kings Court</h1>
         <h2 style="color: ${config.color}; text-align: center;">${config.heading}</h2>
         <p style="color: #555; text-align: center; font-size: 16px;">
-          Hey ${comedianName},
+          Hey ${artistName},
         </p>
         <p style="color: #555; text-align: center; font-size: 15px; line-height: 1.6;">
           ${config.message}

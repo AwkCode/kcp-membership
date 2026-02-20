@@ -5,7 +5,7 @@ import StaffHeader from "@/components/StaffHeader";
 import PageShell from "@/components/PageShell";
 import { createSupabaseBrowser } from "@/lib/supabase/client";
 
-interface Comedian {
+interface Artist {
   id: string;
   display_name: string;
   legal_name: string | null;
@@ -20,13 +20,13 @@ interface Comedian {
   created_at: string;
 }
 
-export default function AdminComediansPage() {
-  const [comedians, setComedians] = useState<Comedian[]>([]);
+export default function AdminArtistsPage() {
+  const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  const fetchComedians = useCallback(async () => {
+  const fetchArtists = useCallback(async () => {
     try {
       const supabase = createSupabaseBrowser();
       const { data, error } = await supabase
@@ -35,7 +35,7 @@ export default function AdminComediansPage() {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setComedians(data || []);
+      setArtists(data || []);
     } catch {
       // ignore
     } finally {
@@ -44,8 +44,8 @@ export default function AdminComediansPage() {
   }, []);
 
   useEffect(() => {
-    fetchComedians();
-  }, [fetchComedians]);
+    fetchArtists();
+  }, [fetchArtists]);
 
   async function updateStatus(id: string, status: string) {
     try {
@@ -56,13 +56,13 @@ export default function AdminComediansPage() {
         .eq("id", id);
 
       if (error) throw error;
-      fetchComedians();
+      fetchArtists();
     } catch {
       alert("Failed to update");
     }
   }
 
-  const filtered = comedians.filter((c) => {
+  const filtered = artists.filter((c) => {
     const matchesSearch = !filter ||
       c.display_name.toLowerCase().includes(filter.toLowerCase()) ||
       c.email.toLowerCase().includes(filter.toLowerCase());
@@ -76,7 +76,7 @@ export default function AdminComediansPage() {
     banned: "bg-red-500/10 text-red-400 border-red-500/20",
   };
 
-  const pendingCount = comedians.filter((c) => c.status === "pending").length;
+  const pendingCount = artists.filter((c) => c.status === "pending").length;
 
   return (
     <PageShell>
@@ -84,7 +84,7 @@ export default function AdminComediansPage() {
       <div className="max-w-4xl mx-auto p-4 sm:p-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-bold text-white">
-            Comedians
+            Artists
             {pendingCount > 0 && (
               <span className="ml-2 px-2 py-0.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 rounded-full text-xs font-medium">
                 {pendingCount} pending
@@ -96,7 +96,7 @@ export default function AdminComediansPage() {
         <div className="flex gap-3 mb-4">
           <input
             type="text"
-            placeholder="Search comedians..."
+            placeholder="Search artists..."
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             className="flex-1 px-4 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white placeholder-white/30 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm"
@@ -179,7 +179,7 @@ export default function AdminComediansPage() {
               </div>
             ))}
             {filtered.length === 0 && (
-              <p className="text-white/30 text-center py-8 text-sm">No comedians found</p>
+              <p className="text-white/30 text-center py-8 text-sm">No artists found</p>
             )}
           </div>
         )}

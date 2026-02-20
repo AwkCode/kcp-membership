@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import PageShell from "@/components/PageShell";
 
-function ComedianLoginForm() {
+function ArtistLoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -31,8 +31,10 @@ function ComedianLoginForm() {
       return;
     }
 
-    router.push(redirect);
     router.refresh();
+    // Small delay to let the session cookie propagate before navigating
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    router.push(redirect);
   }
 
   return (
@@ -42,7 +44,7 @@ function ComedianLoginForm() {
           <div className="text-center mb-6">
             <Image src="/kc-logo-v3.png" alt="Kings Court" width={80} height={80} className="mx-auto mb-3 rounded" />
             <h1 className="text-xl font-bold text-white">Kings Court Boston</h1>
-            <p className="text-white/40 text-sm">Comedian Login</p>
+            <p className="text-white/40 text-sm">Artist Login</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -86,7 +88,7 @@ function ComedianLoginForm() {
 
             <p className="text-white/30 text-xs text-center">
               Don&apos;t have an account?{" "}
-              <Link href="/comedians/join" className="text-white/60 underline">
+              <Link href="/artists/join" className="text-white/60 underline">
                 Sign up
               </Link>
             </p>
@@ -107,10 +109,10 @@ function ComedianLoginForm() {
   );
 }
 
-export default function ComedianLoginPage() {
+export default function ArtistLoginPage() {
   return (
     <Suspense>
-      <ComedianLoginForm />
+      <ArtistLoginForm />
     </Suspense>
   );
 }

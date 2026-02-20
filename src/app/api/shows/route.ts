@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
 import { requireStaff } from "@/lib/auth";
 
-// GET: List shows (authenticated users — staff or comedians)
+// GET: List shows (authenticated users — staff or artists)
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer();

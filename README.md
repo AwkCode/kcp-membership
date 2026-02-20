@@ -2,7 +2,7 @@
 
 A full-stack venue operations platform built for [Kings Court Boston](https://kingscourtboston.com), a comedy club in Boston, MA. Handles membership, comedian booking, and show lineup management in one system.
 
-**Live:** [kcp-membership.vercel.app](https://kcp-membership.vercel.app)
+**Live:** [member.kingscourtboston.com](https://member.kingscourtboston.com)
 
 ## What It Does
 

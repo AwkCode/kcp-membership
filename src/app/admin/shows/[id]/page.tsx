@@ -314,7 +314,7 @@ export default function AdminShowDetailPage() {
               <div className="space-y-2">
                 {lineup.length === 0 ? (
                   <p className="text-white/30 text-center py-6 text-sm">
-                    No one on the lineup yet. Approve requests to add comics.
+                    No one on the lineup yet. Approve requests to add artists.
                   </p>
                 ) : (
                   lineup.map((entry, idx) => (
@@ -345,7 +345,7 @@ export default function AdminShowDetailPage() {
                         {/* Slot number */}
                         <span className="text-white/20 text-sm font-mono w-6 text-center">{entry.slot_order}</span>
 
-                        {/* Comedian info */}
+                        {/* Artist info */}
                         <div className="flex-1">
                           <p className="text-white text-sm font-medium">{entry.comedians.display_name}</p>
                           <p className="text-white/30 text-xs">

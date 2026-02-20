@@ -10,7 +10,7 @@ export const config = {
     "/scan/:path*",
     "/door/:path*",
     "/admin/:path*",
-    "/comedians/profile/:path*",
-    "/comedians/bookings/:path*",
+    "/artists/profile/:path*",
+    "/artists/bookings/:path*",
   ],
 };

@@ -12,6 +12,8 @@ export default function JoinPage() {
     first_name: "",
     last_name: "",
     email: "",
+    password: "",
+    confirm_password: "",
     phone: "",
   });
   const [agreed, setAgreed] = useState(false);
@@ -23,11 +25,29 @@ export default function JoinPage() {
     setStatus("loading");
     setErrorMsg("");
 
+    if (form.password !== form.confirm_password) {
+      setErrorMsg("Passwords don't match");
+      setStatus("error");
+      return;
+    }
+
+    if (form.password.length < 6) {
+      setErrorMsg("Password must be at least 6 characters");
+      setStatus("error");
+      return;
+    }
+
     try {
       const res = await fetch("/api/join", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          first_name: form.first_name,
+          last_name: form.last_name,
+          email: form.email,
+          password: form.password,
+          phone: form.phone,
+        }),
       });
 
       if (!res.ok) {
@@ -117,6 +137,38 @@ export default function JoinPage() {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white placeholder-white/20 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-xs font-medium text-white/60 mb-1.5">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  required
+                  minLength={6}
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white placeholder-white/20 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm"
+                  placeholder="Min 6 characters"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="confirm_password" className="block text-xs font-medium text-white/60 mb-1.5">
+                  Confirm Password
+                </label>
+                <input
+                  id="confirm_password"
+                  type="password"
+                  required
+                  minLength={6}
+                  value={form.confirm_password}
+                  onChange={(e) => setForm({ ...form, confirm_password: e.target.value })}
+                  className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white placeholder-white/20 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm"
+                  placeholder="Re-enter password"
                 />
               </div>
 

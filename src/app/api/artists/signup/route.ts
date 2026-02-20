@@ -23,16 +23,16 @@ export async function POST(request: NextRequest) {
     const admin = createSupabaseAdmin();
     const normalizedEmail = email.trim().toLowerCase();
 
-    // Check if comedian profile with this email already exists
-    const { data: existingComedian } = await admin
+    // Check if artist profile with this email already exists
+    const { data: existingArtist } = await admin
       .from("comedians")
       .select("id")
       .eq("email", normalizedEmail)
       .single();
 
-    if (existingComedian) {
+    if (existingArtist) {
       return NextResponse.json(
-        { error: "A comedian account with this email already exists. Try logging in instead." },
+        { error: "An artist account with this email already exists. Try logging in instead." },
         { status: 409 }
       );
     }
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (existingAuth) {
-      // Auth user already exists — link comedian profile to existing account
+      // Auth user already exists — link artist profile to existing account
       authUserId = existingAuth.id;
     } else {
       // Create new Supabase Auth user
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
         email: normalizedEmail,
         password,
         email_confirm: true,
-        user_metadata: { role: "comedian" },
+        user_metadata: { role: "artist" },
       });
 
       if (authError) {
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       authUserId = authData.user.id;
     }
 
-    // Create comedian profile
+    // Create artist profile
     const { error: profileError } = await admin
       .from("comedians")
       .insert({
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, existingAccount: !!existingAuth });
   } catch (err) {
-    console.error("Comedian signup error:", err);
+    console.error("Artist signup error:", err);
     return NextResponse.json(
       { error: "Failed to create account" },
       { status: 500 }

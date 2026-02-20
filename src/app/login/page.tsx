@@ -31,8 +31,10 @@ function LoginForm() {
       return;
     }
 
-    router.push(redirect);
     router.refresh();
+    // Small delay to let the session cookie propagate before navigating
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    router.push(redirect);
   }
 
   return (

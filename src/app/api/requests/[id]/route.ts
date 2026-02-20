@@ -37,7 +37,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Request not found" }, { status: 404 });
     }
 
-    // Comedians can only cancel their own requests
+    // Artists can only cancel their own requests
     const isOwner = existing.comedians?.auth_id === user.id;
     if (isOwner && status !== "canceled") {
       return NextResponse.json({ error: "You can only cancel your own requests" }, { status: 403 });
@@ -107,7 +107,7 @@ export async function PATCH(
         });
         sendBookingStatusEmail({
           to: existing.comedians.email,
-          comedianName: existing.comedians.display_name || "there",
+          artistName: existing.comedians.display_name || "there",
           showName: show.show_name,
           showDate: formattedDate,
           startTime: show.start_time,
