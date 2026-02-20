@@ -92,6 +92,10 @@ function ComedianLoginForm() {
             </p>
 
             <p className="text-white/30 text-xs text-center">
+              <Link href="/forgot-password" className="text-white/60 underline">
+                Forgot password?
+              </Link>
+              {" · "}
               <Link href="/" className="text-white/60 underline">
                 Back to Home
               </Link>

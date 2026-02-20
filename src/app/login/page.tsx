@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createSupabaseBrowser } from "@/lib/supabase/client";
 import { Suspense } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import PageShell from "@/components/PageShell";
 
 function LoginForm() {
@@ -82,6 +83,18 @@ function LoginForm() {
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
+
+            <p className="text-white/30 text-xs text-center">
+              <Link href="/forgot-password" className="text-white/60 underline">
+                Forgot password?
+              </Link>
+            </p>
+
+            <p className="text-white/30 text-xs text-center">
+              <Link href="/" className="text-white/60 underline">
+                Back to Home
+              </Link>
+            </p>
           </form>
         </div>
       </main>

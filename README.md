@@ -24,6 +24,7 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 ### Show Booking & Lineup Management
 - Staff create shows with date, time, venue, capacity, and optional Eventbrite link
 - Booking request queue: approve, reject, or waitlist incoming requests
+- Email notifications to comedians on booking status changes (approved, rejected, waitlisted)
 - Auto-waitlist when show hits capacity, auto-add to lineup on approval
 - Lineup builder with reordering, role assignment (performer, host, feature, headliner), and set length controls
 - Show lifecycle management: scheduled, closed, canceled
@@ -55,8 +56,9 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 1. Comic signs up at `/comedians/join` (existing members can use the same email)
 2. Browses upcoming shows at `/shows`, picks one, hits **Request Spot**
 3. Staff sees the request in `/admin/shows/[id]` and approves, rejects, or waitlists
-4. On approval, the comic is auto-added to the lineup
-5. Staff reorders the lineup, assigns roles, sets time lengths
+4. Comedian receives an email notification with the decision (approved, rejected, or waitlisted)
+5. On approval, the comic is auto-added to the lineup
+6. Staff reorders the lineup, assigns roles, sets time lengths
 
 ## Routes
 
