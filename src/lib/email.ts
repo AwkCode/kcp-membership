@@ -60,3 +60,77 @@ export async function sendMembershipEmail({
 
   await sgMail.send(msg);
 }
+
+interface SendBookingEmailParams {
+  to: string;
+  comedianName: string;
+  showName: string;
+  showDate: string;
+  startTime: string;
+  status: "approved" | "rejected" | "waitlisted";
+}
+
+export async function sendBookingStatusEmail({
+  to,
+  comedianName,
+  showName,
+  showDate,
+  startTime,
+  status,
+}: SendBookingEmailParams) {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+  const statusConfig = {
+    approved: {
+      subject: `You're on the lineup — ${showName}`,
+      heading: "You're In!",
+      message: `Your spot has been approved for <strong>${showName}</strong> on <strong>${showDate}</strong> at <strong>${startTime}</strong>. Check your bookings for details.`,
+      color: "#22c55e",
+      cta: { text: "View My Spots", url: `${baseUrl}/comedians/bookings` },
+    },
+    rejected: {
+      subject: `Booking update — ${showName}`,
+      heading: "Not This Time",
+      message: `Your request for <strong>${showName}</strong> on <strong>${showDate}</strong> was not approved. Check back for upcoming shows.`,
+      color: "#ef4444",
+      cta: { text: "Browse Shows", url: `${baseUrl}/shows` },
+    },
+    waitlisted: {
+      subject: `You're on the waitlist — ${showName}`,
+      heading: "Waitlisted",
+      message: `The lineup for <strong>${showName}</strong> on <strong>${showDate}</strong> is currently full. You're on the waitlist — we'll let you know if a spot opens up.`,
+      color: "#eab308",
+      cta: { text: "View My Spots", url: `${baseUrl}/comedians/bookings` },
+    },
+  };
+
+  const config = statusConfig[status];
+
+  const msg = {
+    to,
+    from: process.env.SENDGRID_FROM_EMAIL!,
+    subject: config.subject,
+    html: `
+      <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #1a1a2e; text-align: center;">Kings Court</h1>
+        <h2 style="color: ${config.color}; text-align: center;">${config.heading}</h2>
+        <p style="color: #555; text-align: center; font-size: 16px;">
+          Hey ${comedianName},
+        </p>
+        <p style="color: #555; text-align: center; font-size: 15px; line-height: 1.6;">
+          ${config.message}
+        </p>
+        <p style="text-align: center; margin-top: 24px;">
+          <a href="${config.cta.url}" style="display: inline-block; padding: 12px 24px; background: #1a1a2e; color: #fff; text-decoration: none; border-radius: 6px;">
+            ${config.cta.text}
+          </a>
+        </p>
+        <p style="color: #999; font-size: 12px; text-align: center; margin-top: 32px;">
+          Kings Court Boston — kingscourtboston.com
+        </p>
+      </div>
+    `,
+  };
+
+  await sgMail.send(msg);
+}

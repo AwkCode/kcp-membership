@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
+import { sendBookingStatusEmail } from "@/lib/email";
 
 // PATCH: Update request status (staff approve/reject/waitlist, comedian cancel)
 export async function PATCH(
@@ -25,10 +26,10 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    // Get the existing request
+    // Get the existing request with comedian + show details
     const { data: existing } = await admin
       .from("booking_requests")
-      .select("*, comedians:comedian_id(auth_id)")
+      .select("*, comedians:comedian_id(auth_id, email, display_name), shows:show_id(show_name, show_date, start_time)")
       .eq("id", id)
       .single();
 
@@ -85,6 +86,26 @@ export async function PATCH(
         .delete()
         .eq("show_id", existing.show_id)
         .eq("comedian_id", existing.comedian_id);
+    }
+
+    // Send booking status email (approved/rejected/waitlisted only, not canceled)
+    if (["approved", "rejected", "waitlisted"].includes(status) && existing.comedians?.email) {
+      const show = existing.shows as { show_name: string; show_date: string; start_time: string } | null;
+      if (show) {
+        const formattedDate = new Date(show.show_date + "T00:00:00").toLocaleDateString("en-US", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+        });
+        sendBookingStatusEmail({
+          to: existing.comedians.email,
+          comedianName: existing.comedians.display_name || "there",
+          showName: show.show_name,
+          showDate: formattedDate,
+          startTime: show.start_time,
+          status: status as "approved" | "rejected" | "waitlisted",
+        }).catch((err) => console.error("Booking email failed:", err));
+      }
     }
 
     return NextResponse.json({ request: updated });
