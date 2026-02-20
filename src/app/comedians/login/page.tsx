@@ -90,6 +90,12 @@ function ComedianLoginForm() {
                 Sign up
               </Link>
             </p>
+
+            <p className="text-white/30 text-xs text-center">
+              <Link href="/" className="text-white/60 underline">
+                Back to Home
+              </Link>
+            </p>
           </form>
         </div>
       </main>
