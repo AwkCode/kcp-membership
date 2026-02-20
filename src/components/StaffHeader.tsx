@@ -13,7 +13,7 @@ export default function StaffHeader() {
             height={36}
             className="rounded"
           />
-          <span className="text-base font-semibold tracking-tight text-white">
+          <span className="hidden sm:inline text-base font-semibold tracking-tight text-white">
             Kings Court
           </span>
           <span className="text-[10px] bg-white/10 text-white/60 px-2 py-0.5 rounded-full border border-white/10">
