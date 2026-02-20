@@ -1,20 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
+import { createSupabaseAdmin } from "@/lib/supabase/server";
+import { requireStaff } from "@/lib/auth";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ token: string }> }
 ) {
   try {
-    // Verify staff auth
-    const supabase = await createSupabaseServer();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    await requireStaff();
 
     const { token } = await params;
     const admin = createSupabaseAdmin();
@@ -58,7 +51,9 @@ export async function GET(
       },
     });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Server error";
+    const status = message === "Unauthorized" || message === "Staff access required" ? 401 : 500;
     console.error("Scan error:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ error: message }, { status });
   }
 }

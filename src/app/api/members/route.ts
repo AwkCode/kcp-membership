@@ -1,16 +1,10 @@
 import { NextResponse } from "next/server";
-import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
+import { createSupabaseAdmin } from "@/lib/supabase/server";
+import { requireStaff } from "@/lib/auth";
 
 export async function GET() {
   try {
-    const supabase = await createSupabaseServer();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    await requireStaff();
 
     const admin = createSupabaseAdmin();
     const { data: members, error } = await admin
@@ -22,7 +16,9 @@ export async function GET() {
 
     return NextResponse.json({ members });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to load members";
+    const status = message === "Unauthorized" || message === "Staff access required" ? 401 : 500;
     console.error("Members list error:", err);
-    return NextResponse.json({ error: "Failed to load members" }, { status: 500 });
+    return NextResponse.json({ error: message }, { status });
   }
 }

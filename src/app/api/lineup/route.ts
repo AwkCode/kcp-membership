@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
+import { requireStaff } from "@/lib/auth";
 
-// GET: Get lineup for a show
+// GET: Get lineup for a show (authenticated users — staff or comedians)
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createSupabaseServer();
@@ -34,12 +35,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// PATCH: Update lineup (reorder, change roles, set lengths)
+// PATCH: Update lineup (staff only — reorder, change roles, set lengths)
 export async function PATCH(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    await requireStaff();
 
     const admin = createSupabaseAdmin();
     const body = await request.json();
@@ -68,17 +67,17 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to update lineup";
+    const status = message === "Unauthorized" || message === "Staff access required" ? 401 : 500;
     console.error("Update lineup error:", err);
-    return NextResponse.json({ error: "Failed to update lineup" }, { status: 500 });
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
-// DELETE: Remove from lineup
+// DELETE: Remove from lineup (staff only)
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    await requireStaff();
 
     const admin = createSupabaseAdmin();
     const url = new URL(request.url);
@@ -97,7 +96,9 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to remove from lineup";
+    const status = message === "Unauthorized" || message === "Staff access required" ? 401 : 500;
     console.error("Delete lineup entry error:", err);
-    return NextResponse.json({ error: "Failed to remove from lineup" }, { status: 500 });
+    return NextResponse.json({ error: message }, { status });
   }
 }

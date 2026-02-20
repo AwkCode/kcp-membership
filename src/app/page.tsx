@@ -76,7 +76,30 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col gap-3 w-full max-w-xs">
-              {user.isComedian && (
+              {user.isStaff && (
+                <>
+                  <Link
+                    href="/admin/dashboard"
+                    className="px-8 py-3.5 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/admin/shows"
+                    className="px-8 py-3.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full font-semibold hover:bg-white/20 transition text-center text-sm"
+                  >
+                    Manage Shows
+                  </Link>
+                  <Link
+                    href="/scan"
+                    className="px-8 py-3.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full font-semibold hover:bg-white/20 transition text-center text-sm"
+                  >
+                    Scanner
+                  </Link>
+                </>
+              )}
+
+              {user.isComedian && !user.isStaff && (
                 <>
                   <Link
                     href="/shows"
@@ -99,35 +122,6 @@ export default function Home() {
                 </>
               )}
 
-              {user.isStaff && (
-                <>
-                  <Link
-                    href="/admin/shows"
-                    className={`px-8 py-3.5 ${!user.isComedian ? 'bg-white text-black shadow-lg' : 'bg-white/10 text-white border border-white/20'} rounded-full font-semibold hover:bg-white/90 transition text-center text-sm`}
-                  >
-                    Manage Shows
-                  </Link>
-                  <Link
-                    href="/admin"
-                    className="px-8 py-3.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full font-semibold hover:bg-white/20 transition text-center text-sm"
-                  >
-                    Members
-                  </Link>
-                  <Link
-                    href="/admin/comedians"
-                    className="px-8 py-3.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full font-semibold hover:bg-white/20 transition text-center text-sm"
-                  >
-                    Comics
-                  </Link>
-                  <Link
-                    href="/scan"
-                    className="px-8 py-3.5 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-full font-semibold hover:bg-white/20 transition text-center text-sm"
-                  >
-                    Scanner
-                  </Link>
-                </>
-              )}
-
               {!user.isComedian && !user.isStaff && (
                 <Link
                   href="/join"
@@ -143,6 +137,16 @@ export default function Home() {
               <Link href="/perks" className="text-white/30 text-xs hover:text-white/60 transition">
                 Perks
               </Link>
+              {user.isStaff && user.isComedian && (
+                <>
+                  <Link href="/shows" className="text-white/30 text-xs hover:text-white/60 transition">
+                    Browse Shows
+                  </Link>
+                  <Link href="/comedians/bookings" className="text-white/30 text-xs hover:text-white/60 transition">
+                    My Spots
+                  </Link>
+                </>
+              )}
               {!user.isComedian && (
                 <Link href="/comedians/join" className="text-white/30 text-xs hover:text-white/60 transition">
                   Comedian Sign Up

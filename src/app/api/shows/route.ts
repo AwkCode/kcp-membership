@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
+import { requireStaff } from "@/lib/auth";
 
 // GET: List shows (authenticated users — staff or comedians)
 export async function GET(request: NextRequest) {
@@ -40,9 +41,7 @@ export async function GET(request: NextRequest) {
 // POST: Create show (staff only)
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const user = await requireStaff();
 
     const body = await request.json();
     const { show_name, show_date, start_time, venue, capacity_slots, notes, eventbrite_url } = body;
@@ -75,17 +74,17 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ show });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to create show";
+    const status = message === "Unauthorized" || message === "Staff access required" ? 401 : 500;
     console.error("Create show error:", err);
-    return NextResponse.json({ error: "Failed to create show" }, { status: 500 });
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
 // PATCH: Update show (staff only)
 export async function PATCH(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    await requireStaff();
 
     const body = await request.json();
     const { id, ...updates } = body;
@@ -106,7 +105,9 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json({ show });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to update show";
+    const status = message === "Unauthorized" || message === "Staff access required" ? 401 : 500;
     console.error("Update show error:", err);
-    return NextResponse.json({ error: "Failed to update show" }, { status: 500 });
+    return NextResponse.json({ error: message }, { status });
   }
 }

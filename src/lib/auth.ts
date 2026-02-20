@@ -10,6 +10,11 @@ export async function requireStaff() {
     throw new Error("Unauthorized");
   }
 
+  const role = user.user_metadata?.role;
+  if (role !== "staff" && role !== "admin") {
+    throw new Error("Staff access required");
+  }
+
   return user;
 }
 

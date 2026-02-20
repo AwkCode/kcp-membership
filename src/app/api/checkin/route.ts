@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseServer, createSupabaseAdmin } from "@/lib/supabase/server";
+import { createSupabaseAdmin } from "@/lib/supabase/server";
+import { requireStaff } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServer();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const user = await requireStaff();
 
     const { member_id, notes } = await request.json();
 
@@ -55,7 +49,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ checkin });
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to check in";
+    const status = message === "Unauthorized" || message === "Staff access required" ? 401 : 500;
     console.error("Checkin error:", err);
-    return NextResponse.json({ error: "Failed to check in" }, { status: 500 });
+    return NextResponse.json({ error: message }, { status });
   }
 }

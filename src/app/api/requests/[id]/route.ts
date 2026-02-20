@@ -43,6 +43,14 @@ export async function PATCH(
       return NextResponse.json({ error: "You can only cancel your own requests" }, { status: 403 });
     }
 
+    // Non-owners must be staff to change status (approve/reject/waitlist)
+    if (!isOwner) {
+      const role = user.user_metadata?.role;
+      if (role !== "staff" && role !== "admin") {
+        return NextResponse.json({ error: "Staff access required" }, { status: 401 });
+      }
+    }
+
     const updates: Record<string, unknown> = { status };
     if (["approved", "rejected", "waitlisted"].includes(status)) {
       updates.reviewed_by = user.id;
