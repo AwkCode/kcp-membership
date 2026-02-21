@@ -159,7 +159,7 @@ export default function DashboardPage() {
 
                     return (
                       <Link href={`/admin/shows/${show.id}`} key={show.id}>
-                        <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-5 hover:bg-white/[0.05] transition">
+                        <div className="bg-white/[0.04] border border-kc-purple/10 rounded-2xl p-5 hover:bg-white/[0.05] transition">
                           <div className="flex items-start justify-between">
                             <div>
                               <p className="font-semibold text-white">{show.show_name}</p>
@@ -192,18 +192,18 @@ export default function DashboardPage() {
             {/* Quick Stats */}
             <div className="grid grid-cols-3 gap-3 mb-6">
               <Link href="/admin">
-                <div className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4 text-center hover:bg-white/[0.05] transition">
+                <div className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-4 text-center hover:bg-white/[0.05] transition">
                   <p className="text-2xl font-bold text-white">{members.length}</p>
                   <p className="text-white/40 text-xs mt-1">Members</p>
                 </div>
               </Link>
               <Link href="/admin/shows">
-                <div className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4 text-center hover:bg-white/[0.05] transition">
+                <div className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-4 text-center hover:bg-white/[0.05] transition">
                   <p className="text-2xl font-bold text-white">{shows.length}</p>
                   <p className="text-white/40 text-xs mt-1">Upcoming</p>
                 </div>
               </Link>
-              <div className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4 text-center">
+              <div className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-4 text-center">
                 <p className="text-2xl font-bold text-white">{pendingRequests.length}</p>
                 <p className="text-white/40 text-xs mt-1">Pending</p>
               </div>
@@ -218,7 +218,7 @@ export default function DashboardPage() {
                 <div className="space-y-1.5">
                   {pendingRequests.slice(0, 5).map((req) => (
                     <Link href={`/admin/shows/${req.shows?.id}`} key={req.id}>
-                      <div className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-3 hover:bg-white/[0.05] transition">
+                      <div className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-3 hover:bg-white/[0.05] transition">
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-white text-sm">{req.comedians?.display_name}</p>
@@ -248,7 +248,7 @@ export default function DashboardPage() {
                   {recentMembers.map((m) => (
                     <div
                       key={m.id}
-                      className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-3"
+                      className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-3"
                     >
                       <div className="flex items-center justify-between">
                         <div>

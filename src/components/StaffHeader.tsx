@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function StaffHeader() {
   return (
-    <header className="w-full sticky top-0 z-50 bg-black border-b border-white/[0.08]">
+    <header className="w-full sticky top-0 z-50 header-glass border-b border-kc-purple/10">
       <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -16,7 +16,7 @@ export default function StaffHeader() {
           <span className="hidden sm:inline text-base font-semibold tracking-tight text-white">
             Kings Court
           </span>
-          <span className="text-[10px] bg-white/10 text-white/60 px-2 py-0.5 rounded-full border border-white/10">
+          <span className="text-[10px] bg-kc-purple/15 text-kc-purple-light px-2 py-0.5 rounded-full border border-kc-purple/25">
             Staff
           </span>
         </Link>

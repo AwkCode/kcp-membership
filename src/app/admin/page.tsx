@@ -113,7 +113,7 @@ export default function AdminPage() {
         ) : (
           <div className="space-y-2">
             {filtered.map((m) => (
-              <div key={m.id} className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4">
+              <div key={m.id} className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-4">
                 {editingId === m.id ? (
                   <div className="space-y-3">
                     <p className="font-medium text-white text-sm">

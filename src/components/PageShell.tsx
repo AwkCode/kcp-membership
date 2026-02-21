@@ -4,7 +4,7 @@ interface PageShellProps {
 
 export default function PageShell({ children }: PageShellProps) {
   return (
-    <div className="min-h-screen relative bg-black">
+    <div className="min-h-screen relative bg-kc-gradient">
       <div className="relative z-10">{children}</div>
     </div>
   );

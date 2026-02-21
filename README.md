@@ -1,21 +1,22 @@
 # Kings Court Boston — Venue Operations Platform
 
-A full-stack venue operations platform built for [Kings Court Boston](https://kingscourtboston.com), a comedy club in Boston, MA. Handles membership, comedian booking, and show lineup management in one system.
+A full-stack venue operations platform built for [Kings Court Boston](https://kingscourtboston.com), a live events venue in Boston, MA. Handles membership, artist booking, and show lineup management in one system.
 
 **Live:** [member.kingscourtboston.com](https://member.kingscourtboston.com)
 
 ## What It Does
 
 ### Membership System
-- Public signup with instant QR code delivery via email and SMS
+- Account-based signup with email + password (creates Supabase Auth account)
+- Instant QR code delivery via email and SMS
 - Digital member cards at unique URLs with self-cancel option
 - Staff QR scanner (camera-based, works on iPhone/Safari via jsQR)
 - Door check-in with manual search by name, email, or phone
 - Admin panel: member management, status control (active, VIP, staff, comp, suspended), CSV export
 - Visit tracking and check-in history
 
-### Comedian Portal
-- Comedian signup and login (shares auth with staff — same email can be both roles)
+### Artist Portal
+- Artist signup and login (shares auth with staff/members — same email can be multiple roles)
 - Profile management: display name, bio, Instagram, video links, tags
 - Browse upcoming shows with real-time spot availability
 - Self-serve spot requests with optional notes to the booker
@@ -24,11 +25,11 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 ### Show Booking & Lineup Management
 - Staff create shows with date, time, venue, capacity, and optional Eventbrite link
 - Booking request queue: approve, reject, or waitlist incoming requests
-- Email notifications to comedians on booking status changes (approved, rejected, waitlisted)
+- Email notifications to artists on booking status changes (approved, rejected, waitlisted)
 - Auto-waitlist when show hits capacity, auto-add to lineup on approval
 - Lineup builder with reordering, role assignment (performer, host, feature, headliner), and set length controls
 - Show lifecycle management: scheduled, closed, canceled
-- Comedian directory with search, filter, approve/ban
+- Artist directory with search, filter, approve/ban
 
 ## Tech Stack
 
@@ -46,18 +47,18 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 ## How It Works
 
 ### Members
-1. Visitor signs up at `/join`
+1. Visitor signs up at `/join` with email + password (creates an auth account)
 2. System creates their record, generates a secure token, emails a QR code + card link
 3. At the door, staff opens `/scan` on their phone and scans the QR
 4. System verifies member status and staff taps **Check In**
 5. Fallback: staff uses `/door` to search by name/email/phone
 
-### Comedians
-1. Comic signs up at `/comedians/join` (existing members can use the same email)
+### Artists
+1. Artist signs up at `/artists/join` (existing members can use the same email)
 2. Browses upcoming shows at `/shows`, picks one, hits **Request Spot**
 3. Staff sees the request in `/admin/shows/[id]` and approves, rejects, or waitlists
-4. Comedian receives an email notification with the decision (approved, rejected, or waitlisted)
-5. On approval, the comic is auto-added to the lineup
+4. Artist receives an email notification with the decision (approved, rejected, or waitlisted)
+5. On approval, the artist is auto-added to the lineup
 6. Staff reorders the lineup, assigns roles, sets time lengths
 
 ## Routes
@@ -71,7 +72,7 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 | `/perks` | Member benefits |
 | `/m/[token]` | Digital member card with QR code |
 | `/terms` | Terms of Service & Privacy Policy |
-| `/shows` | Upcoming shows (comedian view) |
+| `/shows` | Upcoming shows (artist view) |
 | `/shows/[id]` | Show detail + request spot |
 
 ### Staff (requires login)
@@ -83,20 +84,20 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 | `/admin` | Member management + CSV export |
 | `/admin/shows` | Create and manage shows |
 | `/admin/shows/[id]` | Requests queue + lineup builder |
-| `/admin/comedians` | Comedian directory + approve/ban |
+| `/admin/artists` | Artist directory + approve/ban |
 
-### Comedian (requires login)
+### Artist (requires login)
 
 | Route | Description |
 |---|---|
-| `/comedians/profile` | Edit profile |
-| `/comedians/bookings` | Track spot requests |
+| `/artists/profile` | Edit profile |
+| `/artists/bookings` | Track spot requests |
 
 ### API
 
 | Endpoint | Description |
 |---|---|
-| `POST /api/join` | Create member + send email/SMS |
+| `POST /api/join` | Create member + auth account + send email/SMS |
 | `GET /api/scan/m/[token]` | Look up member by token |
 | `POST /api/checkin` | Log a check-in |
 | `GET /api/members` | List all members |
@@ -104,8 +105,8 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 | `PATCH /api/members/[id]` | Update member |
 | `POST /api/members/[id]/rotate-token` | New membership token |
 | `GET /api/members/export` | CSV export |
-| `POST /api/comedians/signup` | Create comedian account |
-| `GET/PATCH /api/comedians/me` | Comedian profile |
+| `POST /api/artists/signup` | Create artist account |
+| `GET/PATCH /api/artists/me` | Artist profile |
 | `GET/POST/PATCH /api/shows` | Show CRUD |
 | `GET/POST /api/requests` | Booking requests |
 | `PATCH /api/requests/[id]` | Approve/reject/waitlist |
@@ -115,9 +116,9 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 
 7 tables with Row Level Security:
 
-- **members** — profiles, tokens, statuses, contact info
+- **members** — profiles, tokens, statuses, contact info, linked to auth accounts
 - **checkins** — check-in log with staff attribution
-- **comedians** — profiles linked to auth accounts
+- **comedians** — artist profiles linked to auth accounts (table name kept for compatibility)
 - **shows** — schedule, capacity, status, Eventbrite links
 - **booking_requests** — spot requests with approval workflow
 - **show_lineup** — confirmed lineup with ordering and roles
@@ -163,6 +164,7 @@ Run migrations in order in Supabase SQL Editor:
 2. `supabase/migrations/002_checkin_notes.sql`
 3. `supabase/migrations/003_comedian_portal.sql`
 4. `supabase/migrations/004_show_eventbrite_url.sql`
+5. `supabase/migrations/006_members_auth_id.sql`
 
 Create a staff user in Supabase Auth dashboard with `role: "staff"` in user metadata.
 

@@ -191,7 +191,7 @@ export default function AdminShowDetailPage() {
         ) : (
           <>
             {/* Show Header */}
-            <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6 mb-4">
+            <div className="bg-white/[0.04] border border-kc-purple/10 rounded-2xl p-6 mb-4">
               <h1 className="text-xl font-bold text-white">{show.show_name}</h1>
               <p className="text-white/50 text-sm mt-1">
                 {formatDate(show.show_date)} at {formatTime(show.start_time)} | {show.venue}
@@ -234,7 +234,7 @@ export default function AdminShowDetailPage() {
                   <>
                     <h3 className="text-white/40 text-xs uppercase tracking-wide mb-2">Pending</h3>
                     {pendingRequests.map((req) => (
-                      <div key={req.id} className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4">
+                      <div key={req.id} className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-4">
                         <div className="flex items-start justify-between">
                           <div>
                             <p className="font-medium text-white text-sm">{req.comedians.display_name}</p>
@@ -318,7 +318,7 @@ export default function AdminShowDetailPage() {
                   </p>
                 ) : (
                   lineup.map((entry, idx) => (
-                    <div key={entry.id} className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4">
+                    <div key={entry.id} className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-4">
                       <div className="flex items-center gap-3">
                         {/* Reorder buttons */}
                         <div className="flex flex-col gap-1">

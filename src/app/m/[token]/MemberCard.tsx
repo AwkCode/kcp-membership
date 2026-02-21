@@ -35,8 +35,8 @@ export default function MemberCard({ firstName, lastName, status: initialStatus,
   }
 
   return (
-    <div className="max-w-sm w-full bg-white/[0.06] rounded-2xl border border-white/[0.06] overflow-hidden">
-      <div className="px-6 py-5 text-center border-b border-white/[0.06]">
+    <div className="max-w-sm w-full bg-white/[0.04] rounded-2xl border border-kc-purple/15 overflow-hidden">
+      <div className="px-6 py-5 text-center border-b border-kc-purple/10">
         <Image src="/kc-logo-v3.png" alt="Kings Court" width={48} height={48} className="mx-auto mb-2 rounded" />
         <h1 className="text-lg font-semibold text-white">Kings Court Boston</h1>
         <p className="text-[10px] text-white/40 uppercase tracking-widest mt-0.5">Member Card</p>

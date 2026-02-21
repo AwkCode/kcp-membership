@@ -124,7 +124,7 @@ export default function AdminShowsPage() {
         </div>
 
         {creating && (
-          <form onSubmit={createShow} className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6 mb-6 space-y-4">
+          <form onSubmit={createShow} className="bg-white/[0.04] border border-kc-purple/10 rounded-2xl p-6 mb-6 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-white/60 mb-1.5">Show Name *</label>
@@ -220,7 +220,7 @@ export default function AdminShowsPage() {
               const lineupCount = show.show_lineup?.[0]?.count || 0;
 
               return (
-                <div key={show.id} className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4">
+                <div key={show.id} className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-4">
                   <div className="flex items-start justify-between">
                     <div>
                       <Link href={`/admin/shows/${show.id}`} className="font-medium text-white text-sm hover:text-white/80 transition">

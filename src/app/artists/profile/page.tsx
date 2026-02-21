@@ -116,7 +116,7 @@ export default function ArtistProfilePage() {
         ) : !artist ? (
           <p className="text-white/30 text-center py-8 text-sm">Profile not found</p>
         ) : editing ? (
-          <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6 space-y-4">
+          <div className="bg-white/[0.04] border border-kc-purple/10 rounded-2xl p-6 space-y-4">
             <h2 className="text-lg font-bold text-white">Edit Profile</h2>
 
             <div>
@@ -234,7 +234,7 @@ export default function ArtistProfilePage() {
             </div>
           </div>
         ) : (
-          <div className="bg-white/[0.06] border border-white/[0.06] rounded-2xl p-6">
+          <div className="bg-white/[0.04] border border-kc-purple/10 rounded-2xl p-6">
             <div className="flex items-start justify-between mb-6">
               <div>
                 <h1 className="text-xl font-bold text-white">{artist.display_name}</h1>

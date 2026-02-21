@@ -1,1 +1,90 @@
 @import "tailwindcss";
+
+@theme {
+  --color-kc-purple: #7c3aed;
+  --color-kc-purple-light: #a78bfa;
+  --color-kc-purple-dark: #4c1d95;
+  --color-kc-purple-glow: rgba(124, 58, 237, 0.15);
+}
+
+/* Ambient background gradient */
+.bg-kc-gradient {
+  background: linear-gradient(
+    170deg,
+    #0c0015 0%,
+    #110022 15%,
+    #0a0a0a 50%,
+    #000000 100%
+  );
+}
+
+/* Subtle floating purple orb glow */
+.bg-kc-gradient::before {
+  content: "";
+  position: fixed;
+  top: -20%;
+  left: -10%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-kc-gradient::after {
+  content: "";
+  position: fixed;
+  bottom: -30%;
+  right: -15%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header glass effect */
+.header-glass {
+  background: linear-gradient(
+    180deg,
+    rgba(124, 58, 237, 0.08) 0%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Purple glow button hover */
+.btn-glow:hover {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3), 0 0 60px rgba(124, 58, 237, 0.1);
+}
+
+/* Global purple focus ring on all inputs */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  ring: none;
+  border-color: rgba(124, 58, 237, 0.4) !important;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15), 0 0 12px rgba(124, 58, 237, 0.08) !important;
+}
+
+/* Primary button base — auto-applies glow to white buttons */
+button[type="submit"],
+button.btn-primary {
+  transition: all 0.2s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3), 0 0 60px rgba(124, 58, 237, 0.1);
+}
+
+/* Card purple border on hover */
+.card-kc {
+  border-color: rgba(124, 58, 237, 0.08);
+  transition: border-color 0.2s ease;
+}
+
+.card-kc:hover {
+  border-color: rgba(124, 58, 237, 0.18);
+}

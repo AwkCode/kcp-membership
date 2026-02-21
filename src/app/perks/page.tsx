@@ -78,9 +78,9 @@ export default function PerksPage() {
             {perks.map((perk, i) => (
               <div
                 key={i}
-                className="bg-white/[0.06] rounded-2xl p-5 border border-white/[0.06] flex items-start gap-4"
+                className="bg-white/[0.04] rounded-2xl p-5 border border-kc-purple/10 flex items-start gap-4 hover:border-kc-purple/20 hover:bg-kc-purple/[0.04] transition"
               >
-                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white/70 shrink-0">
+                <div className="w-10 h-10 bg-kc-purple/10 rounded-xl flex items-center justify-center text-kc-purple-light shrink-0">
                   {perk.icon}
                 </div>
                 <div>
@@ -92,14 +92,14 @@ export default function PerksPage() {
           </div>
 
           <div className="mt-14 text-center">
-            <div className="bg-white/[0.06] rounded-2xl p-10 border border-white/[0.06]">
+            <div className="bg-white/[0.04] rounded-2xl p-10 border border-kc-purple/10">
               <h2 className="text-2xl font-bold text-white mb-2">Ready to join?</h2>
               <p className="text-white/40 mb-6 text-sm">
                 Free membership. Instant access. Takes 30 seconds.
               </p>
               <Link
                 href="/join"
-                className="inline-block px-8 py-3 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-sm"
+                className="inline-block px-8 py-3 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-sm btn-glow"
               >
                 Become a Member
               </Link>

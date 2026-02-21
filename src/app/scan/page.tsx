@@ -217,7 +217,7 @@ export default function ScanPage() {
 
         {member && (
           <div className="mt-4">
-            <div className="bg-white/[0.06] rounded-2xl border border-white/[0.06] overflow-hidden">
+            <div className="bg-white/[0.04] rounded-2xl border border-kc-purple/10 overflow-hidden">
               {/* Status banner — large and clear */}
               <div className={`px-6 py-8 text-center ${
                 isValid

@@ -118,7 +118,7 @@ export default function AdminArtistsPage() {
         ) : (
           <div className="space-y-2">
             {filtered.map((c) => (
-              <div key={c.id} className="bg-white/[0.06] border border-white/[0.06] rounded-xl p-4">
+              <div key={c.id} className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-4">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="font-medium text-white text-sm">{c.display_name}</p>

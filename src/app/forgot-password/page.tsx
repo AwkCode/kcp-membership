@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
   return (
     <PageShell>
       <main className="min-h-screen flex flex-col items-center justify-center px-6">
-        <div className="max-w-sm w-full bg-white/[0.06] rounded-2xl border border-white/[0.06] p-8">
+        <div className="max-w-sm w-full bg-white/[0.04] rounded-2xl border border-kc-purple/10 p-8">
           <div className="text-center mb-6">
             <Image src="/kc-logo-v3.png" alt="Kings Court" width={80} height={80} className="mx-auto mb-3 rounded" />
             <h1 className="text-xl font-bold text-white">Reset Password</h1>
