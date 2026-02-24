@@ -9,7 +9,6 @@ const VALID_STATUSES = ["active", "vip", "staff", "comp"];
 
 type ScanStatus =
   | "scanning"      // Camera active, looking for QR
-  | "looking"       // Sees something but no QR detected yet
   | "found"         // Found a QR, checking if it's a KC code
   | "unrecognized"  // QR found but not a KC membership code
   | "verifying"     // KC code found, looking up member
@@ -38,155 +37,12 @@ export default function ScanPage() {
   const [checkingIn, setCheckingIn] = useState(false);
   const [checkinNotes, setCheckinNotes] = useState("");
   const [errorDetail, setErrorDetail] = useState("");
-  const scanningRef = useRef(true);
-  const lastScannedRef = useRef("");
-  const unrecognizedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const qrDetectedCountRef = useRef(0);
 
-  const startCamera = useCallback(async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
-      });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch {
-      setScanStatus("error");
-      setErrorDetail("Could not access camera. Make sure you allow camera access.");
-    }
-  }, []);
+  // Use a key to force remount the scanner when resetting
+  const [scanKey, setScanKey] = useState(0);
 
-  const stopCamera = useCallback(() => {
-    if (videoRef.current?.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream.getTracks().forEach((t) => t.stop());
-    }
-  }, []);
-
-  const lookupToken = useCallback(async (token: string) => {
-    if (token === lastScannedRef.current) return;
-    lastScannedRef.current = token;
-    setScanStatus("verifying");
-    setErrorDetail("");
-
-    try {
-      const res = await fetch(`/api/scan/m/${token}`);
-      if (!res.ok) {
-        const data = await res.json();
-        if (res.status === 404) {
-          setScanStatus("not-found");
-          setErrorDetail("This QR code doesn't match any member in the system.");
-        } else if (res.status === 401) {
-          setScanStatus("error");
-          setErrorDetail("Session expired. Please refresh and log in again.");
-        } else {
-          setScanStatus("error");
-          setErrorDetail(data.error || "Lookup failed");
-        }
-        // Allow re-scanning after showing the error
-        setTimeout(() => { lastScannedRef.current = ""; }, 3000);
-        return;
-      }
-      const data = await res.json();
-      setMember(data.member);
-      scanningRef.current = false;
-
-      if (VALID_STATUSES.includes(data.member.status)) {
-        setScanStatus("verified");
-      } else {
-        setScanStatus("invalid");
-      }
-    } catch {
-      setScanStatus("error");
-      setErrorDetail("Network error. Check your connection.");
-      lastScannedRef.current = "";
-    }
-  }, []);
-
-  useEffect(() => {
-    startCamera();
-
-    let animationId: number;
-    let frameCount = 0;
-    let noQrFrames = 0;
-
-    const scanFrame = () => {
-      if (!scanningRef.current || !videoRef.current || !canvasRef.current) {
-        animationId = requestAnimationFrame(scanFrame);
-        return;
-      }
-
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-
-      if (video.readyState !== video.HAVE_ENOUGH_DATA) {
-        animationId = requestAnimationFrame(scanFrame);
-        return;
-      }
-
-      // Scan every 3rd frame for performance
-      frameCount++;
-      if (frameCount % 3 !== 0) {
-        animationId = requestAnimationFrame(scanFrame);
-        return;
-      }
-
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(video, 0, 0);
-
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(imageData.data, imageData.width, imageData.height, {
-        inversionAttempts: "dontInvert",
-      });
-
-      if (code) {
-        noQrFrames = 0;
-        qrDetectedCountRef.current++;
-
-        const match = code.data.match(/\/scan\/m\/([A-Za-z0-9_-]+)/);
-        if (match) {
-          // It's a KC membership QR code
-          setScanStatus("found");
-          scanningRef.current = false;
-          lookupToken(match[1]);
-          return;
-        } else {
-          // It's a QR code but not a KC membership code
-          setScanStatus("unrecognized");
-          // Clear the unrecognized status after 3 seconds and go back to scanning
-          if (unrecognizedTimeoutRef.current) {
-            clearTimeout(unrecognizedTimeoutRef.current);
-          }
-          unrecognizedTimeoutRef.current = setTimeout(() => {
-            setScanStatus("scanning");
-            qrDetectedCountRef.current = 0;
-          }, 3000);
-        }
-      } else {
-        noQrFrames++;
-        // If we haven't seen a QR for a while, go back to scanning state
-        if (noQrFrames > 30) {
-          setScanStatus("scanning");
-          qrDetectedCountRef.current = 0;
-        }
-      }
-
-      animationId = requestAnimationFrame(scanFrame);
-    };
-
-    animationId = requestAnimationFrame(scanFrame);
-
-    return () => {
-      cancelAnimationFrame(animationId);
-      if (unrecognizedTimeoutRef.current) {
-        clearTimeout(unrecognizedTimeoutRef.current);
-      }
-      stopCamera();
-    };
-  }, [startCamera, stopCamera, lookupToken]);
+  const isValid = member && VALID_STATUSES.includes(member.status);
+  const showCamera = ["scanning", "found", "unrecognized", "verifying", "not-found", "error"].includes(scanStatus);
 
   async function handleCheckin() {
     if (!member) return;
@@ -217,14 +73,9 @@ export default function ScanPage() {
     setScanStatus("scanning");
     setErrorDetail("");
     setCheckinNotes("");
-    lastScannedRef.current = "";
-    qrDetectedCountRef.current = 0;
-    scanningRef.current = true;
-    startCamera();
+    // Bump scanKey to force the Scanner component to fully remount
+    setScanKey((k) => k + 1);
   }
-
-  const isValid = member && VALID_STATUSES.includes(member.status);
-  const showCamera = ["scanning", "looking", "found", "unrecognized", "verifying", "not-found", "error"].includes(scanStatus);
 
   const statusLabel: Record<string, string> = {
     active: "Verified Member",
@@ -236,13 +87,11 @@ export default function ScanPage() {
     cancelled: "Cancelled",
   };
 
-  // Status banner config for the strip below the camera
+  // Status banner config
   function getStatusBanner(): { text: string; color: string; pulse: boolean; icon: "scan" | "check" | "x" | "warn" | "loading" } | null {
     switch (scanStatus) {
       case "scanning":
         return { text: "Scanning...", color: "bg-white/10 text-white/60", pulse: true, icon: "scan" };
-      case "looking":
-        return { text: "Detecting...", color: "bg-white/10 text-white/60", pulse: true, icon: "scan" };
       case "found":
         return { text: "KC code found — verifying...", color: "bg-blue-500/15 text-blue-400", pulse: true, icon: "loading" };
       case "unrecognized":
@@ -266,78 +115,69 @@ export default function ScanPage() {
       <div className="max-w-lg mx-auto p-4">
 
         {showCamera && (
-          <>
-            <div className="relative rounded-2xl overflow-hidden bg-black aspect-[4/3]">
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 border border-white/10 rounded-2xl" />
-              {/* Scanning crosshair */}
-              <div className={`absolute inset-[15%] border-2 rounded-lg transition-colors duration-300 ${
-                scanStatus === "unrecognized" ? "border-amber-500/50" :
-                scanStatus === "not-found" || scanStatus === "error" ? "border-red-500/50" :
-                scanStatus === "found" || scanStatus === "verifying" ? "border-blue-500/50" :
-                "border-white/30"
-              }`}>
-                <div className="absolute -top-0.5 -left-0.5 w-6 h-6 border-t-2 border-l-2 border-inherit rounded-tl-lg" />
-                <div className="absolute -top-0.5 -right-0.5 w-6 h-6 border-t-2 border-r-2 border-inherit rounded-tr-lg" />
-                <div className="absolute -bottom-0.5 -left-0.5 w-6 h-6 border-b-2 border-l-2 border-inherit rounded-bl-lg" />
-                <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-2 border-r-2 border-inherit rounded-br-lg" />
-              </div>
-            </div>
-            <canvas ref={canvasRef} className="hidden" />
+          <Scanner
+            key={scanKey}
+            videoRef={videoRef}
+            canvasRef={canvasRef}
+            scanStatus={scanStatus}
+            onStatusChange={setScanStatus}
+            onMemberFound={(m) => {
+              setMember(m);
+              if (VALID_STATUSES.includes(m.status)) {
+                setScanStatus("verified");
+              } else {
+                setScanStatus("invalid");
+              }
+            }}
+            onError={(msg) => {
+              setErrorDetail(msg);
+            }}
+          />
+        )}
 
-            {/* Status banner below camera */}
-            {banner && (
-              <div className={`mt-3 px-4 py-3 rounded-xl flex items-center gap-3 text-sm font-medium ${banner.color}`}>
-                {/* Icon */}
-                {banner.icon === "scan" && (
-                  <div className={banner.pulse ? "animate-pulse" : ""}>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                    </svg>
-                  </div>
-                )}
-                {banner.icon === "loading" && (
-                  <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                )}
-                {banner.icon === "check" && (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
-                )}
-                {banner.icon === "x" && (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                )}
-                {banner.icon === "warn" && (
-                  <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                  </svg>
-                )}
-
-                <span>{banner.text}</span>
+        {/* Status banner below camera */}
+        {showCamera && banner && (
+          <div className={`mt-3 px-4 py-3 rounded-xl flex items-center gap-3 text-sm font-medium ${banner.color}`}>
+            {banner.icon === "scan" && (
+              <div className={banner.pulse ? "animate-pulse" : ""}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                </svg>
               </div>
             )}
-
-            {/* Tap to retry on error/not-found states */}
-            {(scanStatus === "not-found" || scanStatus === "error") && (
-              <button
-                onClick={resetScan}
-                className="mt-2 w-full py-2.5 text-white/40 text-sm hover:text-white/60 transition border border-white/10 rounded-xl"
-              >
-                Tap to scan again
-              </button>
+            {banner.icon === "loading" && (
+              <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
             )}
-          </>
+            {banner.icon === "check" && (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+            )}
+            {banner.icon === "x" && (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            )}
+            {banner.icon === "warn" && (
+              <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg>
+            )}
+            <span>{banner.text}</span>
+          </div>
+        )}
+
+        {/* Tap to retry on error/not-found states */}
+        {(scanStatus === "not-found" || scanStatus === "error") && (
+          <button
+            onClick={resetScan}
+            className="mt-2 w-full py-2.5 text-white/40 text-sm hover:text-white/60 transition border border-white/10 rounded-xl"
+          >
+            Tap to scan again
+          </button>
         )}
 
         {/* Member result card */}
@@ -346,16 +186,12 @@ export default function ScanPage() {
             <div className="bg-white/[0.04] rounded-2xl border border-kc-purple/10 overflow-hidden">
               {/* Status banner — large and clear */}
               <div className={`px-6 py-8 text-center ${
-                scanStatus === "checked-in"
+                scanStatus === "checked-in" || isValid
                   ? "bg-green-500/10 border-b border-green-500/20"
-                  : isValid
-                    ? "bg-green-500/10 border-b border-green-500/20"
-                    : "bg-red-500/10 border-b border-red-500/20"
+                  : "bg-red-500/10 border-b border-red-500/20"
               }`}>
                 <div className={`w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center ${
-                  scanStatus === "checked-in"
-                    ? "bg-green-500/20"
-                    : isValid ? "bg-green-500/20" : "bg-red-500/20"
+                  scanStatus === "checked-in" || isValid ? "bg-green-500/20" : "bg-red-500/20"
                 }`}>
                   {scanStatus === "checked-in" ? (
                     <svg className="w-9 h-9 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -372,8 +208,7 @@ export default function ScanPage() {
                   )}
                 </div>
                 <h2 className={`text-lg font-bold ${
-                  scanStatus === "checked-in" ? "text-green-400" :
-                  isValid ? "text-green-400" : "text-red-400"
+                  scanStatus === "checked-in" || isValid ? "text-green-400" : "text-red-400"
                 }`}>
                   {scanStatus === "checked-in"
                     ? "Checked In"
@@ -475,5 +310,200 @@ export default function ScanPage() {
         )}
       </div>
     </PageShell>
+  );
+}
+
+/**
+ * Separate Scanner component that fully owns the camera + scan loop lifecycle.
+ * When the parent bumps the `key`, this unmounts completely (stopping camera + loop)
+ * and remounts fresh — no stale refs or zombie animation frames.
+ */
+function Scanner({
+  videoRef,
+  canvasRef,
+  scanStatus,
+  onStatusChange,
+  onMemberFound,
+  onError,
+}: {
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  scanStatus: ScanStatus;
+  onStatusChange: (s: ScanStatus) => void;
+  onMemberFound: (m: MemberInfo) => void;
+  onError: (msg: string) => void;
+}) {
+  const activeRef = useRef(true);
+  const lastTokenRef = useRef("");
+  const unrecognizedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const lookupToken = useCallback(async (token: string) => {
+    if (token === lastTokenRef.current) return;
+    lastTokenRef.current = token;
+    onStatusChange("verifying");
+
+    try {
+      const res = await fetch(`/api/scan/m/${token}`);
+      if (!res.ok) {
+        const data = await res.json();
+        if (res.status === 404) {
+          onStatusChange("not-found");
+          onError("This QR code doesn't match any member in the system.");
+        } else if (res.status === 401) {
+          onStatusChange("error");
+          onError("Session expired. Please refresh and log in again.");
+        } else {
+          onStatusChange("error");
+          onError(data.error || "Lookup failed");
+        }
+        // Allow re-scanning after 3s
+        setTimeout(() => {
+          lastTokenRef.current = "";
+        }, 3000);
+        return;
+      }
+      const data = await res.json();
+      activeRef.current = false;
+      onMemberFound(data.member);
+    } catch {
+      onStatusChange("error");
+      onError("Network error. Check your connection.");
+      lastTokenRef.current = "";
+    }
+  }, [onStatusChange, onMemberFound, onError]);
+
+  useEffect(() => {
+    let animationId: number;
+    let stream: MediaStream | null = null;
+
+    async function init() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
+        });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          // Wait for video to be ready before starting scan loop
+          videoRef.current.onloadeddata = () => {
+            startScanLoop();
+          };
+        }
+      } catch {
+        onStatusChange("error");
+        onError("Could not access camera. Make sure you allow camera access.");
+      }
+    }
+
+    function startScanLoop() {
+      let frameCount = 0;
+      let noQrFrames = 0;
+
+      const scanFrame = () => {
+        if (!activeRef.current) return; // Fully stopped, don't reschedule
+
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+
+        if (!video || !canvas || video.readyState !== video.HAVE_ENOUGH_DATA) {
+          animationId = requestAnimationFrame(scanFrame);
+          return;
+        }
+
+        frameCount++;
+        if (frameCount % 3 !== 0) {
+          animationId = requestAnimationFrame(scanFrame);
+          return;
+        }
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext("2d")!;
+        ctx.drawImage(video, 0, 0);
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: "dontInvert",
+        });
+
+        if (code) {
+          noQrFrames = 0;
+
+          const match = code.data.match(/\/scan\/m\/([A-Za-z0-9_-]+)/);
+          if (match) {
+            // KC membership QR — stop scanning, look up member
+            onStatusChange("found");
+            activeRef.current = false;
+            lookupToken(match[1]);
+            return; // Don't reschedule
+          } else {
+            // Non-KC QR code
+            onStatusChange("unrecognized");
+            if (unrecognizedTimeoutRef.current) {
+              clearTimeout(unrecognizedTimeoutRef.current);
+            }
+            unrecognizedTimeoutRef.current = setTimeout(() => {
+              if (activeRef.current) {
+                onStatusChange("scanning");
+              }
+            }, 3000);
+          }
+        } else {
+          noQrFrames++;
+          if (noQrFrames > 30) {
+            onStatusChange("scanning");
+          }
+        }
+
+        animationId = requestAnimationFrame(scanFrame);
+      };
+
+      animationId = requestAnimationFrame(scanFrame);
+    }
+
+    init();
+
+    // Cleanup: stop everything when this component unmounts
+    return () => {
+      activeRef.current = false;
+      cancelAnimationFrame(animationId);
+      if (unrecognizedTimeoutRef.current) {
+        clearTimeout(unrecognizedTimeoutRef.current);
+      }
+      // Stop all camera tracks
+      if (stream) {
+        stream.getTracks().forEach((t) => t.stop());
+      }
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+    };
+  }, [videoRef, canvasRef, lookupToken, onStatusChange, onError]);
+
+  return (
+    <>
+      <div className="relative rounded-2xl overflow-hidden bg-black aspect-[4/3]">
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 border border-white/10 rounded-2xl" />
+        {/* Scanning crosshair — color changes with status */}
+        <div className={`absolute inset-[15%] border-2 rounded-lg transition-colors duration-300 ${
+          scanStatus === "unrecognized" ? "border-amber-500/50" :
+          scanStatus === "not-found" || scanStatus === "error" ? "border-red-500/50" :
+          scanStatus === "found" || scanStatus === "verifying" ? "border-blue-500/50" :
+          "border-white/30"
+        }`}>
+          <div className="absolute -top-0.5 -left-0.5 w-6 h-6 border-t-2 border-l-2 border-inherit rounded-tl-lg" />
+          <div className="absolute -top-0.5 -right-0.5 w-6 h-6 border-t-2 border-r-2 border-inherit rounded-tr-lg" />
+          <div className="absolute -bottom-0.5 -left-0.5 w-6 h-6 border-b-2 border-l-2 border-inherit rounded-bl-lg" />
+          <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-2 border-r-2 border-inherit rounded-br-lg" />
+        </div>
+      </div>
+      <canvas ref={canvasRef} className="hidden" />
+    </>
   );
 }
