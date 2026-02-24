@@ -7,6 +7,18 @@ import PageShell from "@/components/PageShell";
 
 const VALID_STATUSES = ["active", "vip", "staff", "comp"];
 
+type ScanStatus =
+  | "scanning"      // Camera active, looking for QR
+  | "looking"       // Sees something but no QR detected yet
+  | "found"         // Found a QR, checking if it's a KC code
+  | "unrecognized"  // QR found but not a KC membership code
+  | "verifying"     // KC code found, looking up member
+  | "verified"      // Member found and valid
+  | "invalid"       // Member found but status is bad
+  | "not-found"     // Token doesn't match any member
+  | "error"         // Network/auth error
+  | "checked-in";   // Successfully checked in
+
 interface MemberInfo {
   id: string;
   first_name: string;
@@ -22,13 +34,14 @@ export default function ScanPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [member, setMember] = useState<MemberInfo | null>(null);
-  const [error, setError] = useState("");
-  const [scanning, setScanning] = useState(true);
-  const [checkedIn, setCheckedIn] = useState(false);
+  const [scanStatus, setScanStatus] = useState<ScanStatus>("scanning");
   const [checkingIn, setCheckingIn] = useState(false);
   const [checkinNotes, setCheckinNotes] = useState("");
+  const [errorDetail, setErrorDetail] = useState("");
   const scanningRef = useRef(true);
   const lastScannedRef = useRef("");
+  const unrecognizedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const qrDetectedCountRef = useRef(0);
 
   const startCamera = useCallback(async () => {
     try {
@@ -39,7 +52,8 @@ export default function ScanPage() {
         videoRef.current.srcObject = stream;
       }
     } catch {
-      setError("Could not access camera. Make sure you allow camera access.");
+      setScanStatus("error");
+      setErrorDetail("Could not access camera. Make sure you allow camera access.");
     }
   }, []);
 
@@ -53,19 +67,39 @@ export default function ScanPage() {
   const lookupToken = useCallback(async (token: string) => {
     if (token === lastScannedRef.current) return;
     lastScannedRef.current = token;
-    setError("");
+    setScanStatus("verifying");
+    setErrorDetail("");
+
     try {
       const res = await fetch(`/api/scan/m/${token}`);
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Lookup failed");
+        if (res.status === 404) {
+          setScanStatus("not-found");
+          setErrorDetail("This QR code doesn't match any member in the system.");
+        } else if (res.status === 401) {
+          setScanStatus("error");
+          setErrorDetail("Session expired. Please refresh and log in again.");
+        } else {
+          setScanStatus("error");
+          setErrorDetail(data.error || "Lookup failed");
+        }
+        // Allow re-scanning after showing the error
+        setTimeout(() => { lastScannedRef.current = ""; }, 3000);
+        return;
       }
       const data = await res.json();
       setMember(data.member);
-      setScanning(false);
       scanningRef.current = false;
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Lookup failed");
+
+      if (VALID_STATUSES.includes(data.member.status)) {
+        setScanStatus("verified");
+      } else {
+        setScanStatus("invalid");
+      }
+    } catch {
+      setScanStatus("error");
+      setErrorDetail("Network error. Check your connection.");
       lastScannedRef.current = "";
     }
   }, []);
@@ -75,6 +109,7 @@ export default function ScanPage() {
 
     let animationId: number;
     let frameCount = 0;
+    let noQrFrames = 0;
 
     const scanFrame = () => {
       if (!scanningRef.current || !videoRef.current || !canvasRef.current) {
@@ -108,11 +143,34 @@ export default function ScanPage() {
       });
 
       if (code) {
+        noQrFrames = 0;
+        qrDetectedCountRef.current++;
+
         const match = code.data.match(/\/scan\/m\/([A-Za-z0-9_-]+)/);
         if (match) {
+          // It's a KC membership QR code
+          setScanStatus("found");
           scanningRef.current = false;
           lookupToken(match[1]);
           return;
+        } else {
+          // It's a QR code but not a KC membership code
+          setScanStatus("unrecognized");
+          // Clear the unrecognized status after 3 seconds and go back to scanning
+          if (unrecognizedTimeoutRef.current) {
+            clearTimeout(unrecognizedTimeoutRef.current);
+          }
+          unrecognizedTimeoutRef.current = setTimeout(() => {
+            setScanStatus("scanning");
+            qrDetectedCountRef.current = 0;
+          }, 3000);
+        }
+      } else {
+        noQrFrames++;
+        // If we haven't seen a QR for a while, go back to scanning state
+        if (noQrFrames > 30) {
+          setScanStatus("scanning");
+          qrDetectedCountRef.current = 0;
         }
       }
 
@@ -123,6 +181,9 @@ export default function ScanPage() {
 
     return () => {
       cancelAnimationFrame(animationId);
+      if (unrecognizedTimeoutRef.current) {
+        clearTimeout(unrecognizedTimeoutRef.current);
+      }
       stopCamera();
     };
   }, [startCamera, stopCamera, lookupToken]);
@@ -140,11 +201,12 @@ export default function ScanPage() {
         const data = await res.json();
         throw new Error(data.error);
       }
-      setCheckedIn(true);
+      setScanStatus("checked-in");
       // Auto-reset after 3 seconds for continuous scanning
       setTimeout(() => resetScan(), 3000);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Check-in failed");
+      setScanStatus("error");
+      setErrorDetail(err instanceof Error ? err.message : "Check-in failed");
     } finally {
       setCheckingIn(false);
     }
@@ -152,16 +214,17 @@ export default function ScanPage() {
 
   function resetScan() {
     setMember(null);
-    setError("");
-    setCheckedIn(false);
+    setScanStatus("scanning");
+    setErrorDetail("");
     setCheckinNotes("");
     lastScannedRef.current = "";
-    setScanning(true);
+    qrDetectedCountRef.current = 0;
     scanningRef.current = true;
     startCamera();
   }
 
   const isValid = member && VALID_STATUSES.includes(member.status);
+  const showCamera = ["scanning", "looking", "found", "unrecognized", "verifying", "not-found", "error"].includes(scanStatus);
 
   const statusLabel: Record<string, string> = {
     active: "Verified Member",
@@ -173,12 +236,36 @@ export default function ScanPage() {
     cancelled: "Cancelled",
   };
 
+  // Status banner config for the strip below the camera
+  function getStatusBanner(): { text: string; color: string; pulse: boolean; icon: "scan" | "check" | "x" | "warn" | "loading" } | null {
+    switch (scanStatus) {
+      case "scanning":
+        return { text: "Scanning...", color: "bg-white/10 text-white/60", pulse: true, icon: "scan" };
+      case "looking":
+        return { text: "Detecting...", color: "bg-white/10 text-white/60", pulse: true, icon: "scan" };
+      case "found":
+        return { text: "KC code found — verifying...", color: "bg-blue-500/15 text-blue-400", pulse: true, icon: "loading" };
+      case "unrecognized":
+        return { text: "QR code not recognized — not a KC membership", color: "bg-amber-500/15 text-amber-400", pulse: false, icon: "warn" };
+      case "verifying":
+        return { text: "Looking up member...", color: "bg-blue-500/15 text-blue-400", pulse: true, icon: "loading" };
+      case "not-found":
+        return { text: "Member not found — old or invalid QR code", color: "bg-red-500/15 text-red-400", pulse: false, icon: "x" };
+      case "error":
+        return { text: errorDetail || "Something went wrong", color: "bg-red-500/15 text-red-400", pulse: false, icon: "x" };
+      default:
+        return null;
+    }
+  }
+
+  const banner = getStatusBanner();
+
   return (
     <PageShell>
       <StaffHeader />
       <div className="max-w-lg mx-auto p-4">
 
-        {scanning && (
+        {showCamera && (
           <>
             <div className="relative rounded-2xl overflow-hidden bg-black aspect-[4/3]">
               <video
@@ -190,44 +277,91 @@ export default function ScanPage() {
               />
               <div className="absolute inset-0 border border-white/10 rounded-2xl" />
               {/* Scanning crosshair */}
-              <div className="absolute inset-[15%] border-2 border-white/30 rounded-lg">
-                <div className="absolute -top-0.5 -left-0.5 w-6 h-6 border-t-2 border-l-2 border-white rounded-tl-lg" />
-                <div className="absolute -top-0.5 -right-0.5 w-6 h-6 border-t-2 border-r-2 border-white rounded-tr-lg" />
-                <div className="absolute -bottom-0.5 -left-0.5 w-6 h-6 border-b-2 border-l-2 border-white rounded-bl-lg" />
-                <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-2 border-r-2 border-white rounded-br-lg" />
-              </div>
-              <div className="absolute bottom-4 left-0 right-0 text-center">
-                <span className="bg-black/60 text-white/80 px-4 py-1.5 rounded-full text-xs">
-                  Scanning...
-                </span>
+              <div className={`absolute inset-[15%] border-2 rounded-lg transition-colors duration-300 ${
+                scanStatus === "unrecognized" ? "border-amber-500/50" :
+                scanStatus === "not-found" || scanStatus === "error" ? "border-red-500/50" :
+                scanStatus === "found" || scanStatus === "verifying" ? "border-blue-500/50" :
+                "border-white/30"
+              }`}>
+                <div className="absolute -top-0.5 -left-0.5 w-6 h-6 border-t-2 border-l-2 border-inherit rounded-tl-lg" />
+                <div className="absolute -top-0.5 -right-0.5 w-6 h-6 border-t-2 border-r-2 border-inherit rounded-tr-lg" />
+                <div className="absolute -bottom-0.5 -left-0.5 w-6 h-6 border-b-2 border-l-2 border-inherit rounded-bl-lg" />
+                <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 border-b-2 border-r-2 border-inherit rounded-br-lg" />
               </div>
             </div>
             <canvas ref={canvasRef} className="hidden" />
+
+            {/* Status banner below camera */}
+            {banner && (
+              <div className={`mt-3 px-4 py-3 rounded-xl flex items-center gap-3 text-sm font-medium ${banner.color}`}>
+                {/* Icon */}
+                {banner.icon === "scan" && (
+                  <div className={banner.pulse ? "animate-pulse" : ""}>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                  </div>
+                )}
+                {banner.icon === "loading" && (
+                  <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                )}
+                {banner.icon === "check" && (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+                {banner.icon === "x" && (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                )}
+                {banner.icon === "warn" && (
+                  <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                  </svg>
+                )}
+
+                <span>{banner.text}</span>
+              </div>
+            )}
+
+            {/* Tap to retry on error/not-found states */}
+            {(scanStatus === "not-found" || scanStatus === "error") && (
+              <button
+                onClick={resetScan}
+                className="mt-2 w-full py-2.5 text-white/40 text-sm hover:text-white/60 transition border border-white/10 rounded-xl"
+              >
+                Tap to scan again
+              </button>
+            )}
           </>
         )}
 
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mt-4 text-sm text-center">
-            {error}
-            <button onClick={resetScan} className="block mx-auto mt-2 text-white/40 text-xs underline">
-              Try again
-            </button>
-          </div>
-        )}
-
-        {member && (
+        {/* Member result card */}
+        {member && (scanStatus === "verified" || scanStatus === "invalid" || scanStatus === "checked-in") && (
           <div className="mt-4">
             <div className="bg-white/[0.04] rounded-2xl border border-kc-purple/10 overflow-hidden">
               {/* Status banner — large and clear */}
               <div className={`px-6 py-8 text-center ${
-                isValid
+                scanStatus === "checked-in"
                   ? "bg-green-500/10 border-b border-green-500/20"
-                  : "bg-red-500/10 border-b border-red-500/20"
+                  : isValid
+                    ? "bg-green-500/10 border-b border-green-500/20"
+                    : "bg-red-500/10 border-b border-red-500/20"
               }`}>
                 <div className={`w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center ${
-                  isValid ? "bg-green-500/20" : "bg-red-500/20"
+                  scanStatus === "checked-in"
+                    ? "bg-green-500/20"
+                    : isValid ? "bg-green-500/20" : "bg-red-500/20"
                 }`}>
-                  {isValid ? (
+                  {scanStatus === "checked-in" ? (
+                    <svg className="w-9 h-9 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : isValid ? (
                     <svg className="w-9 h-9 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -237,10 +371,17 @@ export default function ScanPage() {
                     </svg>
                   )}
                 </div>
-                <h2 className={`text-lg font-bold ${isValid ? "text-green-400" : "text-red-400"}`}>
-                  {isValid ? statusLabel[member.status] || "Verified" : "NOT VALID"}
+                <h2 className={`text-lg font-bold ${
+                  scanStatus === "checked-in" ? "text-green-400" :
+                  isValid ? "text-green-400" : "text-red-400"
+                }`}>
+                  {scanStatus === "checked-in"
+                    ? "Checked In"
+                    : isValid
+                      ? statusLabel[member.status] || "Verified"
+                      : "NOT VALID"}
                 </h2>
-                {!isValid && (
+                {!isValid && scanStatus !== "checked-in" && (
                   <p className="text-red-400/60 text-sm mt-1">
                     {statusLabel[member.status] || member.status}
                   </p>
@@ -291,7 +432,7 @@ export default function ScanPage() {
 
               {/* Action area */}
               <div className="px-6 pb-5 space-y-3">
-                {!checkedIn && isValid && (
+                {scanStatus === "verified" && isValid && (
                   <input
                     type="text"
                     placeholder="Add a note (optional)..."
@@ -301,7 +442,7 @@ export default function ScanPage() {
                   />
                 )}
 
-                {checkedIn ? (
+                {scanStatus === "checked-in" ? (
                   <div className="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-5 rounded-xl text-center font-bold text-xl flex items-center justify-center gap-2">
                     <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
