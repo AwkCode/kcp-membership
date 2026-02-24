@@ -8,15 +8,15 @@ import PageShell from "@/components/PageShell";
 const VALID_STATUSES = ["active", "vip", "staff", "comp"];
 
 type ScanStatus =
-  | "scanning"      // Camera active, looking for QR
-  | "found"         // Found a QR, checking if it's a KC code
-  | "unrecognized"  // QR found but not a KC membership code
-  | "verifying"     // KC code found, looking up member
-  | "verified"      // Member found and valid
-  | "invalid"       // Member found but status is bad
-  | "not-found"     // Token doesn't match any member
-  | "error"         // Network/auth error
-  | "checked-in";   // Successfully checked in
+  | "scanning"
+  | "found"
+  | "unrecognized"
+  | "verifying"
+  | "verified"
+  | "invalid"
+  | "not-found"
+  | "error"
+  | "checked-in";
 
 interface MemberInfo {
   id: string;
@@ -29,20 +29,26 @@ interface MemberInfo {
   visit_count: number;
 }
 
+interface ScanResult {
+  status: ScanStatus;
+  member?: MemberInfo;
+  error?: string;
+}
+
 export default function ScanPage() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [member, setMember] = useState<MemberInfo | null>(null);
-  const [scanStatus, setScanStatus] = useState<ScanStatus>("scanning");
+  const [result, setResult] = useState<ScanResult | null>(null);
   const [checkingIn, setCheckingIn] = useState(false);
   const [checkinNotes, setCheckinNotes] = useState("");
-  const [errorDetail, setErrorDetail] = useState("");
-
-  // Use a key to force remount the scanner when resetting
   const [scanKey, setScanKey] = useState(0);
 
+  const member = result?.member ?? null;
+  const scanStatus = result?.status ?? "scanning";
   const isValid = member && VALID_STATUSES.includes(member.status);
-  const showCamera = ["scanning", "found", "unrecognized", "verifying", "not-found", "error"].includes(scanStatus);
+  const showScanner = !result || ["scanning", "found", "unrecognized", "verifying", "not-found", "error"].includes(result.status);
+
+  function handleScanResult(r: ScanResult) {
+    setResult(r);
+  }
 
   async function handleCheckin() {
     if (!member) return;
@@ -57,23 +63,18 @@ export default function ScanPage() {
         const data = await res.json();
         throw new Error(data.error);
       }
-      setScanStatus("checked-in");
-      // Auto-reset after 3 seconds for continuous scanning
+      setResult({ status: "checked-in", member });
       setTimeout(() => resetScan(), 3000);
     } catch (err: unknown) {
-      setScanStatus("error");
-      setErrorDetail(err instanceof Error ? err.message : "Check-in failed");
+      setResult({ status: "error", error: err instanceof Error ? err.message : "Check-in failed" });
     } finally {
       setCheckingIn(false);
     }
   }
 
   function resetScan() {
-    setMember(null);
-    setScanStatus("scanning");
-    setErrorDetail("");
+    setResult(null);
     setCheckinNotes("");
-    // Bump scanKey to force the Scanner component to fully remount
     setScanKey((k) => k + 1);
   }
 
@@ -87,90 +88,21 @@ export default function ScanPage() {
     cancelled: "Cancelled",
   };
 
-  // Status banner config
-  function getStatusBanner(): { text: string; color: string; pulse: boolean; icon: "scan" | "check" | "x" | "warn" | "loading" } | null {
-    switch (scanStatus) {
-      case "scanning":
-        return { text: "Scanning...", color: "bg-white/10 text-white/60", pulse: true, icon: "scan" };
-      case "found":
-        return { text: "KC code found — verifying...", color: "bg-blue-500/15 text-blue-400", pulse: true, icon: "loading" };
-      case "unrecognized":
-        return { text: "QR code not recognized — not a KC membership", color: "bg-amber-500/15 text-amber-400", pulse: false, icon: "warn" };
-      case "verifying":
-        return { text: "Looking up member...", color: "bg-blue-500/15 text-blue-400", pulse: true, icon: "loading" };
-      case "not-found":
-        return { text: "Member not found — old or invalid QR code", color: "bg-red-500/15 text-red-400", pulse: false, icon: "x" };
-      case "error":
-        return { text: errorDetail || "Something went wrong", color: "bg-red-500/15 text-red-400", pulse: false, icon: "x" };
-      default:
-        return null;
-    }
-  }
-
-  const banner = getStatusBanner();
-
   return (
     <PageShell>
       <StaffHeader />
       <div className="max-w-lg mx-auto p-4">
 
-        {showCamera && (
-          <Scanner
-            key={scanKey}
-            videoRef={videoRef}
-            canvasRef={canvasRef}
-            scanStatus={scanStatus}
-            onStatusChange={setScanStatus}
-            onMemberFound={(m) => {
-              setMember(m);
-              if (VALID_STATUSES.includes(m.status)) {
-                setScanStatus("verified");
-              } else {
-                setScanStatus("invalid");
-              }
-            }}
-            onError={(msg) => {
-              setErrorDetail(msg);
-            }}
-          />
+        {showScanner && (
+          <Scanner key={scanKey} onResult={handleScanResult} />
         )}
 
         {/* Status banner below camera */}
-        {showCamera && banner && (
-          <div className={`mt-3 px-4 py-3 rounded-xl flex items-center gap-3 text-sm font-medium ${banner.color}`}>
-            {banner.icon === "scan" && (
-              <div className={banner.pulse ? "animate-pulse" : ""}>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                </svg>
-              </div>
-            )}
-            {banner.icon === "loading" && (
-              <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
-            )}
-            {banner.icon === "check" && (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-              </svg>
-            )}
-            {banner.icon === "x" && (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            )}
-            {banner.icon === "warn" && (
-              <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg>
-            )}
-            <span>{banner.text}</span>
-          </div>
+        {showScanner && (
+          <StatusBanner status={scanStatus} error={result?.error} />
         )}
 
-        {/* Tap to retry on error/not-found states */}
+        {/* Tap to retry */}
         {(scanStatus === "not-found" || scanStatus === "error") && (
           <button
             onClick={resetScan}
@@ -184,7 +116,6 @@ export default function ScanPage() {
         {member && (scanStatus === "verified" || scanStatus === "invalid" || scanStatus === "checked-in") && (
           <div className="mt-4">
             <div className="bg-white/[0.04] rounded-2xl border border-kc-purple/10 overflow-hidden">
-              {/* Status banner — large and clear */}
               <div className={`px-6 py-8 text-center ${
                 scanStatus === "checked-in" || isValid
                   ? "bg-green-500/10 border-b border-green-500/20"
@@ -223,7 +154,6 @@ export default function ScanPage() {
                 )}
               </div>
 
-              {/* Member name — large for door staff */}
               <div className="px-6 py-5">
                 <h3 className="text-3xl font-bold text-center text-white">
                   {member.first_name} {member.last_name}
@@ -265,7 +195,6 @@ export default function ScanPage() {
                 </div>
               </div>
 
-              {/* Action area */}
               <div className="px-6 pb-5 space-y-3">
                 {scanStatus === "verified" && isValid && (
                   <input
@@ -314,95 +243,82 @@ export default function ScanPage() {
 }
 
 /**
- * Separate Scanner component that fully owns the camera + scan loop lifecycle.
- * When the parent bumps the `key`, this unmounts completely (stopping camera + loop)
- * and remounts fresh — no stale refs or zombie animation frames.
+ * Self-contained scanner component. Owns its own video element, canvas,
+ * camera stream, and scan loop. When unmounted, everything is cleaned up.
+ * When remounted (via key change), everything starts completely fresh.
  */
-function Scanner({
-  videoRef,
-  canvasRef,
-  scanStatus,
-  onStatusChange,
-  onMemberFound,
-  onError,
-}: {
-  videoRef: React.RefObject<HTMLVideoElement | null>;
-  canvasRef: React.RefObject<HTMLCanvasElement | null>;
-  scanStatus: ScanStatus;
-  onStatusChange: (s: ScanStatus) => void;
-  onMemberFound: (m: MemberInfo) => void;
-  onError: (msg: string) => void;
-}) {
+function Scanner({ onResult }: { onResult: (r: ScanResult) => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const activeRef = useRef(true);
   const lastTokenRef = useRef("");
-  const unrecognizedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [localStatus, setLocalStatus] = useState<"scanning" | "found" | "unrecognized" | "verifying">("scanning");
 
   const lookupToken = useCallback(async (token: string) => {
     if (token === lastTokenRef.current) return;
     lastTokenRef.current = token;
-    onStatusChange("verifying");
+    setLocalStatus("verifying");
+    onResult({ status: "verifying" });
 
     try {
       const res = await fetch(`/api/scan/m/${token}`);
       if (!res.ok) {
         const data = await res.json();
         if (res.status === 404) {
-          onStatusChange("not-found");
-          onError("This QR code doesn't match any member in the system.");
+          onResult({ status: "not-found", error: "This QR code doesn't match any member in the system." });
         } else if (res.status === 401) {
-          onStatusChange("error");
-          onError("Session expired. Please refresh and log in again.");
+          onResult({ status: "error", error: "Session expired. Please refresh and log in again." });
         } else {
-          onStatusChange("error");
-          onError(data.error || "Lookup failed");
+          onResult({ status: "error", error: data.error || "Lookup failed" });
         }
-        // Allow re-scanning after 3s
-        setTimeout(() => {
-          lastTokenRef.current = "";
-        }, 3000);
+        setTimeout(() => { lastTokenRef.current = ""; }, 3000);
         return;
       }
       const data = await res.json();
       activeRef.current = false;
-      onMemberFound(data.member);
+      const member = data.member;
+      if (VALID_STATUSES.includes(member.status)) {
+        onResult({ status: "verified", member });
+      } else {
+        onResult({ status: "invalid", member });
+      }
     } catch {
-      onStatusChange("error");
-      onError("Network error. Check your connection.");
+      onResult({ status: "error", error: "Network error. Check your connection." });
       lastTokenRef.current = "";
     }
-  }, [onStatusChange, onMemberFound, onError]);
+  }, [onResult]);
 
   useEffect(() => {
     let animationId: number;
     let stream: MediaStream | null = null;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
 
     async function init() {
       try {
         stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
         });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          // Wait for video to be ready before starting scan loop
-          videoRef.current.onloadeddata = () => {
-            startScanLoop();
-          };
+        if (video && activeRef.current) {
+          video.srcObject = stream;
+          await video.play().catch(() => {});
+          startScanLoop();
         }
       } catch {
-        onStatusChange("error");
-        onError("Could not access camera. Make sure you allow camera access.");
+        onResult({ status: "error", error: "Could not access camera. Make sure you allow camera access." });
       }
     }
 
     function startScanLoop() {
       let frameCount = 0;
       let noQrFrames = 0;
+      let unrecognizedTimeout: NodeJS.Timeout | null = null;
 
       const scanFrame = () => {
-        if (!activeRef.current) return; // Fully stopped, don't reschedule
-
-        const video = videoRef.current;
-        const canvas = canvasRef.current;
+        if (!activeRef.current) {
+          if (unrecognizedTimeout) clearTimeout(unrecognizedTimeout);
+          return;
+        }
 
         if (!video || !canvas || video.readyState !== video.HAVE_ENOUGH_DATA) {
           animationId = requestAnimationFrame(scanFrame);
@@ -427,30 +343,30 @@ function Scanner({
 
         if (code) {
           noQrFrames = 0;
-
           const match = code.data.match(/\/scan\/m\/([A-Za-z0-9_-]+)/);
           if (match) {
-            // KC membership QR — stop scanning, look up member
-            onStatusChange("found");
+            setLocalStatus("found");
+            onResult({ status: "found" });
             activeRef.current = false;
             lookupToken(match[1]);
-            return; // Don't reschedule
+            return;
           } else {
-            // Non-KC QR code
-            onStatusChange("unrecognized");
-            if (unrecognizedTimeoutRef.current) {
-              clearTimeout(unrecognizedTimeoutRef.current);
-            }
-            unrecognizedTimeoutRef.current = setTimeout(() => {
+            setLocalStatus("unrecognized");
+            onResult({ status: "unrecognized", error: "QR code not recognized — not a KC membership" });
+            if (unrecognizedTimeout) clearTimeout(unrecognizedTimeout);
+            unrecognizedTimeout = setTimeout(() => {
               if (activeRef.current) {
-                onStatusChange("scanning");
+                setLocalStatus("scanning");
+                onResult({ status: "scanning" });
               }
             }, 3000);
           }
         } else {
           noQrFrames++;
           if (noQrFrames > 30) {
-            onStatusChange("scanning");
+            setLocalStatus("scanning");
+            onResult({ status: "scanning" });
+            noQrFrames = 0;
           }
         }
 
@@ -462,22 +378,18 @@ function Scanner({
 
     init();
 
-    // Cleanup: stop everything when this component unmounts
     return () => {
       activeRef.current = false;
       cancelAnimationFrame(animationId);
-      if (unrecognizedTimeoutRef.current) {
-        clearTimeout(unrecognizedTimeoutRef.current);
-      }
-      // Stop all camera tracks
       if (stream) {
         stream.getTracks().forEach((t) => t.stop());
       }
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
+      if (video) {
+        video.srcObject = null;
       }
     };
-  }, [videoRef, canvasRef, lookupToken, onStatusChange, onError]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -490,11 +402,9 @@ function Scanner({
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 border border-white/10 rounded-2xl" />
-        {/* Scanning crosshair — color changes with status */}
         <div className={`absolute inset-[15%] border-2 rounded-lg transition-colors duration-300 ${
-          scanStatus === "unrecognized" ? "border-amber-500/50" :
-          scanStatus === "not-found" || scanStatus === "error" ? "border-red-500/50" :
-          scanStatus === "found" || scanStatus === "verifying" ? "border-blue-500/50" :
+          localStatus === "unrecognized" ? "border-amber-500/50" :
+          localStatus === "found" || localStatus === "verifying" ? "border-blue-500/50" :
           "border-white/30"
         }`}>
           <div className="absolute -top-0.5 -left-0.5 w-6 h-6 border-t-2 border-l-2 border-inherit rounded-tl-lg" />
@@ -505,5 +415,48 @@ function Scanner({
       </div>
       <canvas ref={canvasRef} className="hidden" />
     </>
+  );
+}
+
+function StatusBanner({ status, error }: { status: ScanStatus; error?: string }) {
+  const config: Record<string, { text: string; color: string; icon: string } | null> = {
+    scanning: { text: "Scanning...", color: "bg-white/10 text-white/60", icon: "scan" },
+    found: { text: "KC code found — verifying...", color: "bg-blue-500/15 text-blue-400", icon: "loading" },
+    unrecognized: { text: "QR code not recognized — not a KC membership", color: "bg-amber-500/15 text-amber-400", icon: "warn" },
+    verifying: { text: "Looking up member...", color: "bg-blue-500/15 text-blue-400", icon: "loading" },
+    "not-found": { text: "Member not found — old or invalid QR code", color: "bg-red-500/15 text-red-400", icon: "x" },
+    error: { text: error || "Something went wrong", color: "bg-red-500/15 text-red-400", icon: "x" },
+  };
+
+  const banner = config[status];
+  if (!banner) return null;
+
+  return (
+    <div className={`mt-3 px-4 py-3 rounded-xl flex items-center gap-3 text-sm font-medium ${banner.color}`}>
+      {banner.icon === "scan" && (
+        <div className="animate-pulse">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+          </svg>
+        </div>
+      )}
+      {banner.icon === "loading" && (
+        <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+      )}
+      {banner.icon === "x" && (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      )}
+      {banner.icon === "warn" && (
+        <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+        </svg>
+      )}
+      <span>{banner.text}</span>
+    </div>
   );
 }
