@@ -7,20 +7,6 @@ interface PageShellProps {
 export default function PageShell({ children }: PageShellProps) {
   return (
     <div className="min-h-screen relative bg-kc-gradient overflow-hidden">
-      {/* Backdrop illustration — fixed, visible behind content */}
-      <div className="fixed inset-0 z-[1] pointer-events-none">
-        <Image
-          src="/backdrop.png"
-          alt=""
-          fill
-          className="object-cover opacity-[0.08] sm:opacity-[0.10] lg:opacity-[0.12]"
-          aria-hidden="true"
-          priority
-        />
-        {/* Purple tint overlay on backdrop */}
-        <div className="absolute inset-0 bg-kc-purple/[0.05]" />
-      </div>
-
       {/* Side art - left (mobile: small corner pieces, desktop: larger) */}
       <div className="fixed left-0 top-0 bottom-0 w-16 sm:w-24 lg:w-32 xl:w-40 z-[2] pointer-events-none">
         <div className="absolute top-[12%] -left-6 sm:-left-4 lg:-left-4 xl:left-0 opacity-[0.06] sm:opacity-[0.08] lg:opacity-[0.10]">
