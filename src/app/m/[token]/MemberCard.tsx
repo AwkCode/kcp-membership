@@ -71,6 +71,21 @@ export default function MemberCard({ firstName, lastName, status: initialStatus,
           <p className="text-white/30 text-xs mt-6">Show this QR code at check-in</p>
         )}
 
+        {/* Add to Apple Wallet button */}
+        {["active", "vip", "staff", "comp"].includes(status) && (
+          <div className="mt-5">
+            <a
+              href={`/api/wallet/apple/${token}`}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-black border border-white/20 rounded-xl text-white text-sm font-medium hover:bg-white/10 transition"
+            >
+              <svg className="w-5 h-6" viewBox="0 0 24 30" fill="currentColor">
+                <path d="M20.8 27.4c-1.2 1.4-2.5 1.2-3.8.5-1.3-.7-2.5-.7-3.9 0-1.7.9-2.6.7-3.7-.5C4.2 21.6 5 13.5 10.6 13.2c1.5.1 2.6.9 3.4.9.8 0 2.3-1.1 3.9-.9 1.7.1 2.9.8 3.7 2.1-3.4 2-2.6 6.5.5 7.8-.6 1.6-1.4 3.2-2.5 4.3zM15.5 13.1c-.1-3 2.4-5.4 4.5-5.6.4 3.3-3 5.7-4.5 5.6z"/>
+              </svg>
+              Add to Apple Wallet
+            </a>
+          </div>
+        )}
+
         {["cancelled", "suspended", "expired"].includes(status) && (
           <p className="text-white/30 text-xs mt-6">Your membership is {status}.</p>
         )}
