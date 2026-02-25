@@ -45,11 +45,10 @@ export async function GET(
         "Content-Disposition": `attachment; filename="kings-court-${member.first_name.toLowerCase()}.pkpass"`,
       },
     });
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
-    console.error("Apple Wallet pass error:", msg);
+  } catch (err) {
+    console.error("Apple Wallet pass error:", err);
     return NextResponse.json(
-      { error: "Failed to generate pass", debug: msg },
+      { error: "Failed to generate pass" },
       { status: 500 }
     );
   }
