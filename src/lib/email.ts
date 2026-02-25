@@ -47,6 +47,11 @@ export async function sendMembershipEmail({
             &#63743; Add to Apple Wallet
           </a>
         </p>
+        <p style="text-align: center; margin-top: 8px;">
+          <a href="${baseUrl}/api/wallet/google/${token}" style="display: inline-block; padding: 10px 20px; background: #000; color: #fff; text-decoration: none; border-radius: 6px; border: 1px solid #333; font-size: 14px;">
+            Add to Google Wallet
+          </a>
+        </p>
         <p style="color: #999; font-size: 12px; text-align: center; margin-top: 32px;">
           Keep this email — it contains your membership QR code.
         </p>
