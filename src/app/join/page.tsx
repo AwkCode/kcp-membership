@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import PageShell from "@/components/PageShell";
+import { DoodleScatter } from "@/components/Doodles";
 
 export default function JoinPage() {
   const [form, setForm] = useState({
@@ -66,6 +67,7 @@ export default function JoinPage() {
     return (
       <PageShell>
         <Header />
+        <DoodleScatter variant="join" />
         <main className="flex flex-col items-center justify-center px-6 pt-20 pb-24">
           <div className="max-w-md w-full bg-white/[0.04] rounded-2xl border border-kc-purple/15 p-10 text-center">
             <Image src="/kc-logo-v3.png" alt="Kings Court" width={80} height={80} className="mx-auto mb-4 rounded" />

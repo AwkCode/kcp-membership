@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
 import PageShell from "@/components/PageShell";
+import { DoodleScatter } from "@/components/Doodles";
 import { createSupabaseBrowser } from "@/lib/supabase/client";
 
 interface UserInfo {
@@ -64,6 +65,7 @@ export default function Home() {
   return (
     <PageShell>
       <Header />
+      <DoodleScatter variant="home" />
       <main className="flex flex-col items-center justify-center px-4 sm:px-6 pt-16 sm:pt-20 pb-16 sm:pb-24 min-h-screen">
         <Image
           src="/kc-logo-v3.png"

@@ -6,6 +6,7 @@ import { createSupabaseBrowser } from "@/lib/supabase/client";
 import Image from "next/image";
 import PageShell from "@/components/PageShell";
 import Header from "@/components/Header";
+import { DoodleScatter } from "@/components/Doodles";
 
 interface MemberData {
   id: string;
@@ -154,6 +155,7 @@ export default function MemberAccountPage() {
   return (
     <PageShell>
       <Header />
+      <DoodleScatter variant="login" />
       <main className="flex flex-col items-center px-6 pt-12 pb-24">
         {/* Member Card */}
         <div className="max-w-sm w-full bg-white/[0.04] rounded-2xl border border-kc-purple/15 overflow-hidden">
