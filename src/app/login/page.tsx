@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import PageShell from "@/components/PageShell";
+import { DoodleScatter } from "@/components/Doodles";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -39,6 +40,7 @@ function LoginForm() {
 
   return (
     <PageShell>
+      <DoodleScatter variant="login" />
       <main className="min-h-screen flex flex-col items-center justify-center px-6">
         <div className="max-w-sm w-full bg-white/[0.04] rounded-2xl border border-kc-purple/10 p-8">
           <div className="text-center mb-6">

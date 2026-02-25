@@ -17,6 +17,16 @@ interface MemberData {
   status: string;
   membership_token: string;
   created_at: string;
+  visit_count: number;
+  last_checkin: string | null;
+  upcoming_shows: {
+    id: string;
+    show_name: string;
+    show_date: string;
+    start_time: string;
+    venue: string;
+    eventbrite_url: string;
+  }[];
 }
 
 export default function MemberAccountPage() {
@@ -36,8 +46,9 @@ export default function MemberAccountPage() {
   const [showCancel, setShowCancel] = useState(false);
   const [cancelling, setCancelling] = useState(false);
 
-  // QR code
+  // QR code + light/dark mode
   const [qrDataUrl, setQrDataUrl] = useState("");
+  const [qrLight, setQrLight] = useState(true);
 
   const router = useRouter();
 
@@ -61,7 +72,6 @@ export default function MemberAccountPage() {
         // Generate QR code URL
         const baseUrl = window.location.origin;
         const scanUrl = `${baseUrl}/scan/m/${data.membership_token}`;
-        // Use a simple QR code API since we're client-side
         setQrDataUrl(`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(scanUrl)}`);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong");
@@ -92,7 +102,7 @@ export default function MemberAccountPage() {
       }
 
       const updated = await res.json();
-      setMember(updated);
+      setMember((prev) => prev ? { ...prev, ...updated } : prev);
       setEditing(false);
       setSaveMsg("Saved!");
       setTimeout(() => setSaveMsg(""), 2000);
@@ -167,9 +177,43 @@ export default function MemberAccountPage() {
 
           <div className="p-8 text-center">
             {isActive && qrDataUrl && (
-              <div className="mb-5 bg-white rounded-xl p-4 inline-block">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={qrDataUrl} alt="Membership QR Code" className="w-48 h-48" />
+              <div className="mb-4">
+                <div
+                  className={`rounded-xl p-4 inline-block transition-colors duration-300 ${
+                    qrLight ? "bg-white" : "bg-gray-900 border border-white/10"
+                  }`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={qrLight
+                      ? qrDataUrl
+                      : `${qrDataUrl}&color=fff&bgcolor=111`
+                    }
+                    alt="Membership QR Code"
+                    className="w-48 h-48"
+                  />
+                </div>
+                {/* Light/Dark toggle */}
+                <button
+                  onClick={() => setQrLight(!qrLight)}
+                  className="mt-2 inline-flex items-center gap-1.5 text-white/30 text-[10px] hover:text-white/50 transition"
+                >
+                  {qrLight ? (
+                    <>
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                      </svg>
+                      Dark mode
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                      Light mode
+                    </>
+                  )}
+                </button>
               </div>
             )}
 
@@ -190,8 +234,29 @@ export default function MemberAccountPage() {
               {member.status === "vip" ? "VIP" : member.status}
             </span>
 
+            {/* Visit counter */}
             {isActive && (
-              <p className="text-white/30 text-xs mt-6">Show this QR code at check-in</p>
+              <div className="mt-4 flex items-center justify-center gap-3">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-white">{member.visit_count}</p>
+                  <p className="text-[10px] text-white/30 uppercase tracking-wider">Visits</p>
+                </div>
+                {member.last_checkin && (
+                  <>
+                    <div className="w-px h-8 bg-white/10" />
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-white">
+                        {new Date(member.last_checkin).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      </p>
+                      <p className="text-[10px] text-white/30 uppercase tracking-wider">Last visit</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            {isActive && (
+              <p className="text-white/30 text-xs mt-5">Show this QR code at check-in</p>
             )}
 
             {/* Apple Wallet button */}
@@ -214,6 +279,45 @@ export default function MemberAccountPage() {
             )}
           </div>
         </div>
+
+        {/* Upcoming Events */}
+        {member.upcoming_shows.length > 0 && (
+          <div className="max-w-sm w-full mt-6 bg-white/[0.04] rounded-2xl border border-kc-purple/15 overflow-hidden">
+            <div className="px-6 py-4 border-b border-kc-purple/10">
+              <h2 className="text-sm font-semibold text-white">Upcoming Events</h2>
+            </div>
+            <div className="divide-y divide-white/[0.04]">
+              {member.upcoming_shows.map((show) => (
+                <div key={show.id} className="px-6 py-4 flex items-center gap-4">
+                  <div className="shrink-0 w-11 h-11 bg-kc-purple/10 rounded-xl flex flex-col items-center justify-center">
+                    <span className="text-[10px] text-kc-purple-light uppercase font-medium leading-none">
+                      {new Date(show.show_date + "T00:00:00").toLocaleDateString("en-US", { month: "short" })}
+                    </span>
+                    <span className="text-sm font-bold text-white leading-none mt-0.5">
+                      {new Date(show.show_date + "T00:00:00").getDate()}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">{show.show_name}</p>
+                    <p className="text-xs text-white/40">
+                      {show.start_time.slice(0, 5).replace(/^0/, "")} · {show.venue}
+                    </p>
+                  </div>
+                  {show.eventbrite_url && (
+                    <a
+                      href={show.eventbrite_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 text-[10px] text-kc-purple-light border border-kc-purple/20 rounded-lg px-2.5 py-1.5 hover:bg-kc-purple/10 transition"
+                    >
+                      RSVP
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Account Settings */}
         <div className="max-w-sm w-full mt-6 bg-white/[0.04] rounded-2xl border border-kc-purple/15 overflow-hidden">

@@ -3,6 +3,7 @@ import { generateQRDataURL } from "@/lib/qr";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import PageShell from "@/components/PageShell";
+import { DoodleScatter } from "@/components/Doodles";
 import MemberCard from "./MemberCard";
 
 interface Props {
@@ -28,6 +29,7 @@ export default async function MemberCardPage({ params }: Props) {
   return (
     <PageShell>
       <Header />
+      <DoodleScatter variant="login" />
       <main className="flex flex-col items-center px-6 pt-12 pb-24">
         <MemberCard
           firstName={member.first_name}

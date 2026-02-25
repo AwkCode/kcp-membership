@@ -55,8 +55,8 @@ export default function PageShell({ children }: PageShellProps) {
         </div>
       </div>
 
-      {/* Page content */}
-      <div className="relative z-10">{children}</div>
+      {/* Page content with fade-in */}
+      <div className="relative z-10 animate-page-in">{children}</div>
     </div>
   );
 }

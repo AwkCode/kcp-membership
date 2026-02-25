@@ -5,6 +5,33 @@ import { createSupabaseAdmin } from "@/lib/supabase/server";
 export async function GET() {
   try {
     const { member } = await requireMember();
+    const admin = createSupabaseAdmin();
+
+    // Get visit count
+    const { count: visitCount } = await admin
+      .from("checkins")
+      .select("*", { count: "exact", head: true })
+      .eq("member_id", member.id);
+
+    // Get last check-in
+    const { data: lastCheckin } = await admin
+      .from("checkins")
+      .select("created_at")
+      .eq("member_id", member.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    // Get upcoming shows
+    const today = new Date().toISOString().split("T")[0];
+    const { data: upcomingShows } = await admin
+      .from("shows")
+      .select("id, show_name, show_date, start_time, venue, eventbrite_url")
+      .gte("show_date", today)
+      .eq("status", "scheduled")
+      .order("show_date", { ascending: true })
+      .order("start_time", { ascending: true })
+      .limit(5);
 
     return NextResponse.json({
       id: member.id,
@@ -15,6 +42,9 @@ export async function GET() {
       status: member.status,
       membership_token: member.membership_token,
       created_at: member.created_at,
+      visit_count: visitCount || 0,
+      last_checkin: lastCheckin?.created_at || null,
+      upcoming_shows: upcomingShows || [],
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unauthorized";
