@@ -43,6 +43,31 @@ export async function requireArtist() {
   return { user, artist };
 }
 
+export async function requireMember() {
+  const supabase = await createSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  // Look up member profile linked to this auth user
+  const admin = createSupabaseAdmin();
+  const { data: member } = await admin
+    .from("members")
+    .select("*")
+    .eq("auth_id", user.id)
+    .single();
+
+  if (!member) {
+    throw new Error("Member profile not found");
+  }
+
+  return { user, member };
+}
+
 export async function getAuthUser() {
   const supabase = await createSupabaseServer();
   const {

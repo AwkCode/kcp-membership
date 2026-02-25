@@ -11,6 +11,7 @@ interface UserInfo {
   displayName: string;
   isArtist: boolean;
   isStaff: boolean;
+  isMember: boolean;
 }
 
 export default function Home() {
@@ -35,13 +36,21 @@ export default function Home() {
           .eq("auth_id", authUser.id)
           .single();
 
+        // Check if they have a member profile
+        const { data: member } = await supabase
+          .from("members")
+          .select("first_name")
+          .eq("auth_id", authUser.id)
+          .single();
+
         // Check user metadata for role
         const role = authUser.user_metadata?.role;
 
         setUser({
-          displayName: artist?.display_name || authUser.email?.split("@")[0] || "there",
+          displayName: member?.first_name || artist?.display_name || authUser.email?.split("@")[0] || "there",
           isArtist: !!artist,
           isStaff: role === "staff" || role === "admin",
+          isMember: !!member,
         });
       } catch {
         // not logged in, that's fine
@@ -122,7 +131,16 @@ export default function Home() {
                 </>
               )}
 
-              {!user.isArtist && !user.isStaff && (
+              {user.isMember && (
+                <Link
+                  href="/members/account"
+                  className="px-8 py-3.5 bg-white text-black rounded-lg font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm btn-glow"
+                >
+                  My Card
+                </Link>
+              )}
+
+              {!user.isArtist && !user.isStaff && !user.isMember && (
                 <Link
                   href="/join"
                   className="px-8 py-3.5 bg-white text-black rounded-lg font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm btn-glow"

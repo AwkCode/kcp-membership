@@ -78,6 +78,12 @@ export default function JoinPage() {
             <p className="text-white/50 text-sm">
               Check your email for your membership QR code and digital card link.
             </p>
+            <p className="text-white/30 text-xs mt-4">
+              You can always access your card by{" "}
+              <Link href="/members/login" className="text-white/60 underline">
+                logging in
+              </Link>
+            </p>
           </div>
         </main>
       </PageShell>

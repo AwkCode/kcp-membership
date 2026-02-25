@@ -53,6 +53,13 @@ export default function Header() {
             {loginOpen && (
               <div className="absolute right-0 mt-2 w-36 bg-black/95 border border-kc-purple/20 rounded-lg shadow-xl overflow-hidden">
                 <Link
+                  href="/members/login"
+                  className="block px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/[0.06] transition"
+                  onClick={() => setLoginOpen(false)}
+                >
+                  Member
+                </Link>
+                <Link
                   href="/login"
                   className="block px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/[0.06] transition"
                   onClick={() => setLoginOpen(false)}

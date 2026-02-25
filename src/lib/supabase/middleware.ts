@@ -31,11 +31,15 @@ export async function updateSession(request: NextRequest) {
 
   const staffRoutes = ["/scan", "/door", "/admin"];
   const artistRoutes = ["/artists/profile", "/artists/bookings"];
+  const memberRoutes = ["/members/account"];
 
   const isStaffRoute = staffRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
   const isArtistRoute = artistRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  );
+  const isMemberRoute = memberRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
 
@@ -49,6 +53,13 @@ export async function updateSession(request: NextRequest) {
   if (isArtistRoute && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/artists/login";
+    url.searchParams.set("redirect", request.nextUrl.pathname);
+    return NextResponse.redirect(url);
+  }
+
+  if (isMemberRoute && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/members/login";
     url.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(url);
   }
