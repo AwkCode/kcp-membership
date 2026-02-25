@@ -194,6 +194,7 @@ export default function MemberAccountPage() {
                   />
                 </div>
                 {/* Light/Dark toggle */}
+                <div className="flex justify-center">
                 <button
                   onClick={() => setQrLight(!qrLight)}
                   className="mt-2 inline-flex items-center gap-1.5 text-white/30 text-[10px] hover:text-white/50 transition"
@@ -214,6 +215,7 @@ export default function MemberAccountPage() {
                     </>
                   )}
                 </button>
+                </div>
               </div>
             )}
 
