@@ -50,7 +50,7 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
     id: objectId,
     classId: classId,
     genericType: "GENERIC_TYPE_UNSPECIFIED",
-    hexBackgroundColor: "#0c0015",
+    hexBackgroundColor: "#110022",
     logo: {
       sourceUri: {
         uri: `${baseUrl}/kc-logo-v3.png`,
@@ -58,7 +58,7 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
       contentDescription: {
         defaultValue: {
           language: "en-US",
-          value: "Kings Court Boston logo",
+          value: "Kings Court Boston",
         },
       },
     },
@@ -85,6 +85,17 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
       value: scanUrl,
       alternateText: `${member.firstName} ${member.lastName}`,
     },
+    heroImage: {
+      sourceUri: {
+        uri: `${baseUrl}/wallet-hero.jpg`,
+      },
+      contentDescription: {
+        defaultValue: {
+          language: "en-US",
+          value: "Kings Court Boston",
+        },
+      },
+    },
     textModulesData: [
       {
         header: "STATUS",
@@ -95,6 +106,11 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
         header: "MEMBER SINCE",
         body: memberSinceFormatted,
         id: "since",
+      },
+      {
+        header: "VENUE",
+        body: "Boston, MA",
+        id: "venue",
       },
     ],
     linksModuleData: {
@@ -120,7 +136,7 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
       cardTemplateOverride: {
         cardRowTemplateInfos: [
           {
-            twoItems: {
+            threeItems: {
               startItem: {
                 firstValue: {
                   fields: [
@@ -130,11 +146,20 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
                   ],
                 },
               },
-              endItem: {
+              middleItem: {
                 firstValue: {
                   fields: [
                     {
                       fieldPath: "object.textModulesData['since']",
+                    },
+                  ],
+                },
+              },
+              endItem: {
+                firstValue: {
+                  fields: [
+                    {
+                      fieldPath: "object.textModulesData['venue']",
                     },
                   ],
                 },
