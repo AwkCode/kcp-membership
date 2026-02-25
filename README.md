@@ -1,6 +1,6 @@
 # Kings Court Boston — Venue Operations Platform
 
-A full-stack venue operations platform built for [Kings Court Boston](https://kingscourtboston.com), a live events venue in Boston, MA. Handles membership, artist booking, and show lineup management in one system.
+A full-stack venue operations platform built for [Kings Court Boston](https://kingscourtboston.com), a live comedy club, coffee shop, and 420-friendly creative venue in Boston, MA. Handles membership, artist booking, and show lineup management in one system.
 
 **Live:** [member.kingscourtboston.com](https://member.kingscourtboston.com)
 
@@ -8,12 +8,15 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 
 ### Membership System
 - Account-based signup with email + password (creates Supabase Auth account)
+- Member login with authenticated account page
+- Digital member cards with QR code, visit counter, and light/dark mode toggle
+- Apple Wallet and Google Wallet pass integration
 - Instant QR code delivery via email and SMS
-- Digital member cards at unique URLs with self-cancel option
 - Staff QR scanner (camera-based, works on iPhone/Safari via jsQR)
 - Door check-in with manual search by name, email, or phone
 - Admin panel: member management, status control (active, VIP, staff, comp, suspended), CSV export
 - Visit tracking and check-in history
+- Upcoming events display on member account page
 
 ### Artist Portal
 - Artist signup and login (shares auth with staff/members — same email can be multiple roles)
@@ -31,17 +34,26 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 - Show lifecycle management: scheduled, closed, canceled
 - Artist directory with search, filter, approve/ban
 
+### Design & Branding
+- Dark purple gradient theme with ambient glow effects
+- Hand-drawn SVG doodle art (mic, coffee, joint, leaf, star, crown, speaker) scattered across all pages
+- Circle-cropped graffiti brand art (OSN, KCTV, Smile High Club) as subtle side decorations
+- Page fade-in animations
+- Fully responsive mobile-first design
+
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 15 (App Router) + TypeScript |
-| Styling | Tailwind CSS |
+| Framework | Next.js 16 (App Router) + TypeScript |
+| Styling | Tailwind CSS v4 |
 | Database | Supabase Postgres + Row Level Security |
 | Auth | Supabase Auth (multi-role) |
 | Email | SendGrid (domain-verified) |
 | SMS | Twilio |
 | QR | `qrcode` (generation) + `jsQR` (scanning) |
+| Apple Wallet | `passkit-generator` |
+| Google Wallet | `jsonwebtoken` (JWT signing for skinny pass approach) |
 | Hosting | Vercel |
 
 ## How It Works
@@ -49,9 +61,11 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 ### Members
 1. Visitor signs up at `/join` with email + password (creates an auth account)
 2. System creates their record, generates a secure token, emails a QR code + card link
-3. At the door, staff opens `/scan` on their phone and scans the QR
-4. System verifies member status and staff taps **Check In**
-5. Fallback: staff uses `/door` to search by name/email/phone
+3. Member can log in at `/members/login` to view their card, account settings, visit count, and upcoming events
+4. Member can add their card to Apple Wallet or Google Wallet
+5. At the door, staff opens `/scan` on their phone and scans the QR
+6. System verifies member status and staff taps **Check In**
+7. Fallback: staff uses `/door` to search by name/email/phone
 
 ### Artists
 1. Artist signs up at `/artists/join` (existing members can use the same email)
@@ -69,11 +83,18 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 |---|---|
 | `/` | Auth-aware homepage (personalized when logged in) |
 | `/join` | Membership signup |
-| `/perks` | Member benefits |
-| `/m/[token]` | Digital member card with QR code |
+| `/perks` | Member benefits (comedy, coffee, 420-friendly lounge) |
+| `/m/[token]` | Digital member card with QR code + wallet buttons |
 | `/terms` | Terms of Service & Privacy Policy |
 | `/shows` | Upcoming shows (artist view) |
 | `/shows/[id]` | Show detail + request spot |
+
+### Member (requires login)
+
+| Route | Description |
+|---|---|
+| `/members/login` | Member login |
+| `/members/account` | Member dashboard — card, settings, visits, events |
 
 ### Staff (requires login)
 
@@ -102,9 +123,12 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 | `POST /api/checkin` | Log a check-in |
 | `GET /api/members` | List all members |
 | `GET /api/members/search?q=` | Search members |
-| `PATCH /api/members/[id]` | Update member |
+| `GET/PATCH /api/members/account` | Authenticated member account data |
+| `PATCH /api/members/[id]` | Update member (staff) |
 | `POST /api/members/[id]/rotate-token` | New membership token |
 | `GET /api/members/export` | CSV export |
+| `GET /api/wallet/apple/[token]` | Generate Apple Wallet .pkpass |
+| `GET /api/wallet/google/[token]` | Redirect to Google Wallet save URL |
 | `POST /api/artists/signup` | Create artist account |
 | `GET/PATCH /api/artists/me` | Artist profile |
 | `GET/POST/PATCH /api/shows` | Show CRUD |
@@ -116,7 +140,7 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 
 7 tables with Row Level Security:
 
-- **members** — profiles, tokens, statuses, contact info, linked to auth accounts
+- **members** — profiles, tokens, statuses, contact info, linked to auth accounts via `auth_id`
 - **checkins** — check-in log with staff attribution
 - **comedians** — artist profiles linked to auth accounts (table name kept for compatibility)
 - **shows** — schedule, capacity, status, Eventbrite links
@@ -131,6 +155,8 @@ A full-stack venue operations platform built for [Kings Court Boston](https://ki
 - Supabase project
 - SendGrid account (verified sender/domain)
 - Twilio account
+- Apple Developer account (for Apple Wallet passes)
+- Google Cloud project + Google Wallet issuer account (for Google Wallet passes)
 
 ### Install
 
@@ -145,15 +171,32 @@ npm install
 Create `.env.local`:
 
 ```
+# Supabase
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# SendGrid
 SENDGRID_API_KEY=your_sendgrid_key
 SENDGRID_FROM_EMAIL=your_verified_email
+
+# Twilio
 TWILIO_ACCOUNT_SID=your_twilio_sid
 TWILIO_AUTH_TOKEN=your_twilio_token
 TWILIO_PHONE_NUMBER=your_twilio_number
+
+# Apple Wallet (base64 encoded certificates)
+APPLE_WWDR_CERT=base64_encoded_wwdr_cert
+APPLE_PASS_CERT=base64_encoded_pass_cert
+APPLE_PASS_KEY=base64_encoded_pass_key
+APPLE_PASS_KEY_PASSPHRASE=your_passphrase
+APPLE_PASS_TYPE_ID=pass.com.kingscourtboston.membership
+APPLE_TEAM_ID=your_team_id
+
+# Google Wallet
+GOOGLE_WALLET_ISSUER_ID=your_issuer_id
+GOOGLE_WALLET_SERVICE_ACCOUNT_KEY={"type":"service_account","project_id":"...","private_key":"...","client_email":"..."}
 ```
 
 ### Database
