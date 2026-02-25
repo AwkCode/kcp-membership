@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function ArtistHeader() {
   return (
-    <header className="w-full sticky top-0 z-50 header-glass border-b border-kc-purple/10">
+    <header className="w-full sticky top-0 z-50 header-glass border-b border-white/[0.15]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 sm:gap-3">
           <Image
@@ -16,11 +16,11 @@ export default function ArtistHeader() {
           <span className="text-sm sm:text-base font-semibold tracking-tight text-white">
             Kings Court
           </span>
-          <span className="text-[10px] bg-kc-purple/15 text-kc-purple-light px-2 py-0.5 rounded-full border border-kc-purple/25">
+          <span className="text-[10px] bg-white/15 text-white px-2 py-0.5 rounded-full border border-white/25">
             Artist
           </span>
         </Link>
-        <nav className="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-medium text-white/50">
+        <nav className="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm font-medium text-white/75">
           <Link href="/" className="hover:text-white transition">
             Home
           </Link>

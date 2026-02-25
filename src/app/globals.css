@@ -1,62 +1,64 @@
 @import "tailwindcss";
 
 @theme {
-  --color-kc-purple: #7c3aed;
-  --color-kc-purple-light: #a78bfa;
-  --color-kc-purple-dark: #4c1d95;
-  --color-kc-purple-glow: rgba(124, 58, 237, 0.15);
+  --color-kc-purple: #9333ea;
+  --color-kc-purple-light: #a855f7;
+  --color-kc-purple-dark: #6b21a8;
+  --color-kc-purple-glow: rgba(147, 51, 234, 0.2);
 }
 
-/* Ambient background gradient */
+/* Ambient background — deep purple with visible texture */
 .bg-kc-gradient {
   background: linear-gradient(
     170deg,
-    #0c0015 0%,
-    #110022 15%,
-    #0a0a0a 50%,
-    #000000 100%
+    #1a0a2e 0%,
+    #2d1650 20%,
+    #1a0a2e 50%,
+    #120826 80%,
+    #0d0618 100%
   );
 }
 
-/* Subtle floating purple orb glow */
+/* Purple ambient glow — upper left */
 .bg-kc-gradient::before {
   content: "";
   position: fixed;
-  top: -20%;
+  top: -15%;
   left: -10%;
-  width: 60%;
-  height: 60%;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+  width: 65%;
+  height: 65%;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.12) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
+/* Purple ambient glow — lower right */
 .bg-kc-gradient::after {
   content: "";
   position: fixed;
-  bottom: -30%;
-  right: -15%;
-  width: 50%;
-  height: 50%;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.04) 0%, transparent 70%);
+  bottom: -25%;
+  right: -10%;
+  width: 55%;
+  height: 55%;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.08) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Header glass effect */
+/* Header — solid purple bar matching OG site */
 .header-glass {
   background: linear-gradient(
     180deg,
-    rgba(124, 58, 237, 0.08) 0%,
-    rgba(0, 0, 0, 0.95) 100%
+    rgba(147, 51, 234, 0.85) 0%,
+    rgba(107, 33, 168, 0.9) 100%
   );
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 /* Purple glow button hover */
 .btn-glow:hover {
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3), 0 0 60px rgba(124, 58, 237, 0.1);
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.35), 0 0 60px rgba(147, 51, 234, 0.12);
 }
 
 /* Global purple focus ring on all inputs */
@@ -65,8 +67,8 @@ textarea:focus,
 select:focus {
   outline: none;
   ring: none;
-  border-color: rgba(124, 58, 237, 0.4) !important;
-  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15), 0 0 12px rgba(124, 58, 237, 0.08) !important;
+  border-color: rgba(147, 51, 234, 0.5) !important;
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.18), 0 0 12px rgba(147, 51, 234, 0.1) !important;
 }
 
 /* Primary button base — auto-applies glow to white buttons */
@@ -76,17 +78,17 @@ button.btn-primary {
 }
 
 button[type="submit"]:hover:not(:disabled) {
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3), 0 0 60px rgba(124, 58, 237, 0.1);
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.35), 0 0 60px rgba(147, 51, 234, 0.12);
 }
 
 /* Card purple border on hover */
 .card-kc {
-  border-color: rgba(124, 58, 237, 0.08);
+  border-color: rgba(147, 51, 234, 0.1);
   transition: border-color 0.2s ease;
 }
 
 .card-kc:hover {
-  border-color: rgba(124, 58, 237, 0.18);
+  border-color: rgba(147, 51, 234, 0.22);
 }
 
 /* Page fade-in animation */
