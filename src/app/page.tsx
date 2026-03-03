@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
@@ -16,6 +17,7 @@ interface UserInfo {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [user, setUser] = useState<UserInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,6 +29,13 @@ export default function Home() {
 
         if (!authUser) {
           setLoading(false);
+          return;
+        }
+
+        // Check user metadata for role — staff gets redirected immediately
+        const role = authUser.user_metadata?.role;
+        if (role === "staff" || role === "admin") {
+          router.replace("/admin/dashboard");
           return;
         }
 
@@ -44,13 +53,10 @@ export default function Home() {
           .eq("auth_id", authUser.id)
           .single();
 
-        // Check user metadata for role
-        const role = authUser.user_metadata?.role;
-
         setUser({
           displayName: member?.first_name || artist?.display_name || authUser.email?.split("@")[0] || "there",
           isArtist: !!artist,
-          isStaff: role === "staff" || role === "admin",
+          isStaff: false,
           isMember: !!member,
         });
       } catch {
@@ -60,7 +66,7 @@ export default function Home() {
       }
     }
     checkAuth();
-  }, []);
+  }, [router]);
 
   return (
     <PageShell>
@@ -87,30 +93,7 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col gap-3 w-full max-w-xs">
-              {user.isStaff && (
-                <>
-                  <Link
-                    href="/admin/dashboard"
-                    className="px-8 py-3.5 bg-white text-black rounded-lg font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm btn-glow"
-                  >
-                    Dashboard
-                  </Link>
-                  <Link
-                    href="/admin/shows"
-                    className="px-8 py-3.5 bg-white/[0.06] text-white border border-kc-purple/20 rounded-lg font-semibold hover:bg-kc-purple/10 hover:border-kc-purple/30 transition text-center text-sm"
-                  >
-                    Manage Shows
-                  </Link>
-                  <Link
-                    href="/scan"
-                    className="px-8 py-3.5 bg-white/[0.06] text-white border border-kc-purple/20 rounded-lg font-semibold hover:bg-kc-purple/10 hover:border-kc-purple/30 transition text-center text-sm"
-                  >
-                    Scanner
-                  </Link>
-                </>
-              )}
-
-              {user.isArtist && !user.isStaff && (
+              {user.isArtist && (
                 <>
                   <Link
                     href="/shows"
@@ -157,22 +140,12 @@ export default function Home() {
               <Link href="/perks" className="text-white/30 text-xs hover:text-white/60 transition">
                 Perks
               </Link>
-              {user.isStaff && user.isArtist && (
-                <>
-                  <Link href="/shows" className="text-white/30 text-xs hover:text-white/60 transition">
-                    Browse Shows
-                  </Link>
-                  <Link href="/artists/bookings" className="text-white/30 text-xs hover:text-white/60 transition">
-                    My Spots
-                  </Link>
-                </>
-              )}
               {!user.isArtist && (
                 <Link href="/artists/join" className="text-white/30 text-xs hover:text-white/60 transition">
                   Artist Sign Up
                 </Link>
               )}
-              {user.isArtist && !user.isStaff && (
+              {user.isArtist && !user.isMember && (
                 <Link href="/join" className="text-white/30 text-xs hover:text-white/60 transition">
                   Become a Member
                 </Link>
