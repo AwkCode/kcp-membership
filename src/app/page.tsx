@@ -159,7 +159,7 @@ export default function Home() {
               Kings Court Boston
             </h1>
             <p className="text-white/60 text-base sm:text-lg text-center mb-8 sm:mb-12 max-w-md font-light px-4">
-              Become a member. Skip the line. Unlock exclusive perks.
+              Boston&apos;s underground home for live comedy, music, and creative culture.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0">
@@ -206,7 +206,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="font-medium text-white mb-1.5 text-sm">Members-Only Access</h3>
-                <p className="text-white/40 text-xs leading-relaxed">Skip the line, get drink deals, and hit exclusive events before anyone else.</p>
+                <p className="text-white/40 text-xs leading-relaxed">Skip the line, unlock member perks, and hit exclusive events before anyone else.</p>
               </div>
             </div>
           </>
