@@ -49,6 +49,19 @@ interface LineupEntry {
   };
 }
 
+interface CheckinEntry {
+  id: string;
+  created_at: string;
+  notes: string | null;
+  members: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    status: string;
+  };
+}
+
 export default function AdminShowDetailPage() {
   const params = useParams();
   const showId = params.id as string;
@@ -57,7 +70,12 @@ export default function AdminShowDetailPage() {
   const [requests, setRequests] = useState<BookingRequest[]>([]);
   const [lineup, setLineup] = useState<LineupEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"requests" | "lineup">("requests");
+  const [tab, setTab] = useState<"requests" | "lineup" | "checkins">("requests");
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState("");
+  const [savingName, setSavingName] = useState(false);
+  const [checkins, setCheckins] = useState<CheckinEntry[]>([]);
+  const [checkinsLoading, setCheckinsLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -86,9 +104,52 @@ export default function AdminShowDetailPage() {
     }
   }, [showId]);
 
+  const fetchCheckins = useCallback(async (showDate: string) => {
+    setCheckinsLoading(true);
+    try {
+      const res = await fetch(`/api/checkin?date=${showDate}`);
+      if (res.ok) {
+        const data = await res.json();
+        setCheckins(data.checkins);
+      }
+    } catch {
+      // ignore
+    } finally {
+      setCheckinsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    if (show && tab === "checkins") {
+      fetchCheckins(show.show_date);
+    }
+  }, [show?.show_date, tab, fetchCheckins]);
+
+  async function saveShowName() {
+    if (!show || !nameInput.trim() || nameInput.trim() === show.show_name) {
+      setEditingName(false);
+      return;
+    }
+    setSavingName(true);
+    try {
+      const res = await fetch("/api/shows", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: show.id, show_name: nameInput.trim() }),
+      });
+      if (!res.ok) throw new Error();
+      setShow({ ...show, show_name: nameInput.trim() });
+      setEditingName(false);
+    } catch {
+      alert("Failed to update show name");
+    } finally {
+      setSavingName(false);
+    }
+  }
 
   async function updateRequestStatus(requestId: string, status: string) {
     try {
@@ -192,7 +253,45 @@ export default function AdminShowDetailPage() {
           <>
             {/* Show Header */}
             <div className="bg-white/[0.04] border border-kc-purple/10 rounded-2xl p-6 mb-4">
-              <h1 className="text-xl font-bold text-white">{show.show_name}</h1>
+              {editingName ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={nameInput}
+                    onChange={(e) => setNameInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") saveShowName();
+                      if (e.key === "Escape") setEditingName(false);
+                    }}
+                    className="flex-1 px-3 py-1.5 bg-white/[0.08] border border-white/20 rounded-lg text-white text-xl font-bold focus:ring-2 focus:ring-kc-purple/50 focus:border-transparent"
+                    autoFocus
+                    disabled={savingName}
+                  />
+                  <button
+                    onClick={saveShowName}
+                    disabled={savingName}
+                    className="px-3 py-1.5 bg-green-500/10 text-green-400 border border-green-500/20 rounded-lg text-xs font-medium hover:bg-green-500/20 transition disabled:opacity-40"
+                  >
+                    {savingName ? "..." : "Save"}
+                  </button>
+                  <button
+                    onClick={() => setEditingName(false)}
+                    className="px-3 py-1.5 bg-white/5 text-white/40 border border-white/10 rounded-lg text-xs font-medium hover:text-white/60 transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <h1
+                  className="text-xl font-bold text-white flex items-center gap-2 group cursor-pointer"
+                  onClick={() => { setNameInput(show.show_name); setEditingName(true); }}
+                >
+                  {show.show_name}
+                  <svg className="w-4 h-4 text-white/20 group-hover:text-white/50 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </h1>
+              )}
               <p className="text-white/50 text-sm mt-1">
                 {formatDate(show.show_date)} at {formatTime(show.start_time)} | {show.venue}
               </p>
@@ -224,6 +323,18 @@ export default function AdminShowDetailPage() {
                 }`}
               >
                 Lineup ({lineup.length})
+              </button>
+              <button
+                onClick={() => setTab("checkins")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                  tab === "checkins" ? "bg-white/10 text-white" : "text-white/40 hover:text-white/60"
+                }`}
+              >
+                Check-Ins {checkins.length > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-green-500/20 text-green-400 rounded-full text-[10px]">
+                    {checkins.length}
+                  </span>
+                )}
               </button>
             </div>
 
@@ -392,6 +503,51 @@ export default function AdminShowDetailPage() {
                       </div>
                     </div>
                   ))
+                )}
+              </div>
+            )}
+
+            {/* Check-Ins Tab */}
+            {tab === "checkins" && (
+              <div className="space-y-2">
+                {checkinsLoading ? (
+                  <p className="text-white/30 text-center py-6 text-sm">Loading check-ins...</p>
+                ) : checkins.length === 0 ? (
+                  <p className="text-white/30 text-center py-6 text-sm">
+                    No members checked in on this date yet.
+                  </p>
+                ) : (
+                  <>
+                    <h3 className="text-white/40 text-xs uppercase tracking-wide mb-2">
+                      {checkins.length} member{checkins.length !== 1 ? "s" : ""} checked in on {show ? formatDate(show.show_date) : ""}
+                    </h3>
+                    {checkins.map((c) => (
+                      <div key={c.id} className="bg-white/[0.04] border border-kc-purple/10 rounded-xl p-4 flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-white text-sm">
+                            {c.members.first_name} {c.members.last_name}
+                          </p>
+                          <p className="text-white/30 text-xs">{c.members.email}</p>
+                          <span
+                            className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${
+                              c.members.status === "vip" ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                                : c.members.status === "staff" ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                                : c.members.status === "comp" ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                                : "bg-green-500/10 text-green-400 border-green-500/20"
+                            }`}
+                          >
+                            {c.members.status}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-white/30 text-xs">
+                            {new Date(c.created_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
+                          </p>
+                          {c.notes && <p className="text-white/20 text-xs mt-0.5">{c.notes}</p>}
+                        </div>
+                      </div>
+                    ))}
+                  </>
                 )}
               </div>
             )}
