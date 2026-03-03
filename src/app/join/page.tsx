@@ -202,9 +202,9 @@ export default function JoinPage() {
                   required
                 />
                 <span className="text-white/40 text-xs leading-relaxed">
-                  I agree to the{" "}
+                  I am at least 21 years old and agree to the{" "}
                   <Link href="/terms" target="_blank" className="text-white/60 underline">
-                    Terms of Service & Privacy Policy
+                    Membership By-Laws & Terms of Service
                   </Link>
                 </span>
               </label>
