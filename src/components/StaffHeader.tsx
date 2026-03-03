@@ -1,11 +1,23 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { createSupabaseBrowser } from "@/lib/supabase/client";
 
 export default function StaffHeader() {
+  const router = useRouter();
+
+  async function handleLogout() {
+    const supabase = createSupabaseBrowser();
+    await supabase.auth.signOut();
+    router.push("/");
+  }
+
   return (
     <header className="w-full sticky top-0 z-50 header-glass border-b border-white/[0.15]">
       <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
+        <Link href="/admin/dashboard" className="flex items-center gap-3">
           <Image
             src="/kc-logo-v3.png"
             alt="Kings Court"
@@ -39,6 +51,15 @@ export default function StaffHeader() {
           <Link href="/admin/artists" className="hover:text-white transition">
             Artists
           </Link>
+          <Link href="/terms" className="hover:text-white transition hidden sm:block">
+            Terms
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="text-white/40 hover:text-red-400 transition"
+          >
+            Logout
+          </button>
         </nav>
       </div>
     </header>
