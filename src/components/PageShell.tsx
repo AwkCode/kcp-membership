@@ -1,4 +1,5 @@
 import Image from "next/image";
+import BackgroundCarousel from "./BackgroundCarousel";
 
 interface PageShellProps {
   children: React.ReactNode;
@@ -7,6 +8,9 @@ interface PageShellProps {
 export default function PageShell({ children }: PageShellProps) {
   return (
     <div className="min-h-screen relative bg-kc-gradient overflow-hidden">
+      {/* Background photo carousel */}
+      <BackgroundCarousel />
+
       {/* Side art - left (mobile: small corner pieces, desktop: larger) */}
       <div className="fixed left-0 top-0 bottom-0 w-16 sm:w-24 lg:w-32 xl:w-40 z-[2] pointer-events-none">
         <div className="absolute top-[12%] -left-6 sm:-left-4 lg:-left-4 xl:left-0 opacity-[0.06] sm:opacity-[0.08] lg:opacity-[0.10]">
