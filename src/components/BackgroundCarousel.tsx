@@ -10,7 +10,6 @@ const images = [
   "/carousel/5.jpg",
   "/carousel/6.jpg",
   "/carousel/7.jpg",
-  "/carousel/8.jpg",
 ];
 
 const INTERVAL = 6000; // 6 seconds per slide
