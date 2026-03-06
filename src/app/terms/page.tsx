@@ -73,7 +73,6 @@ export default function TermsPage() {
                     <ul className="list-disc list-inside space-y-1 mt-2">
                       <li>Access to the private Kings Court lounge and event spaces</li>
                       <li>Priority entry and early access to shows and events</li>
-                      <li>Member-only discounts on merchandise and event tickets</li>
                       <li>Access to curated cannabis-friendly social experiences</li>
                       <li>Digital membership card with QR code and mobile wallet pass</li>
                     </ul>
