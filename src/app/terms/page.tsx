@@ -92,14 +92,14 @@ export default function TermsPage() {
                       Cannabis consumption is permitted only in designated areas within the premises,
                       in accordance with all applicable Massachusetts state laws and local regulations.
                       Members are solely responsible for their own cannabis products and consumption.
-                      Kings Court does not sell, distribute, or provide cannabis or cannabis products.
+                      Kings Court does not sell cannabis.
                     </p>
                     <ul className="list-disc list-inside space-y-1 mt-2">
                       <li>Members must bring their own legally obtained cannabis products</li>
                       <li>Consumption is permitted only in clearly designated areas</li>
                       <li>Members must comply with all Massachusetts Cannabis Control Commission regulations</li>
                       <li>Excessive impairment that disrupts others or poses a safety concern may result in removal</li>
-                      <li>Sharing, selling, or distributing cannabis to others on the premises is strictly prohibited</li>
+                      <li>Selling cannabis on the premises is strictly prohibited</li>
                     </ul>
                   </section>
 
@@ -145,7 +145,7 @@ export default function TermsPage() {
                       <li>Discrimination based on race, color, religion, gender, gender identity, sexual orientation, national origin, disability, or any other protected characteristic</li>
                       <li>Physical violence or any conduct that endangers the safety of others</li>
                       <li>Theft, vandalism, or destruction of property</li>
-                      <li>Any illegal activity (other than lawful cannabis consumption in designated areas)</li>
+                      <li>Any illegal activity</li>
                       <li>Disruptive behavior that interferes with other members&apos; enjoyment</li>
                       <li>Entering restricted or staff-only areas without authorization</li>
                       <li>Refusal to comply with directions from Kings Court staff</li>
@@ -158,20 +158,7 @@ export default function TermsPage() {
 
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      9. Media & Social Media Policy
-                    </h3>
-                    <p>
-                      Members and guests shall not photograph, record, or otherwise capture the likeness
-                      of other members or guests without their explicit consent. Members shall not disclose
-                      the identity or presence of other members to any press, media outlet, or on social
-                      media platforms without the express written consent of the individuals involved.
-                      Violation of this policy may result in membership revocation.
-                    </p>
-                  </section>
-
-                  <section>
-                    <h3 className="text-white font-semibold text-base mb-2">
-                      10. Intellectual Property
+                      9. Intellectual Property
                     </h3>
                     <p>
                       The Kings Court Boston name, logo, branding, and all associated intellectual property
@@ -183,7 +170,7 @@ export default function TermsPage() {
 
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      11. Assumption of Risk & Liability Waiver
+                      10. Assumption of Risk & Liability Waiver
                     </h3>
                     <p>
                       By becoming a member of Kings Court Boston, you acknowledge and voluntarily assume all
@@ -212,7 +199,7 @@ export default function TermsPage() {
                 <div className="space-y-6">
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      12. Information We Collect
+                      11. Information We Collect
                     </h3>
                     <p>
                       When you register for membership, we collect the following information:
@@ -232,7 +219,7 @@ export default function TermsPage() {
 
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      13. How We Use Your Information
+                      12. How We Use Your Information
                     </h3>
                     <ul className="list-disc list-inside space-y-1">
                       <li>To create and manage your membership account</li>
@@ -245,7 +232,7 @@ export default function TermsPage() {
 
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      14. Data Protection & Sharing
+                      13. Data Protection & Sharing
                     </h3>
                     <p>
                       Your personal information is stored securely and is never sold to third parties.
@@ -259,7 +246,7 @@ export default function TermsPage() {
 
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      15. Communications & Marketing
+                      14. Communications & Marketing
                     </h3>
                     <p>
                       By providing your email address and/or phone number, you consent to receive
@@ -273,7 +260,7 @@ export default function TermsPage() {
 
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      16. Cancellation & Account Termination
+                      15. Cancellation & Account Termination
                     </h3>
                     <p>
                       You may cancel your membership at any time through your digital member card page
@@ -286,7 +273,7 @@ export default function TermsPage() {
 
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      17. Disclaimer of Warranties
+                      16. Disclaimer of Warranties
                     </h3>
                     <p>
                       All services provided by Kings Court Boston, including the membership platform,
@@ -299,7 +286,7 @@ export default function TermsPage() {
 
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      18. Changes to These Terms
+                      17. Changes to These Terms
                     </h3>
                     <p>
                       Kings Court Boston reserves the right to update or modify these by-laws and terms
@@ -311,7 +298,7 @@ export default function TermsPage() {
 
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      19. Governing Law
+                      18. Governing Law
                     </h3>
                     <p>
                       These by-laws and terms shall be governed by and construed in accordance with the
@@ -322,7 +309,7 @@ export default function TermsPage() {
 
                   <section>
                     <h3 className="text-white font-semibold text-base mb-2">
-                      20. Contact
+                      19. Contact
                     </h3>
                     <p>
                       For questions about your membership, these by-laws, or our privacy practices,
