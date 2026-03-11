@@ -7,11 +7,12 @@ interface Props {
   firstName: string;
   lastName: string;
   status: string;
+  tier?: string;
   token: string;
   qrDataUrl: string;
 }
 
-export default function MemberCard({ firstName, lastName, status: initialStatus, token, qrDataUrl }: Props) {
+export default function MemberCard({ firstName, lastName, status: initialStatus, tier, token, qrDataUrl }: Props) {
   const [status, setStatus] = useState(initialStatus);
   const [showConfirm, setShowConfirm] = useState(false);
   const [cancelling, setCancelling] = useState(false);
@@ -66,6 +67,12 @@ export default function MemberCard({ firstName, lastName, status: initialStatus,
         >
           {status === "vip" ? "VIP" : status}
         </span>
+
+        {tier === "levia" && (
+          <span className="inline-block mt-1 ml-1 px-3 py-1 rounded-full text-[10px] font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">
+            Levia
+          </span>
+        )}
 
         {["active", "vip", "staff", "comp"].includes(status) && (
           <p className="text-white/30 text-xs mt-6">Show this QR code at check-in</p>

@@ -9,13 +9,13 @@ export async function GET() {
     const admin = createSupabaseAdmin();
     const { data: members, error } = await admin
       .from("members")
-      .select("first_name, last_name, email, phone, status, notes, created_at")
+      .select("first_name, last_name, email, phone, status, tier, notes, created_at")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
 
-    const header = "First Name,Last Name,Email,Phone,Status,Notes,Joined";
-    const rows = (members || []).map((m: { first_name: string; last_name: string; email: string; phone: string | null; status: string; notes: string | null; created_at: string }) => {
+    const header = "First Name,Last Name,Email,Phone,Status,Tier,Notes,Joined";
+    const rows = (members || []).map((m: { first_name: string; last_name: string; email: string; phone: string | null; status: string; tier: string; notes: string | null; created_at: string }) => {
       const escape = (v: string | null) => {
         if (!v) return "";
         if (v.includes(",") || v.includes('"') || v.includes("\n")) {
@@ -29,6 +29,7 @@ export async function GET() {
         escape(m.email),
         escape(m.phone),
         escape(m.status),
+        escape(m.tier),
         escape(m.notes),
         new Date(m.created_at).toLocaleDateString(),
       ].join(",");

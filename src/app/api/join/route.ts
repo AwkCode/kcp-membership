@@ -8,7 +8,7 @@ import { sendMembershipSMS } from "@/lib/sms";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { first_name, last_name, email, password, phone } = body;
+    const { first_name, last_name, email, password, phone, tier } = body;
 
     if (!first_name || !last_name || !email || !password) {
       return NextResponse.json(
@@ -20,6 +20,14 @@ export async function POST(request: NextRequest) {
     if (password.length < 6) {
       return NextResponse.json(
         { error: "Password must be at least 6 characters" },
+        { status: 400 }
+      );
+    }
+
+    const memberTier = tier || "free";
+    if (!["free", "levia"].includes(memberTier)) {
+      return NextResponse.json(
+        { error: "Invalid membership tier" },
         { status: 400 }
       );
     }
@@ -67,6 +75,7 @@ export async function POST(request: NextRequest) {
         phone: phone?.trim() || null,
         membership_token: token,
         status: "active",
+        tier: memberTier,
         auth_id: authUserId,
       })
       .select()
@@ -96,6 +105,7 @@ export async function POST(request: NextRequest) {
       lastName: member.last_name,
       token,
       qrImageBase64: qrDataUrl,
+      tier: memberTier,
     });
 
     // Send SMS if phone number provided and Twilio is configured
@@ -105,6 +115,7 @@ export async function POST(request: NextRequest) {
           to: member.phone,
           firstName: member.first_name,
           token,
+          tier: memberTier,
         });
       } catch (smsErr) {
         console.error("SMS send failed (non-blocking):", smsErr);

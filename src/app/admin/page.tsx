@@ -11,6 +11,7 @@ interface Member {
   email: string;
   phone: string | null;
   status: string;
+  tier: string;
   notes: string;
   membership_token: string;
   created_at: string;
@@ -20,7 +21,7 @@ export default function AdminPage() {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ status: "", notes: "" });
+  const [editForm, setEditForm] = useState({ status: "", tier: "", notes: "" });
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState("");
 
@@ -43,7 +44,7 @@ export default function AdminPage() {
 
   function startEdit(m: Member) {
     setEditingId(m.id);
-    setEditForm({ status: m.status, notes: m.notes || "" });
+    setEditForm({ status: m.status, tier: m.tier, notes: m.notes || "" });
   }
 
   async function saveEdit(id: string) {
@@ -137,6 +138,17 @@ export default function AdminPage() {
                       </select>
                     </div>
                     <div>
+                      <label className="block text-xs font-medium text-white/60 mb-1">Tier</label>
+                      <select
+                        value={editForm.tier}
+                        onChange={(e) => setEditForm({ ...editForm, tier: e.target.value })}
+                        className="w-full px-3 py-2 bg-white/[0.06] border border-white/10 rounded-lg text-white text-sm"
+                      >
+                        <option value="free">Free</option>
+                        <option value="levia">Levia</option>
+                      </select>
+                    </div>
+                    <div>
                       <label className="block text-xs font-medium text-white/60 mb-1">Notes</label>
                       <textarea
                         value={editForm.notes}
@@ -183,6 +195,11 @@ export default function AdminPage() {
                         >
                           {m.status}
                         </span>
+                        {m.tier === "levia" && (
+                          <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                            Levia
+                          </span>
+                        )}
                         {m.notes && (
                           <span className="text-white/30 text-xs truncate max-w-[200px]">
                             {m.notes}

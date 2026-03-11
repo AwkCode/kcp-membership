@@ -40,6 +40,7 @@ export async function GET() {
       email: member.email,
       phone: member.phone,
       status: member.status,
+      tier: member.tier,
       membership_token: member.membership_token,
       created_at: member.created_at,
       visit_count: visitCount || 0,
@@ -100,6 +101,7 @@ export async function PATCH(request: NextRequest) {
       email: data.email,
       phone: data.phone,
       status: data.status,
+      tier: data.tier,
       membership_token: data.membership_token,
       created_at: data.created_at,
     });

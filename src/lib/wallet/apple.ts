@@ -4,6 +4,7 @@ interface MemberPassData {
   firstName: string;
   lastName: string;
   status: string;
+  tier?: string;
   token: string;
   memberSince: string;
 }
@@ -75,7 +76,9 @@ export async function generateApplePass(member: MemberPassData): Promise<Buffer>
     {
       key: "status",
       label: "STATUS",
-      value: statusDisplay[member.status] || member.status,
+      value: member.tier === "levia"
+        ? "Levia Member"
+        : statusDisplay[member.status] || member.status,
     },
     {
       key: "since",
@@ -92,6 +95,14 @@ export async function generateApplePass(member: MemberPassData): Promise<Buffer>
     label: "VENUE",
     value: "Kings Court Boston",
   });
+
+  if (member.tier === "levia") {
+    pass.auxiliaryFields.push({
+      key: "tier",
+      label: "TIER",
+      value: "Levia",
+    });
+  }
 
   pass.backFields.push(
     {

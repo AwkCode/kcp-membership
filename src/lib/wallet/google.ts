@@ -4,6 +4,7 @@ interface MemberPassData {
   firstName: string;
   lastName: string;
   status: string;
+  tier?: string;
   token: string;
   memberSince: string;
 }
@@ -71,7 +72,9 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
     subheader: {
       defaultValue: {
         language: "en-US",
-        value: statusDisplay[member.status] || member.status,
+        value: member.tier === "levia"
+          ? "Levia Member"
+          : statusDisplay[member.status] || member.status,
       },
     },
     header: {
@@ -102,6 +105,9 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
         body: statusDisplay[member.status] || member.status,
         id: "status",
       },
+      ...(member.tier === "levia"
+        ? [{ header: "TIER", body: "Levia", id: "tier" }]
+        : []),
       {
         header: "MEMBER SINCE",
         body: memberSinceFormatted,

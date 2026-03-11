@@ -23,6 +23,7 @@ interface Member {
   last_name: string;
   email: string;
   status: string;
+  tier: string;
   created_at: string;
 }
 
@@ -265,6 +266,11 @@ export default function DashboardPage() {
                           >
                             {m.status}
                           </span>
+                          {m.tier === "levia" && (
+                            <span className="inline-block ml-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                              Levia
+                            </span>
+                          )}
                           <p className="text-white/20 text-xs mt-0.5">
                             {timeAgo(m.created_at)}
                           </p>

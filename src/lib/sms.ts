@@ -9,6 +9,7 @@ interface SendMembershipSMSParams {
   to: string;
   firstName: string;
   token: string;
+  tier?: string;
 }
 
 /**
@@ -42,13 +43,18 @@ export async function sendMembershipSMS({
   to,
   firstName,
   token,
+  tier = "free",
 }: SendMembershipSMSParams) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const cardUrl = `${baseUrl}/m/${token}`;
   const normalizedTo = normalizePhone(to);
 
+  const body = tier === "levia"
+    ? `Welcome to Kings Court, ${firstName}! Your Levia membership is now active. View your digital card & QR code here: ${cardUrl}`
+    : `Welcome to Kings Court, ${firstName}! Your membership is active. View your digital card & QR code here: ${cardUrl}`;
+
   await client.messages.create({
-    body: `Welcome to Kings Court, ${firstName}! Your membership is active. View your digital card & QR code here: ${cardUrl}`,
+    body,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: normalizedTo,
   });

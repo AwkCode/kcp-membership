@@ -16,7 +16,7 @@ export default async function MemberCardPage({ params }: Props) {
 
   const { data: member } = await supabase
     .from("members")
-    .select("first_name, last_name, status, membership_token")
+    .select("first_name, last_name, status, tier, membership_token")
     .eq("membership_token", token)
     .single();
 
@@ -35,6 +35,7 @@ export default async function MemberCardPage({ params }: Props) {
           firstName={member.first_name}
           lastName={member.last_name}
           status={member.status}
+          tier={member.tier}
           token={member.membership_token}
           qrDataUrl={qrDataUrl}
         />

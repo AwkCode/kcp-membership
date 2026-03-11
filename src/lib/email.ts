@@ -8,6 +8,7 @@ interface SendMembershipEmailParams {
   lastName: string;
   token: string;
   qrImageBase64: string;
+  tier?: string;
 }
 
 export async function sendMembershipEmail({
@@ -16,23 +17,38 @@ export async function sendMembershipEmail({
   lastName,
   token,
   qrImageBase64,
+  tier = "free",
 }: SendMembershipEmailParams) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const cardUrl = `${baseUrl}/m/${token}`;
+  const isLevia = tier === "levia";
 
   // Strip the data:image/png;base64, prefix for attachment
   const base64Data = qrImageBase64.replace(/^data:image\/png;base64,/, "");
 
+  const subject = isLevia
+    ? "Welcome to Kings Court — Levia Membership"
+    : "Welcome to Kings Court — Your Membership Card";
+
+  const welcomeText = isLevia
+    ? `Your Levia membership is now active. You've unlocked exclusive perks including locker access, monthly product allotments, coworking hours, and more. Show the QR code below when you check in.`
+    : `Your membership is now active. Show the QR code below when you check in.`;
+
+  const tierBadge = isLevia
+    ? `<p style="text-align: center; margin-bottom: 16px;"><span style="display: inline-block; padding: 4px 16px; background: #0d9488; color: #fff; border-radius: 20px; font-size: 13px; font-weight: 600;">Levia Member</span></p>`
+    : "";
+
   const msg = {
     to,
     from: process.env.SENDGRID_FROM_EMAIL!,
-    subject: "Welcome to Kings Court — Your Membership Card",
+    subject,
     html: `
       <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
         <h1 style="color: #1a1a2e; text-align: center;">Kings Court</h1>
         <h2 style="color: #333; text-align: center;">Welcome, ${firstName} ${lastName}!</h2>
+        ${tierBadge}
         <p style="color: #555; text-align: center;">
-          Your membership is now active. Show the QR code below when you check in.
+          ${welcomeText}
         </p>
         <div style="text-align: center; margin: 24px 0;">
           <img src="cid:qrcode" alt="Membership QR Code" width="250" height="250" />

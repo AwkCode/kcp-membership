@@ -11,11 +11,14 @@ export async function PATCH(
 
     const { id } = await params;
     const body = await request.json();
-    const { status, notes } = body;
+    const { status, notes, tier } = body;
 
     const updates: Record<string, string> = {};
-    if (status && ["active", "suspended", "cancelled"].includes(status)) {
+    if (status && ["active", "vip", "staff", "comp", "suspended", "cancelled", "expired"].includes(status)) {
       updates.status = status;
+    }
+    if (tier && ["free", "levia"].includes(tier)) {
+      updates.tier = tier;
     }
     if (notes !== undefined) {
       updates.notes = notes;

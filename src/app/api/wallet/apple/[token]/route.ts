@@ -13,7 +13,7 @@ export async function GET(
     // Look up the member
     const { data: member, error } = await supabase
       .from("members")
-      .select("first_name, last_name, status, membership_token, created_at")
+      .select("first_name, last_name, status, tier, membership_token, created_at")
       .eq("membership_token", token)
       .single();
 
@@ -34,6 +34,7 @@ export async function GET(
       firstName: member.first_name,
       lastName: member.last_name,
       status: member.status,
+      tier: member.tier,
       token: member.membership_token,
       memberSince: member.created_at,
     });

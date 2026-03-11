@@ -170,6 +170,12 @@ export default function Home() {
                 Become a Member
               </Link>
               <Link
+                href="/join/levia"
+                className="px-8 py-3.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-lg font-semibold hover:bg-teal-500/20 transition text-center text-sm"
+              >
+                Levia Membership
+              </Link>
+              <Link
                 href="/perks"
                 className="px-8 py-3.5 bg-white/[0.06] text-white border border-kc-purple/20 rounded-lg font-semibold hover:bg-kc-purple/10 hover:border-kc-purple/30 transition text-center text-sm"
               >

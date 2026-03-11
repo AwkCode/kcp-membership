@@ -60,6 +60,19 @@ const perks = [
   },
 ];
 
+const leviaPerks = [
+  { title: "Founding Member Locker", desc: "Personal wine-locker-style storage on the 2nd floor with curated Levia products." },
+  { title: "Monthly Milligram Allotment", desc: "Levia-donated product each month — gummies, pre-rolls, drink drops, and more." },
+  { title: "Drink Drops", desc: "Complimentary Levia drink drops at the coffee shop." },
+  { title: "Free Levia Water", desc: "Unlimited Levia-infused water on every visit." },
+  { title: "Grab-and-Go Levias", desc: "Infused Levia beverages ready when you are." },
+  { title: "Coworking Hours", desc: "Included daytime coworking access at the venue." },
+  { title: "Earn Show Tickets", desc: "Convert coworking hours into tickets to live shows." },
+  { title: "Cold Juice Punch Card", desc: "Loyalty punch card for cold-pressed juices at the workstations." },
+  { title: "Dispensary Discounts", desc: "Show your KCB card at 250+ dispensaries for exclusive Levia discounts." },
+  { title: "Private Club Access", desc: "Full access to private membership club events and on-site amenities." },
+];
+
 export default function PerksPage() {
   return (
     <PageShell>
@@ -109,18 +122,61 @@ export default function PerksPage() {
             ))}
           </div>
 
+          {/* Levia Membership Section */}
+          <div className="mt-14">
+            <div className="text-center mb-8">
+              <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-3">
+                Levia Membership
+              </span>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+                Upgrade Your Experience
+              </h2>
+              <p className="text-white/50 text-sm max-w-md mx-auto font-light">
+                Everything in the free tier, plus exclusive Levia-powered perks.
+              </p>
+            </div>
+
+            <div className="grid gap-3">
+              {leviaPerks.map((perk, i) => (
+                <div
+                  key={i}
+                  className="bg-teal-500/[0.03] rounded-2xl p-5 border border-teal-500/10 flex items-start gap-4 hover:border-teal-500/20 hover:bg-teal-500/[0.05] transition"
+                >
+                  <div className="w-10 h-10 bg-teal-500/10 rounded-xl flex items-center justify-center text-teal-400 shrink-0">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-white text-sm mb-0.5">{perk.title}</h3>
+                    <p className="text-white/40 text-xs leading-relaxed">{perk.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Dual CTA */}
           <div className="mt-14 text-center">
             <div className="bg-white/[0.04] rounded-2xl p-10 border border-kc-purple/10">
               <h2 className="text-2xl font-bold text-white mb-2">Ready to join?</h2>
               <p className="text-white/40 mb-6 text-sm">
-                Free membership. Instant access. Takes 30 seconds.
+                Start free or go all in with Levia.
               </p>
-              <Link
-                href="/join"
-                className="inline-block px-8 py-3 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-sm btn-glow"
-              >
-                Become a Member
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link
+                  href="/join"
+                  className="inline-block px-8 py-3 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-sm btn-glow"
+                >
+                  Free Membership
+                </Link>
+                <Link
+                  href="/join/levia"
+                  className="inline-block px-8 py-3 bg-teal-500 text-white rounded-full font-semibold hover:bg-teal-400 transition text-sm"
+                >
+                  Levia Membership
+                </Link>
+              </div>
             </div>
           </div>
         </div>

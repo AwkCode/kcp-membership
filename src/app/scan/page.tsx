@@ -23,6 +23,7 @@ interface MemberInfo {
   first_name: string;
   last_name: string;
   status: string;
+  tier?: string;
   notes: string;
   created_at: string;
   last_checkin: string | null;
@@ -167,6 +168,14 @@ export default function ScanPage() {
                         : "bg-purple-500/10 text-purple-400 border border-purple-500/20"
                     }`}>
                       {member.status.toUpperCase()}
+                    </span>
+                  </p>
+                )}
+
+                {member.tier === "levia" && (
+                  <p className="text-center mt-1">
+                    <span className="inline-block px-3 py-0.5 rounded-full text-xs font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                      Levia Member
                     </span>
                   </p>
                 )}

@@ -15,7 +15,7 @@ export async function GET(
     // Get member
     const { data: member, error: memberError } = await admin
       .from("members")
-      .select("id, first_name, last_name, status, notes, created_at")
+      .select("id, first_name, last_name, status, tier, notes, created_at")
       .eq("membership_token", token)
       .single();
 
@@ -44,6 +44,7 @@ export async function GET(
         first_name: member.first_name,
         last_name: member.last_name,
         status: member.status,
+        tier: member.tier,
         notes: member.notes,
         created_at: member.created_at,
         last_checkin: lastCheckin?.created_at || null,
