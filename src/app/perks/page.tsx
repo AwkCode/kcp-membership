@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import PageShell from "@/components/PageShell";
 import { MicDoodle, CoffeeDoodle, JointDoodle, LeafDoodle, StarDoodle } from "@/components/Doodles";
@@ -125,9 +126,7 @@ export default function PerksPage() {
           {/* Levia Membership Section */}
           <div className="mt-14">
             <div className="text-center mb-8">
-              <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-3">
-                Levia Membership
-              </span>
+              <Image src="/levia-logo.png" alt="Levia" width={120} height={48} className="mx-auto mb-4 object-contain" />
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
                 Upgrade Your Experience
               </h2>

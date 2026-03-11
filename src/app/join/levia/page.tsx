@@ -108,9 +108,7 @@ export default function LeviaJoinPage() {
           {/* Levia Perks Preview */}
           <div className="bg-teal-500/[0.04] rounded-2xl border border-teal-500/10 p-6 mb-6">
             <div className="text-center mb-4">
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-3">
-                Levia Membership
-              </span>
+              <Image src="/levia-logo.png" alt="Levia" width={100} height={40} className="mx-auto mb-3 object-contain" />
               <h2 className="text-lg font-bold text-white">Member Perks</h2>
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -131,7 +129,11 @@ export default function LeviaJoinPage() {
           {/* Signup Form */}
           <div className="bg-white/[0.04] rounded-2xl border border-teal-500/10 p-8">
             <div className="text-center mb-6">
-              <Image src="/kc-logo-v3.png" alt="Kings Court" width={64} height={64} className="mx-auto mb-3 rounded" />
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <Image src="/kc-logo-v3.png" alt="Kings Court" width={48} height={48} className="rounded" />
+                <span className="text-white/20 text-2xl font-thin">&times;</span>
+                <Image src="/levia-logo.png" alt="Levia" width={80} height={32} className="object-contain" />
+              </div>
               <h1 className="text-2xl font-bold text-white">Join Kings Court</h1>
               <p className="text-teal-400/60 text-sm mt-1">Levia Membership</p>
             </div>

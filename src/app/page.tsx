@@ -171,9 +171,10 @@ export default function Home() {
               </Link>
               <Link
                 href="/join/levia"
-                className="px-8 py-3.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-lg font-semibold hover:bg-teal-500/20 transition text-center text-sm"
+                className="px-8 py-3.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-lg font-semibold hover:bg-teal-500/20 transition text-center text-sm flex items-center justify-center gap-2"
               >
-                Levia Membership
+                <Image src="/levia-logo.png" alt="Levia" width={56} height={22} className="object-contain" />
+                <span>Membership</span>
               </Link>
               <Link
                 href="/perks"
