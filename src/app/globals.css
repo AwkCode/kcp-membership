@@ -122,3 +122,212 @@ button[type="submit"]:hover:not(:disabled) {
 .animate-card-in {
   animation: fadeInScale 0.35s ease-out both;
 }
+
+/* ═══════════════════════════════════════════════════
+   LEVIA MEMBERSHIP PORTAL — Premium Effects
+   ═══════════════════════════════════════════════════ */
+
+/* Gradient text */
+.levia-gradient-text {
+  background: linear-gradient(135deg, #5eead4 0%, #2dd4bf 30%, #14b8a6 50%, #a78bfa 80%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Floating gradient orbs */
+.levia-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.levia-orb-1 {
+  width: 600px;
+  height: 600px;
+  top: -10%;
+  left: -5%;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.12) 0%, transparent 70%);
+  animation: leviaFloat1 20s ease-in-out infinite;
+}
+
+.levia-orb-2 {
+  width: 500px;
+  height: 500px;
+  top: 40%;
+  right: -10%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+  animation: leviaFloat2 25s ease-in-out infinite;
+}
+
+.levia-orb-3 {
+  width: 400px;
+  height: 400px;
+  bottom: 10%;
+  left: 20%;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.08) 0%, transparent 70%);
+  animation: leviaFloat3 18s ease-in-out infinite;
+}
+
+@keyframes leviaFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(60px, 40px) scale(1.1); }
+  66% { transform: translate(-30px, 80px) scale(0.95); }
+}
+
+@keyframes leviaFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-50px, -60px) scale(1.05); }
+  66% { transform: translate(40px, -30px) scale(0.9); }
+}
+
+@keyframes leviaFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(70px, -50px) scale(1.1); }
+}
+
+/* Floating particles */
+.levia-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(94, 234, 212, 0.4);
+  border-radius: 50%;
+  bottom: -10%;
+  animation: leviaParticleRise linear infinite;
+}
+
+.levia-particle::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: rgba(94, 234, 212, 0.15);
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+@keyframes leviaParticleRise {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  90% { opacity: 0.6; }
+  100% {
+    transform: translateY(-110vh) translateX(30px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Logo glow */
+.levia-logo-glow {
+  filter: drop-shadow(0 0 20px rgba(94, 234, 212, 0.15));
+}
+
+/* CTA button with animated gradient */
+.levia-cta-primary {
+  position: relative;
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 50%, #7c3aed 100%);
+  background-size: 200% 200%;
+  color: white;
+  animation: leviaCTAShift 4s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.levia-cta-primary:hover {
+  box-shadow: 0 0 30px rgba(20, 184, 166, 0.35), 0 0 80px rgba(20, 184, 166, 0.12);
+  transform: translateY(-1px);
+}
+
+@keyframes leviaCTAShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Scroll indicator */
+.levia-scroll-indicator {
+  width: 24px;
+  height: 40px;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  position: relative;
+}
+
+.levia-scroll-dot {
+  width: 3px;
+  height: 8px;
+  background: rgba(94, 234, 212, 0.5);
+  border-radius: 2px;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: leviaScrollBounce 2s ease-in-out infinite;
+}
+
+@keyframes leviaScrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  50% { transform: translateX(-50%) translateY(14px); opacity: 0.3; }
+}
+
+/* Perk cards */
+.levia-perk-card {
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.levia-perk-card:hover {
+  border-color: rgba(20, 184, 166, 0.15);
+  background: rgba(20, 184, 166, 0.03);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), 0 0 40px rgba(20, 184, 166, 0.04);
+}
+
+.levia-perk-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border: 1px solid rgba(20, 184, 166, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(94, 234, 212, 0.7);
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.levia-perk-card:hover .levia-perk-icon {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border-color: rgba(20, 184, 166, 0.2);
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.1);
+}
+
+/* Shimmer effect */
+.levia-shimmer {
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.04) 40%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.04) 60%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: leviaShimmer 3s ease-in-out infinite;
+}
+
+@keyframes leviaShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Noise texture */
+.levia-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
