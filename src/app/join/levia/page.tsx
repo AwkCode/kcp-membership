@@ -150,19 +150,26 @@ export default function LeviaJoinPage() {
       />
       <div className="fixed inset-0 pointer-events-none levia-noise opacity-[0.035]" />
 
-      {/* Floating particles */}
+      {/* Smoke particles */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {mounted && Array.from({ length: 12 }).map((_, i) => (
-          <div
-            key={i}
-            className="levia-particle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 8}s`,
-              animationDuration: `${8 + Math.random() * 12}s`,
-            }}
-          />
-        ))}
+        {mounted && Array.from({ length: 60 }).map((_, i) => {
+          const size = 1 + Math.random() * 4;
+          const isBig = size > 3;
+          return (
+            <div
+              key={i}
+              className={isBig ? "levia-smoke" : "levia-particle"}
+              style={{
+                left: `${Math.random() * 100}%`,
+                width: `${size}px`,
+                height: `${size}px`,
+                animationDelay: `${Math.random() * 15}s`,
+                animationDuration: `${6 + Math.random() * 18}s`,
+                opacity: 0.15 + Math.random() * 0.5,
+              }}
+            />
+          );
+        })}
       </div>
 
       <main className="relative z-10 flex flex-col items-center px-6 pt-10 pb-24 min-h-screen">

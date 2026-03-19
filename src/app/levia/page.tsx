@@ -109,22 +109,30 @@ export default function LeviaMembershipPortal() {
       {/* Noise texture overlay */}
       <div className="fixed inset-0 pointer-events-none levia-noise opacity-[0.035]" />
 
-      {/* ─── HERO ─── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-6">
-        {/* Floating particles */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {mounted && Array.from({ length: 20 }).map((_, i) => (
+      {/* Smoke particles — full page */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {mounted && Array.from({ length: 80 }).map((_, i) => {
+          const size = 1 + Math.random() * 4;
+          const isBig = size > 3;
+          return (
             <div
               key={i}
-              className="levia-particle"
+              className={isBig ? "levia-smoke" : "levia-particle"}
               style={{
                 left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 8}s`,
-                animationDuration: `${8 + Math.random() * 12}s`,
+                width: `${size}px`,
+                height: `${size}px`,
+                animationDelay: `${Math.random() * 15}s`,
+                animationDuration: `${6 + Math.random() * 18}s`,
+                opacity: 0.15 + Math.random() * 0.5,
               }}
             />
-          ))}
-        </div>
+          );
+        })}
+      </div>
+
+      {/* ─── HERO ─── */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-6">
 
         {/* Hero content */}
         <div
