@@ -165,18 +165,6 @@ export default function LeviaMembershipPortal() {
             />
           </div>
 
-          {/* Badge */}
-          <div
-            className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal-400/20 bg-teal-400/[0.06] mb-8 transition-all duration-1000 delay-200 ${
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-            <span className="text-teal-300/80 text-xs font-medium tracking-wider uppercase">
-              Founding Memberships Open
-            </span>
-          </div>
-
           {/* Main headline */}
           <h1
             className={`text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-6 transition-all duration-1000 delay-300 ${
