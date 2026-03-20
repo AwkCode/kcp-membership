@@ -98,7 +98,7 @@ export default function LeviaJoinPage() {
 
                 <div className="relative">
                   <div className="flex items-center justify-center gap-4 mb-6">
-                    <Image src="/kc-logo-v3.png" alt="Kings Court" width={48} height={48} className="rounded-lg levia-logo-glow w-11 h-11 translate-y-0.5" />
+                    <Image src="/kc-logo-v3.png" alt="Kings Court" width={48} height={48} className="rounded-lg levia-logo-glow w-11 h-11 translate-y-1.5" />
                     <span className="text-2xl font-bold levia-gradient-text select-none">&times;</span>
                     <Image src="/levia-logo.png" alt="Levia" width={90} height={36} className="object-contain levia-logo-glow h-11 w-auto" />
                   </div>
@@ -195,7 +195,7 @@ export default function LeviaJoinPage() {
             }`}
           >
             <div className="flex items-center justify-center gap-5 sm:gap-6 mb-5">
-              <Image src="/kc-logo-v3.png" alt="Kings Court" width={56} height={56} className="rounded-lg levia-logo-glow w-12 h-12 sm:w-14 sm:h-14 translate-y-0.5" />
+              <Image src="/kc-logo-v3.png" alt="Kings Court" width={56} height={56} className="rounded-lg levia-logo-glow w-12 h-12 sm:w-14 sm:h-14 translate-y-2" />
               <span className="text-3xl sm:text-4xl font-bold levia-gradient-text select-none">&times;</span>
               <Image src="/levia-logo.png" alt="Levia" width={110} height={44} className="object-contain levia-logo-glow h-12 sm:h-14 w-auto" />
             </div>

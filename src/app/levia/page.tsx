@@ -153,7 +153,7 @@ export default function LeviaMembershipPortal() {
               alt="Kings Court"
               width={72}
               height={72}
-              className="rounded-lg levia-logo-glow w-16 h-16 sm:w-[72px] sm:h-[72px] self-center translate-y-1"
+              className="rounded-lg levia-logo-glow w-16 h-16 sm:w-[72px] sm:h-[72px] self-center translate-y-2.5"
             />
             <span className="text-4xl sm:text-5xl font-bold levia-gradient-text select-none">&times;</span>
             <Image
