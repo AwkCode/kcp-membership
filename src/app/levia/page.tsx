@@ -70,9 +70,9 @@ const leviaPerks = [
 ];
 
 const stats = [
-  { value: "250+", label: "Partner Dispensaries" },
-  { value: "∞", label: "Levia Water Refills" },
-  { value: "24/7", label: "Locker Access" },
+  { value: "Live", label: "Comedy & Music" },
+  { value: "∞", label: "Creative Energy" },
+  { value: "420", label: "Friendly Always" },
   { value: "Free", label: "To Join" },
 ];
 
@@ -111,7 +111,7 @@ export default function LeviaMembershipPortal() {
 
       {/* Smoke particles — full page */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {mounted && Array.from({ length: 80 }).map((_, i) => {
+        {mounted && Array.from({ length: 160 }).map((_, i) => {
           const size = 1 + Math.random() * 4;
           const isBig = size > 3;
           return (
@@ -193,8 +193,7 @@ export default function LeviaMembershipPortal() {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            Lockers. Product drops. Coworking. Dispensary discounts.
-            The premium tier at Boston&apos;s most creative private club.
+            Where Boston&apos;s artists come to create, perform, and unwind — now with perks that hit different.
           </p>
 
           {/* CTA buttons */}

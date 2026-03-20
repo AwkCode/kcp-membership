@@ -152,7 +152,7 @@ export default function LeviaJoinPage() {
 
       {/* Smoke particles */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {mounted && Array.from({ length: 60 }).map((_, i) => {
+        {mounted && Array.from({ length: 120 }).map((_, i) => {
           const size = 1 + Math.random() * 4;
           const isBig = size > 3;
           return (
