@@ -144,24 +144,24 @@ export default function LeviaMembershipPortal() {
         >
           {/* Logos */}
           <div
-            className={`flex items-center justify-center gap-5 mb-10 transition-all duration-1000 ${
+            className={`flex items-center justify-center gap-6 sm:gap-8 mb-10 transition-all duration-1000 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
             <Image
               src="/kc-logo-v3.png"
               alt="Kings Court"
-              width={56}
-              height={56}
-              className="rounded-lg levia-logo-glow"
+              width={72}
+              height={72}
+              className="rounded-lg levia-logo-glow w-16 h-16 sm:w-[72px] sm:h-[72px]"
             />
-            <div className="w-px h-10 bg-gradient-to-b from-transparent via-teal-400/40 to-transparent" />
+            <span className="text-white/20 text-3xl sm:text-4xl font-extralight select-none">&times;</span>
             <Image
               src="/levia-logo.png"
               alt="Levia"
-              width={100}
-              height={40}
-              className="object-contain levia-logo-glow"
+              width={140}
+              height={56}
+              className="object-contain levia-logo-glow h-16 sm:h-[72px] w-auto"
             />
           </div>
 

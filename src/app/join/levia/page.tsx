@@ -97,10 +97,10 @@ export default function LeviaJoinPage() {
                 <div className="absolute inset-0 rounded-[28px] bg-gradient-to-br from-teal-500/[0.03] via-transparent to-purple-500/[0.03]" />
 
                 <div className="relative">
-                  <div className="flex items-center justify-center gap-3 mb-6">
-                    <Image src="/kc-logo-v3.png" alt="Kings Court" width={48} height={48} className="rounded-lg levia-logo-glow" />
-                    <div className="w-px h-8 bg-gradient-to-b from-transparent via-teal-400/30 to-transparent" />
-                    <Image src="/levia-logo.png" alt="Levia" width={80} height={32} className="object-contain levia-logo-glow" />
+                  <div className="flex items-center justify-center gap-4 mb-6">
+                    <Image src="/kc-logo-v3.png" alt="Kings Court" width={48} height={48} className="rounded-lg levia-logo-glow w-11 h-11" />
+                    <span className="text-white/20 text-2xl font-extralight select-none">&times;</span>
+                    <Image src="/levia-logo.png" alt="Levia" width={90} height={36} className="object-contain levia-logo-glow h-11 w-auto" />
                   </div>
 
                   <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-teal-500/10 border border-teal-400/20 flex items-center justify-center">
@@ -194,10 +194,10 @@ export default function LeviaJoinPage() {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
           >
-            <div className="flex items-center justify-center gap-4 mb-5">
-              <Image src="/kc-logo-v3.png" alt="Kings Court" width={44} height={44} className="rounded-lg levia-logo-glow" />
-              <div className="w-px h-8 bg-gradient-to-b from-transparent via-teal-400/30 to-transparent" />
-              <Image src="/levia-logo.png" alt="Levia" width={88} height={36} className="object-contain levia-logo-glow" />
+            <div className="flex items-center justify-center gap-5 sm:gap-6 mb-5">
+              <Image src="/kc-logo-v3.png" alt="Kings Court" width={56} height={56} className="rounded-lg levia-logo-glow w-12 h-12 sm:w-14 sm:h-14" />
+              <span className="text-white/20 text-2xl sm:text-3xl font-extralight select-none">&times;</span>
+              <Image src="/levia-logo.png" alt="Levia" width={110} height={44} className="object-contain levia-logo-glow h-12 sm:h-14 w-auto" />
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
               Become a <span className="levia-gradient-text">Member</span>
