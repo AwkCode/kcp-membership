@@ -49,8 +49,11 @@ export async function sendMembershipSMS({
   const cardUrl = `${baseUrl}/m/${token}`;
   const normalizedTo = normalizePhone(to);
 
-  const body = tier === "levia"
+  const isLevia = tier === "levia" || tier?.startsWith("levia-");
+  const body = isLevia
     ? `Welcome to Kings Court, ${firstName}! Your Levia membership is now active. View your digital card & QR code here: ${cardUrl}`
+    : tier === "zyprun"
+    ? `Welcome to Kings Court, ${firstName}! Your Zyp Run membership is now active. Priority delivery + show perks unlocked. View your card here: ${cardUrl}`
     : `Welcome to Kings Court, ${firstName}! Your membership is active. View your digital card & QR code here: ${cardUrl}`;
 
   await client.messages.create({

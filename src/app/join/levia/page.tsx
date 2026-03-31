@@ -1,19 +1,44 @@
-// Kings Court Boston × Levia — Membership Signup
+// Kings Court Boston × Levia — Tiered Membership Signup
 "use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-const leviaHighlights = [
-  { icon: "🔒", title: "Founding Locker", desc: "Personal storage on the 2nd floor" },
-  { icon: "📦", title: "Monthly Drops", desc: "Curated Levia products every month" },
-  { icon: "💻", title: "Coworking", desc: "Daytime workspace access included" },
-  { icon: "🏷️", title: "Dispensary Deals", desc: "Discounts at 250+ locations" },
+const tierOptions = [
+  {
+    slug: "levia-executive",
+    name: "Executive",
+    product: "1 Bottle of 500mg Drops",
+    price: "$50/mo",
+    ticketPerk: "BOGO Tickets",
+    color: "teal",
+  },
+  {
+    slug: "levia-premium",
+    name: "Premium",
+    product: "12-Pack",
+    price: "$80/mo",
+    ticketPerk: "1 Free Ticket / Week",
+    color: "purple",
+  },
+  {
+    slug: "levia-platinum",
+    name: "Platinum",
+    product: "24-Pack",
+    price: "$130/mo",
+    ticketPerk: "1 Free Ticket / Week",
+    color: "gold",
+  },
 ];
 
-export default function LeviaJoinPage() {
+function LeviaJoinForm() {
+  const searchParams = useSearchParams();
+  const tierParam = searchParams.get("tier") || "levia-premium";
   const [mounted, setMounted] = useState(false);
+  const [selectedTier, setSelectedTier] = useState(tierParam);
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -27,6 +52,8 @@ export default function LeviaJoinPage() {
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => setMounted(true), []);
+
+  const currentTier = tierOptions.find((t) => t.slug === selectedTier) || tierOptions[1];
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -55,7 +82,7 @@ export default function LeviaJoinPage() {
           email: form.email,
           password: form.password,
           phone: form.phone,
-          tier: "levia",
+          tier: selectedTier,
         }),
       });
 
@@ -77,7 +104,6 @@ export default function LeviaJoinPage() {
   if (status === "success") {
     return (
       <div className="min-h-screen bg-[#040208] text-white overflow-hidden">
-        {/* Animated gradient orbs */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
           <div className="levia-orb levia-orb-1" />
           <div className="levia-orb levia-orb-2" />
@@ -90,7 +116,6 @@ export default function LeviaJoinPage() {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
           >
-            {/* Glow border card */}
             <div className="relative">
               <div className="absolute -inset-px rounded-[28px] bg-gradient-to-b from-teal-400/20 via-transparent to-purple-500/20 blur-sm" />
               <div className="relative rounded-[28px] bg-[#0a0a14]/90 border border-white/[0.06] backdrop-blur-xl p-10">
@@ -110,7 +135,7 @@ export default function LeviaJoinPage() {
                   </div>
 
                   <h1 className="text-2xl font-bold mb-2">
-                    You&apos;re a <span className="levia-gradient-text">Levia Member</span>!
+                    You&apos;re a <span className="levia-gradient-text">{currentTier.name} Member</span>!
                   </h1>
                   <p className="text-white/40 text-sm leading-relaxed">
                     Check your email for your membership QR code, digital card link, and Levia perks info.
@@ -132,14 +157,12 @@ export default function LeviaJoinPage() {
 
   return (
     <div className="min-h-screen bg-[#040208] text-white overflow-hidden">
-      {/* Animated gradient orbs */}
+      {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="levia-orb levia-orb-1" />
         <div className="levia-orb levia-orb-2" />
         <div className="levia-orb levia-orb-3" />
       </div>
-
-      {/* Grid + noise overlays */}
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.03]"
         style={{
@@ -173,7 +196,7 @@ export default function LeviaJoinPage() {
       </div>
 
       <main className="relative z-10 flex flex-col items-center px-6 pt-10 pb-24 min-h-screen">
-        {/* Back to portal link */}
+        {/* Back link */}
         <div
           className={`w-full max-w-lg mb-6 transition-all duration-700 ${
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
@@ -183,14 +206,14 @@ export default function LeviaJoinPage() {
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to Levia
+            Back to Levia Tiers
           </Link>
         </div>
 
         <div className="max-w-lg w-full">
           {/* Logos + headline */}
           <div
-            className={`text-center mb-8 transition-all duration-1000 delay-100 ${
+            className={`text-center mb-6 transition-all duration-1000 delay-100 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
           >
@@ -200,27 +223,59 @@ export default function LeviaJoinPage() {
               <Image src="/levia-logo.png" alt="Levia" width={110} height={44} className="object-contain levia-logo-glow h-12 sm:h-14 w-auto" />
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
-              Become a <span className="levia-gradient-text">Member</span>
+              Join as <span className="levia-gradient-text">{currentTier.name}</span>
             </h1>
-            <p className="text-white/35 text-sm">Lock in your founding membership. It&apos;s free.</p>
+            <p className="text-white/35 text-sm">{currentTier.product} + {currentTier.ticketPerk} + 10% Off Levia</p>
           </div>
 
-          {/* Perks preview strip */}
+          {/* Tier Selector */}
           <div
-            className={`grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8 transition-all duration-1000 delay-300 ${
+            className={`grid grid-cols-3 gap-2 mb-8 transition-all duration-1000 delay-200 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            {leviaHighlights.map((perk, i) => (
-              <div
-                key={i}
-                className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:border-teal-400/10 transition"
+            {tierOptions.map((tier) => (
+              <button
+                key={tier.slug}
+                onClick={() => setSelectedTier(tier.slug)}
+                className={`relative py-3 px-2 rounded-xl text-center transition-all duration-300 ${
+                  selectedTier === tier.slug
+                    ? "bg-teal-500/10 border border-teal-400/25"
+                    : "bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12]"
+                }`}
               >
-                <div className="text-lg mb-1">{perk.icon}</div>
-                <p className="text-white/70 text-[11px] font-medium">{perk.title}</p>
-                <p className="text-white/25 text-[10px] leading-snug mt-0.5">{perk.desc}</p>
-              </div>
+                <p className={`font-semibold text-xs ${
+                  selectedTier === tier.slug ? "text-teal-300" : "text-white/60"
+                }`}>
+                  {tier.name}
+                </p>
+                <p className={`text-[10px] mt-0.5 ${
+                  selectedTier === tier.slug ? "text-teal-400/60" : "text-white/25"
+                }`}>
+                  {tier.price}
+                </p>
+              </button>
             ))}
+          </div>
+
+          {/* Perks preview */}
+          <div
+            className={`grid grid-cols-3 gap-2 mb-8 transition-all duration-1000 delay-300 ${
+              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
+            <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+              <p className="text-white/70 text-[11px] font-medium">{currentTier.ticketPerk}</p>
+              <p className="text-white/25 text-[10px] mt-0.5">KCB Shows</p>
+            </div>
+            <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+              <p className="text-white/70 text-[11px] font-medium">10% Off</p>
+              <p className="text-white/25 text-[10px] mt-0.5">All Levia</p>
+            </div>
+            <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+              <p className="text-white/70 text-[11px] font-medium">Monthly Drop</p>
+              <p className="text-white/25 text-[10px] mt-0.5">{currentTier.product}</p>
+            </div>
           </div>
 
           {/* Form card */}
@@ -229,11 +284,9 @@ export default function LeviaJoinPage() {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
           >
-            {/* Glow border */}
             <div className="absolute -inset-px rounded-[24px] bg-gradient-to-b from-teal-400/15 via-transparent to-purple-500/15 blur-sm" />
 
             <div className="relative rounded-[24px] bg-[#0a0a14]/80 border border-white/[0.06] backdrop-blur-xl p-8 sm:p-10">
-              {/* Inner gradient */}
               <div className="absolute inset-0 rounded-[24px] bg-gradient-to-br from-teal-500/[0.02] via-transparent to-purple-500/[0.02]" />
 
               <form onSubmit={handleSubmit} className="relative space-y-5">
@@ -372,7 +425,7 @@ export default function LeviaJoinPage() {
                       Joining...
                     </span>
                   ) : (
-                    "Join as Levia Member"
+                    `Join as ${currentTier.name} — ${currentTier.price}`
                   )}
                 </button>
               </form>
@@ -386,18 +439,30 @@ export default function LeviaJoinPage() {
             </div>
           </div>
 
-          {/* View all perks link */}
+          {/* Compare link */}
           <div
             className={`text-center mt-6 transition-all duration-1000 delay-700 ${
               mounted ? "opacity-100" : "opacity-0"
             }`}
           >
             <Link href="/levia" className="text-teal-400/40 hover:text-teal-400/60 transition text-xs">
-              View all Levia perks →
+              Compare all tiers →
             </Link>
           </div>
         </div>
       </main>
     </div>
+  );
+}
+
+export default function LeviaJoinPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#040208] flex items-center justify-center">
+        <div className="text-white/30 text-sm">Loading...</div>
+      </div>
+    }>
+      <LeviaJoinForm />
+    </Suspense>
   );
 }

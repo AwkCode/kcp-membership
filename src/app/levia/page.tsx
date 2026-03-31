@@ -1,79 +1,90 @@
-// Kings Court Boston × Levia — Premium Membership Portal
+// Kings Court Boston × Levia — 3-Tier Membership Portal
 "use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const leviaPerks = [
+const tiers = [
+  {
+    name: "Executive",
+    slug: "levia-executive",
+    product: "1 Bottle of 500mg Drops",
+    price: "$50",
+    period: "/mo",
+    ticketPerk: "BOGO Tickets",
+    ticketDesc: "Buy one, get one free on all KCB show tickets",
+    highlight: false,
+    color: "teal",
+  },
+  {
+    name: "Premium",
+    slug: "levia-premium",
+    product: "12-Pack",
+    price: "$80",
+    period: "/mo",
+    ticketPerk: "1 Free Ticket / Week",
+    ticketDesc: "One complimentary ticket to any KCB show, every week",
+    highlight: true,
+    color: "purple",
+  },
+  {
+    name: "Platinum",
+    slug: "levia-platinum",
+    product: "24-Pack",
+    price: "$130",
+    period: "/mo",
+    ticketPerk: "1 Free Ticket / Week",
+    ticketDesc: "One complimentary ticket to any KCB show, every week",
+    highlight: false,
+    color: "gold",
+  },
+];
+
+const sharedPerks = [
   {
     icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+      </svg>
+    ),
+    title: "10% Off All Levia Purchases",
+    desc: "Discount code for every Levia product, every time.",
+  },
+  {
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
       </svg>
     ),
-    title: "Founding Member Locker",
-    desc: "Personal wine-locker-style storage on the 2nd floor with curated Levia products.",
-    delay: 0,
+    title: "Monthly Levia Product",
+    desc: "Curated Levia drops delivered with your membership every month.",
   },
   {
     icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    title: "Monthly Product Allotment",
-    desc: "Curated Levia drops — gummies, pre-rolls, drink enhancers, and seasonal exclusives.",
-    delay: 1,
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-      </svg>
-    ),
-    title: "Daytime Coworking",
-    desc: "Work from the club. Included coworking access with cold juice punch card.",
-    delay: 2,
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
-      </svg>
-    ),
-    title: "Dispensary Discounts",
-    desc: "Flash your KCB card at 250+ dispensaries for exclusive Levia deals statewide.",
-    delay: 3,
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
       </svg>
     ),
-    title: "Earn Show Tickets",
-    desc: "Convert coworking hours into tickets for live comedy, music, and private events.",
-    delay: 4,
+    title: "KCB Show Ticket Perks",
+    desc: "BOGO or free tickets depending on your tier.",
   },
   {
     icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
-    title: "Private Club Access",
-    desc: "Full access to members-only events, after-hours sessions, and VIP nights.",
-    delay: 5,
+    title: "Membership Card & QR",
+    desc: "Digital member card with Apple & Google Wallet support.",
   },
 ];
 
 const stats = [
+  { value: "3", label: "Membership Tiers" },
+  { value: "10%", label: "Levia Discount" },
   { value: "Live", label: "Comedy & Music" },
-  { value: "∞", label: "Creative Energy" },
   { value: "420", label: "Friendly Always" },
-  { value: "Free", label: "To Join" },
 ];
 
 export default function LeviaMembershipPortal() {
@@ -109,7 +120,7 @@ export default function LeviaMembershipPortal() {
       {/* Noise texture overlay */}
       <div className="fixed inset-0 pointer-events-none levia-noise opacity-[0.035]" />
 
-      {/* Smoke particles — full page */}
+      {/* Smoke particles */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {mounted && Array.from({ length: 160 }).map((_, i) => {
           const size = 1 + Math.random() * 4;
@@ -132,9 +143,7 @@ export default function LeviaMembershipPortal() {
       </div>
 
       {/* ─── HERO ─── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-6">
-
-        {/* Hero content */}
+      <section className="relative min-h-[85vh] flex flex-col items-center justify-center px-6">
         <div
           className="relative z-10 text-center max-w-3xl mx-auto"
           style={{
@@ -171,8 +180,8 @@ export default function LeviaMembershipPortal() {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
           >
-            <span className="block text-white">Elevate Your</span>
-            <span className="block levia-gradient-text">Membership</span>
+            <span className="block text-white">Choose Your</span>
+            <span className="block levia-gradient-text">Experience</span>
           </h1>
 
           {/* Subtitle */}
@@ -181,32 +190,24 @@ export default function LeviaMembershipPortal() {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            Where Boston&apos;s artists come to create, perform, and unwind — now with perks that hit different.
+            Three tiers of Levia-powered perks. Pick the one that fits your vibe.
           </p>
 
-          {/* CTA buttons */}
+          {/* CTA */}
           <div
-            className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-1000 delay-700 ${
+            className={`transition-all duration-1000 delay-700 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            <Link
-              href="/join/levia"
-              className="group relative px-8 py-4 rounded-full font-semibold text-sm overflow-hidden levia-cta-primary"
+            <a
+              href="#tiers"
+              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm border border-white/10 text-white/60 hover:text-white hover:border-white/25 transition-all duration-300"
             >
-              <span className="relative z-10 flex items-center gap-2">
-                Become a Member
-                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </span>
-            </Link>
-            <Link
-              href="/perks"
-              className="px-8 py-4 rounded-full font-semibold text-sm border border-white/10 text-white/60 hover:text-white hover:border-white/25 transition-all duration-300"
-            >
-              View All Perks
-            </Link>
+              View Membership Tiers
+              <svg className="w-4 h-4 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </a>
           </div>
         </div>
 
@@ -239,29 +240,156 @@ export default function LeviaMembershipPortal() {
         </div>
       </section>
 
-      {/* ─── PERKS GRID ─── */}
-      <section className="relative z-10 py-24 px-6">
-        <div className="max-w-5xl mx-auto">
+      {/* ─── TIER COMPARISON ─── */}
+      <section id="tiers" className="relative z-10 py-24 px-6">
+        <div className="max-w-6xl mx-auto">
           {/* Section header */}
           <div className="text-center mb-16">
             <p className="text-teal-400/60 text-xs font-medium tracking-[0.2em] uppercase mb-4">
-              Exclusive Benefits
+              Membership Tiers
             </p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
-              More Than a <span className="levia-gradient-text">Membership</span>
+              Pick Your <span className="levia-gradient-text">Tier</span>
             </h2>
             <p className="text-white/35 text-base max-w-md mx-auto font-light">
-              Everything in the free tier, plus Levia-powered perks you won&apos;t find anywhere else.
+              Every tier includes 10% off all Levia purchases plus your monthly product drop.
             </p>
           </div>
 
-          {/* Perks */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {leviaPerks.map((perk, i) => (
+          {/* Tier Cards */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {tiers.map((tier) => (
               <div
-                key={i}
-                className="group levia-perk-card"
+                key={tier.slug}
+                className={`relative rounded-[24px] overflow-hidden transition-all duration-500 hover:-translate-y-1 ${
+                  tier.highlight
+                    ? "levia-tier-card-highlight"
+                    : "levia-tier-card"
+                }`}
               >
+                {/* Popular badge */}
+                {tier.highlight && (
+                  <div className="absolute top-0 left-0 right-0 text-center py-2 bg-gradient-to-r from-teal-500/20 via-purple-500/20 to-teal-500/20 border-b border-white/[0.06]">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.15em] levia-gradient-text">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
+
+                <div className={`p-8 ${tier.highlight ? "pt-12" : ""}`}>
+                  {/* Tier name */}
+                  <h3 className={`text-lg font-bold mb-1 ${
+                    tier.color === "gold" ? "text-amber-300" :
+                    tier.color === "purple" ? "levia-gradient-text" :
+                    "text-teal-300"
+                  }`}>
+                    {tier.name}
+                  </h3>
+
+                  {/* Product */}
+                  <p className="text-white/40 text-sm mb-6">{tier.product}</p>
+
+                  {/* Price */}
+                  <div className="mb-8">
+                    <span className="text-4xl font-bold text-white">{tier.price}</span>
+                    <span className="text-white/30 text-sm">{tier.period}</span>
+                  </div>
+
+                  {/* CTA */}
+                  <Link
+                    href={`/join/levia?tier=${tier.slug}`}
+                    className={`block w-full text-center py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                      tier.highlight
+                        ? "levia-cta-primary"
+                        : "bg-white/[0.06] border border-white/[0.08] text-white hover:bg-white/[0.1] hover:border-white/[0.15]"
+                    }`}
+                  >
+                    Get {tier.name}
+                  </Link>
+
+                  {/* Divider */}
+                  <div className="flex items-center gap-3 my-6">
+                    <div className="flex-1 h-px bg-white/[0.06]" />
+                    <span className="text-white/20 text-[10px] uppercase tracking-wider">Includes</span>
+                    <div className="flex-1 h-px bg-white/[0.06]" />
+                  </div>
+
+                  {/* Perks list */}
+                  <ul className="space-y-3">
+                    {/* Ticket perk — unique per tier */}
+                    <li className="flex items-start gap-3">
+                      <div className="mt-0.5 w-5 h-5 rounded-full bg-teal-500/15 flex items-center justify-center shrink-0">
+                        <svg className="w-3 h-3 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-white/80 text-sm font-medium">{tier.ticketPerk}</p>
+                        <p className="text-white/30 text-xs mt-0.5">{tier.ticketDesc}</p>
+                      </div>
+                    </li>
+
+                    {/* Levia product */}
+                    <li className="flex items-start gap-3">
+                      <div className="mt-0.5 w-5 h-5 rounded-full bg-teal-500/15 flex items-center justify-center shrink-0">
+                        <svg className="w-3 h-3 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-white/80 text-sm font-medium">Monthly {tier.product}</p>
+                        <p className="text-white/30 text-xs mt-0.5">Levia products delivered every month</p>
+                      </div>
+                    </li>
+
+                    {/* 10% discount */}
+                    <li className="flex items-start gap-3">
+                      <div className="mt-0.5 w-5 h-5 rounded-full bg-teal-500/15 flex items-center justify-center shrink-0">
+                        <svg className="w-3 h-3 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-white/80 text-sm font-medium">10% Off Levia Purchases</p>
+                        <p className="text-white/30 text-xs mt-0.5">Discount on all additional Levia products</p>
+                      </div>
+                    </li>
+
+                    {/* Digital member card */}
+                    <li className="flex items-start gap-3">
+                      <div className="mt-0.5 w-5 h-5 rounded-full bg-teal-500/15 flex items-center justify-center shrink-0">
+                        <svg className="w-3 h-3 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-white/80 text-sm font-medium">Digital Member Card</p>
+                        <p className="text-white/30 text-xs mt-0.5">Apple & Google Wallet support</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SHARED PERKS GRID ─── */}
+      <section className="relative z-10 py-24 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-teal-400/60 text-xs font-medium tracking-[0.2em] uppercase mb-4">
+              Every Tier Includes
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
+              Perks Across <span className="levia-gradient-text">All Tiers</span>
+            </h2>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            {sharedPerks.map((perk, i) => (
+              <div key={i} className="levia-perk-card">
                 <div className="levia-perk-icon">
                   {perk.icon}
                 </div>
@@ -273,58 +401,77 @@ export default function LeviaMembershipPortal() {
         </div>
       </section>
 
-      {/* ─── PRODUCT SHOWCASE ─── */}
+      {/* ─── SIDE-BY-SIDE COMPARISON TABLE ─── */}
       <section className="relative z-10 py-24 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="levia-showcase-card">
-            {/* Glow effect behind card */}
-            <div className="absolute -inset-px rounded-[28px] bg-gradient-to-b from-teal-400/20 via-transparent to-purple-500/20 blur-sm" />
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-4">
+              Compare <span className="levia-gradient-text">Tiers</span>
+            </h2>
+          </div>
 
-            <div className="relative rounded-[28px] bg-[#0a0a14]/90 border border-white/[0.06] backdrop-blur-xl overflow-hidden">
-              {/* Inner gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-teal-500/[0.04] via-transparent to-purple-500/[0.04]" />
-
-              <div className="relative flex flex-col md:flex-row items-center gap-10 p-10 md:p-14">
-                {/* Left side — text */}
-                <div className="flex-1 text-center md:text-left">
-                  <p className="text-teal-400/60 text-xs font-medium tracking-[0.2em] uppercase mb-3">
-                    Monthly Drop
+          <div className="relative rounded-[24px] bg-white/[0.02] border border-white/[0.06] overflow-hidden">
+            {/* Header row */}
+            <div className="grid grid-cols-4 border-b border-white/[0.06]">
+              <div className="p-4 sm:p-6" />
+              {tiers.map((tier) => (
+                <div key={tier.slug} className={`p-4 sm:p-6 text-center ${tier.highlight ? "bg-white/[0.02]" : ""}`}>
+                  <p className={`font-bold text-sm sm:text-base ${
+                    tier.color === "gold" ? "text-amber-300" :
+                    tier.color === "purple" ? "levia-gradient-text" :
+                    "text-teal-300"
+                  }`}>
+                    {tier.name}
                   </p>
-                  <h3 className="text-2xl sm:text-3xl font-bold mb-3 tracking-tight">
-                    Your Locker,<br />
-                    <span className="levia-gradient-text">Restocked Monthly</span>
-                  </h3>
-                  <p className="text-white/35 text-sm leading-relaxed mb-6 max-w-sm">
-                    Every month your founding member locker gets restocked with curated Levia products — gummies, seltzers, drink drops, pre-rolls, and seasonal specials.
-                  </p>
-                  <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                    {["Gummies", "Seltzers", "Drink Drops", "Pre-Rolls"].map((item) => (
-                      <span
-                        key={item}
-                        className="px-3 py-1 text-xs rounded-full border border-teal-400/15 bg-teal-400/[0.06] text-teal-300/70"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="text-white/40 text-xs mt-0.5">{tier.price}{tier.period}</p>
                 </div>
+              ))}
+            </div>
 
-                {/* Right side — visual element */}
-                <div className="relative w-48 h-48 md:w-56 md:h-56 shrink-0">
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-teal-500/20 to-purple-600/20 blur-xl" />
-                  <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-teal-500/10 to-purple-500/10 border border-white/[0.06] flex items-center justify-center overflow-hidden">
-                    <Image
-                      src="/levia-logo.png"
-                      alt="Levia Products"
-                      width={120}
-                      height={48}
-                      className="object-contain opacity-60"
-                    />
-                    {/* Animated shimmer */}
-                    <div className="absolute inset-0 levia-shimmer" />
-                  </div>
+            {/* Levia Product row */}
+            <div className="grid grid-cols-4 border-b border-white/[0.04]">
+              <div className="p-4 sm:p-6 text-white/50 text-sm">Levia Product</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">500mg Drops</div>
+              <div className={`p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]`}>12-Pack</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">24-Pack</div>
+            </div>
+
+            {/* Retail Value row */}
+            <div className="grid grid-cols-4 border-b border-white/[0.04]">
+              <div className="p-4 sm:p-6 text-white/50 text-sm">Product Retail Value</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">$40</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">$70</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">$120</div>
+            </div>
+
+            {/* Ticket Perk row */}
+            <div className="grid grid-cols-4 border-b border-white/[0.04]">
+              <div className="p-4 sm:p-6 text-white/50 text-sm">Ticket Perk</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">BOGO</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">1 Free / Week</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">1 Free / Week</div>
+            </div>
+
+            {/* 10% Discount row */}
+            <div className="grid grid-cols-4 border-b border-white/[0.04]">
+              <div className="p-4 sm:p-6 text-white/50 text-sm">Levia Discount</div>
+              {[0, 1, 2].map((i) => (
+                <div key={i} className={`p-4 sm:p-6 text-center ${i === 1 ? "bg-white/[0.02]" : ""}`}>
+                  <span className="text-teal-400 text-sm font-medium">10% Off</span>
                 </div>
-              </div>
+              ))}
+            </div>
+
+            {/* Digital Card row */}
+            <div className="grid grid-cols-4">
+              <div className="p-4 sm:p-6 text-white/50 text-sm">Digital Member Card</div>
+              {[0, 1, 2].map((i) => (
+                <div key={i} className={`p-4 sm:p-6 text-center ${i === 1 ? "bg-white/[0.02]" : ""}`}>
+                  <svg className="w-5 h-5 text-teal-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -333,7 +480,6 @@ export default function LeviaMembershipPortal() {
       {/* ─── BOTTOM CTA ─── */}
       <section className="relative z-10 py-32 px-6">
         <div className="max-w-2xl mx-auto text-center">
-          {/* Decorative lines */}
           <div className="flex items-center justify-center gap-4 mb-10">
             <div className="w-16 h-px bg-gradient-to-r from-transparent to-teal-400/30" />
             <div className="w-2 h-2 rounded-full bg-teal-400/40" />
@@ -344,23 +490,25 @@ export default function LeviaMembershipPortal() {
             Ready to <span className="levia-gradient-text">Elevate</span>?
           </h2>
           <p className="text-white/35 text-base mb-10 max-w-md mx-auto font-light">
-            Join the founding members. Lock in your locker. Get your monthly drops. It&apos;s free to join.
+            Pick your tier and start getting Levia products and KCB show perks every month.
           </p>
 
-          <Link
-            href="/join/levia"
-            className="group inline-flex items-center gap-3 levia-cta-primary px-10 py-5 rounded-full font-semibold text-base"
-          >
-            <span className="relative z-10">Claim Your Membership</span>
-            <svg
-              className="relative z-10 w-5 h-5 transition-transform group-hover:translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="#tiers"
+              className="group inline-flex items-center gap-3 levia-cta-primary px-10 py-5 rounded-full font-semibold text-base"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
+              <span className="relative z-10">Choose Your Tier</span>
+              <svg
+                className="relative z-10 w-5 h-5 transition-transform group-hover:translate-y-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </a>
+          </div>
 
           <p className="text-white/20 text-xs mt-6">
             Already a member?{" "}

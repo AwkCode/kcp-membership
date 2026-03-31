@@ -341,6 +341,32 @@ button[type="submit"]:hover:not(:disabled) {
   box-shadow: 0 0 20px rgba(20, 184, 166, 0.1);
 }
 
+/* Tier cards */
+.levia-tier-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.levia-tier-card:hover {
+  border-color: rgba(20, 184, 166, 0.2);
+  background: rgba(20, 184, 166, 0.03);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3), 0 0 40px rgba(20, 184, 166, 0.06);
+}
+
+.levia-tier-card-highlight {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(20, 184, 166, 0.15);
+  box-shadow: 0 0 40px rgba(20, 184, 166, 0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.levia-tier-card-highlight:hover {
+  border-color: rgba(20, 184, 166, 0.3);
+  background: rgba(20, 184, 166, 0.05);
+  box-shadow: 0 8px 50px rgba(0, 0, 0, 0.3), 0 0 60px rgba(20, 184, 166, 0.1);
+}
+
 /* Shimmer effect */
 .levia-shimmer {
   background: linear-gradient(
@@ -361,7 +387,266 @@ button[type="submit"]:hover:not(:disabled) {
 }
 
 /* Noise texture */
-.levia-noise {
+.levia-noise,
+.zyp-noise {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-size: 128px 128px;
+}
+
+/* ═══════════════════════════════════════════════════
+   ZYP RUN MEMBERSHIP PORTAL — Electric Blue + Orange
+   ═══════════════════════════════════════════════════ */
+
+/* Gradient text — blue to orange sweep */
+.zyp-gradient-text {
+  background: linear-gradient(135deg, #85C0F8 0%, #58AFFF 25%, #2F72B5 50%, #FF6B35 80%, #FFA500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Floating gradient orbs */
+.zyp-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.zyp-orb-1 {
+  width: 650px;
+  height: 650px;
+  top: -12%;
+  left: -8%;
+  background: radial-gradient(circle, rgba(88, 175, 255, 0.14) 0%, transparent 70%);
+  animation: zypFloat1 22s ease-in-out infinite;
+}
+
+.zyp-orb-2 {
+  width: 500px;
+  height: 500px;
+  top: 35%;
+  right: -12%;
+  background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
+  animation: zypFloat2 28s ease-in-out infinite;
+}
+
+.zyp-orb-3 {
+  width: 450px;
+  height: 450px;
+  bottom: 8%;
+  left: 15%;
+  background: radial-gradient(circle, rgba(88, 175, 255, 0.08) 0%, transparent 70%);
+  animation: zypFloat3 19s ease-in-out infinite;
+}
+
+@keyframes zypFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(70px, 50px) scale(1.12); }
+  66% { transform: translate(-40px, 90px) scale(0.93); }
+}
+
+@keyframes zypFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-60px, -70px) scale(1.08); }
+  66% { transform: translate(50px, -40px) scale(0.88); }
+}
+
+@keyframes zypFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(80px, -60px) scale(1.12); }
+}
+
+/* Floating particles — electric blue sparks */
+.zyp-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(133, 192, 248, 0.5);
+  border-radius: 50%;
+  bottom: -10%;
+  animation: zypParticleRise linear infinite;
+}
+
+.zyp-particle::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: rgba(133, 192, 248, 0.2);
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+@keyframes zypParticleRise {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  90% { opacity: 0.6; }
+  100% {
+    transform: translateY(-110vh) translateX(25px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Ember wisps — orange sparks that drift up like delivery speed trails */
+.zyp-ember {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 148, 16, 0.35);
+  bottom: -5%;
+  filter: blur(3px);
+  animation: zypEmberRise linear infinite;
+}
+
+.zyp-ember::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  background: rgba(255, 107, 53, 0.1);
+  border-radius: 50%;
+  filter: blur(6px);
+}
+
+@keyframes zypEmberRise {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  5% { opacity: 0.8; }
+  25% { transform: translateY(-25vh) translateX(-25px) scale(1.2); }
+  50% { transform: translateY(-55vh) translateX(30px) scale(1.0); opacity: 0.5; }
+  75% { transform: translateY(-80vh) translateX(-10px) scale(0.7); opacity: 0.25; }
+  100% {
+    transform: translateY(-115vh) translateX(15px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* Logo glow — blue */
+.zyp-logo-glow {
+  filter: drop-shadow(0 0 20px rgba(88, 175, 255, 0.2));
+}
+
+/* CTA button with animated blue-to-orange gradient */
+.zyp-cta-primary {
+  position: relative;
+  background: linear-gradient(135deg, #58AFFF 0%, #005FA3 40%, #FF6B35 100%);
+  background-size: 200% 200%;
+  color: white;
+  animation: zypCTAShift 4s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.zyp-cta-primary:hover {
+  box-shadow: 0 0 30px rgba(88, 175, 255, 0.4), 0 0 80px rgba(255, 107, 53, 0.15);
+  transform: translateY(-1px);
+}
+
+@keyframes zypCTAShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Scroll indicator — blue dot */
+.zyp-scroll-indicator {
+  width: 24px;
+  height: 40px;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  position: relative;
+}
+
+.zyp-scroll-dot {
+  width: 3px;
+  height: 8px;
+  background: rgba(88, 175, 255, 0.6);
+  border-radius: 2px;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: zypScrollBounce 2s ease-in-out infinite;
+}
+
+@keyframes zypScrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  50% { transform: translateX(-50%) translateY(14px); opacity: 0.3; }
+}
+
+/* Perk cards — blue hover glow */
+.zyp-perk-card {
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zyp-perk-card:hover {
+  border-color: rgba(88, 175, 255, 0.18);
+  background: rgba(88, 175, 255, 0.04);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), 0 0 40px rgba(88, 175, 255, 0.06);
+}
+
+.zyp-perk-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(88, 175, 255, 0.1) 0%, rgba(255, 107, 53, 0.05) 100%);
+  border: 1px solid rgba(88, 175, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(133, 192, 248, 0.8);
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.zyp-perk-card:hover .zyp-perk-icon {
+  background: linear-gradient(135deg, rgba(88, 175, 255, 0.18) 0%, rgba(255, 107, 53, 0.1) 100%);
+  border-color: rgba(88, 175, 255, 0.25);
+  box-shadow: 0 0 20px rgba(88, 175, 255, 0.12);
+}
+
+/* Shimmer effect — blue-tinted */
+.zyp-shimmer {
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(133, 192, 248, 0.04) 40%,
+    rgba(133, 192, 248, 0.07) 50%,
+    rgba(133, 192, 248, 0.04) 60%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: zypShimmer 3s ease-in-out infinite;
+}
+
+@keyframes zypShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Speed lines — horizontal streaks for delivery speed vibe */
+.zyp-speed-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(88, 175, 255, 0.3), transparent);
+  animation: zypSpeedStreak linear infinite;
+}
+
+@keyframes zypSpeedStreak {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  90% { opacity: 0.5; }
+  100% {
+    transform: translateX(100vw);
+    opacity: 0;
+  }
 }

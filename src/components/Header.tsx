@@ -40,6 +40,9 @@ export default function Header() {
           <Link href="/levia" className="hover:text-white transition text-teal-200/90">
             Levia
           </Link>
+          <Link href="/zyprun" className="hover:text-white transition text-sky-200/90">
+            Zyp Run
+          </Link>
           <Link href="/perks" className="hover:text-white transition">
             Perks
           </Link>

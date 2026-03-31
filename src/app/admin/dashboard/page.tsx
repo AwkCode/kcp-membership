@@ -266,9 +266,16 @@ export default function DashboardPage() {
                           >
                             {m.status}
                           </span>
-                          {m.tier === "levia" && (
-                            <span className="inline-block ml-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">
-                              Levia
+                          {m.tier?.startsWith("levia") && (
+                            <span className={`inline-block ml-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${
+                              m.tier === "levia-platinum" ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                              : m.tier === "levia-premium" ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                              : "bg-teal-500/10 text-teal-400 border-teal-500/20"
+                            }`}>
+                              {m.tier === "levia-executive" ? "Levia Exec"
+                                : m.tier === "levia-premium" ? "Levia Prem"
+                                : m.tier === "levia-platinum" ? "Levia Plat"
+                                : "Levia"}
                             </span>
                           )}
                           <p className="text-white/20 text-xs mt-0.5">

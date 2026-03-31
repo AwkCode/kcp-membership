@@ -243,6 +243,12 @@ export default function MemberAccountPage() {
               </span>
             )}
 
+            {member.tier === "zyprun" && (
+              <span className="inline-block mt-1 ml-1 px-3 py-1 rounded-full text-[10px] font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                Zyp Run
+              </span>
+            )}
+
             {/* Visit counter */}
             {isActive && (
               <div className="mt-4 flex items-center justify-center gap-3">
@@ -431,6 +437,8 @@ export default function MemberAccountPage() {
                   <span className="text-sm text-white">
                     {member.tier === "levia" ? (
                       <span className="text-teal-400">Levia</span>
+                    ) : member.tier === "zyprun" ? (
+                      <span className="text-sky-400">Zyp Run</span>
                     ) : (
                       "Free"
                     )}

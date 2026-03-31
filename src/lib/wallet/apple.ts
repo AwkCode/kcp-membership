@@ -76,8 +76,11 @@ export async function generateApplePass(member: MemberPassData): Promise<Buffer>
     {
       key: "status",
       label: "STATUS",
-      value: member.tier === "levia"
-        ? "Levia Member"
+      value: member.tier?.startsWith("levia")
+        ? member.tier === "levia-executive" ? "Levia Executive"
+          : member.tier === "levia-premium" ? "Levia Premium"
+          : member.tier === "levia-platinum" ? "Levia Platinum"
+          : "Levia Member"
         : statusDisplay[member.status] || member.status,
     },
     {
@@ -96,11 +99,15 @@ export async function generateApplePass(member: MemberPassData): Promise<Buffer>
     value: "Kings Court Boston",
   });
 
-  if (member.tier === "levia") {
+  if (member.tier?.startsWith("levia")) {
+    const tierLabel = member.tier === "levia-executive" ? "Levia Executive"
+      : member.tier === "levia-premium" ? "Levia Premium"
+      : member.tier === "levia-platinum" ? "Levia Platinum"
+      : "Levia";
     pass.auxiliaryFields.push({
       key: "tier",
       label: "TIER",
-      value: "Levia",
+      value: tierLabel,
     });
   }
 

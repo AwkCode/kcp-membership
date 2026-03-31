@@ -145,7 +145,11 @@ export default function AdminPage() {
                         className="w-full px-3 py-2 bg-white/[0.06] border border-white/10 rounded-lg text-white text-sm"
                       >
                         <option value="free">Free</option>
-                        <option value="levia">Levia</option>
+                        <option value="levia">Levia (Legacy)</option>
+                        <option value="levia-executive">Levia Executive</option>
+                        <option value="levia-premium">Levia Premium</option>
+                        <option value="levia-platinum">Levia Platinum</option>
+                        <option value="zyprun">Zyp Run</option>
                       </select>
                     </div>
                     <div>
@@ -198,6 +202,11 @@ export default function AdminPage() {
                         {m.tier === "levia" && (
                           <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">
                             Levia
+                          </span>
+                        )}
+                        {m.tier === "zyprun" && (
+                          <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                            Zyp Run
                           </span>
                         )}
                         {m.notes && (

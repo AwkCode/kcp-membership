@@ -74,6 +74,30 @@ export default function MemberCard({ firstName, lastName, status: initialStatus,
           </span>
         )}
 
+        {tier === "levia-executive" && (
+          <span className="inline-block mt-1 ml-1 px-3 py-1 rounded-full text-[10px] font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">
+            Levia Executive
+          </span>
+        )}
+
+        {tier === "levia-premium" && (
+          <span className="inline-block mt-1 ml-1 px-3 py-1 rounded-full text-[10px] font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">
+            Levia Premium
+          </span>
+        )}
+
+        {tier === "levia-platinum" && (
+          <span className="inline-block mt-1 ml-1 px-3 py-1 rounded-full text-[10px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            Levia Platinum
+          </span>
+        )}
+
+        {tier === "zyprun" && (
+          <span className="inline-block mt-1 ml-1 px-3 py-1 rounded-full text-[10px] font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
+            Zyp Run
+          </span>
+        )}
+
         {["active", "vip", "staff", "comp"].includes(status) && (
           <p className="text-white/30 text-xs mt-6">Show this QR code at check-in</p>
         )}

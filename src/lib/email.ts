@@ -21,21 +21,29 @@ export async function sendMembershipEmail({
 }: SendMembershipEmailParams) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const cardUrl = `${baseUrl}/m/${token}`;
-  const isLevia = tier === "levia";
+  const isLevia = tier === "levia" || tier?.startsWith("levia-");
+  const isZyprun = tier === "zyprun";
+  const leviaTierName = tier === "levia-executive" ? "Executive" : tier === "levia-premium" ? "Premium" : tier === "levia-platinum" ? "Platinum" : "";
 
   // Strip the data:image/png;base64, prefix for attachment
   const base64Data = qrImageBase64.replace(/^data:image\/png;base64,/, "");
 
   const subject = isLevia
-    ? "Welcome to Kings Court — Levia Membership"
+    ? `Welcome to Kings Court — Levia ${leviaTierName} Membership`.replace(/  /g, " ")
+    : isZyprun
+    ? "Welcome to Kings Court — Zyp Run Membership"
     : "Welcome to Kings Court — Your Membership Card";
 
   const welcomeText = isLevia
     ? `Your Levia membership is now active. You've unlocked exclusive perks including locker access, monthly product allotments, coworking hours, and more. Show the QR code below when you check in.`
+    : isZyprun
+    ? `Your Zyp Run membership is now active. You've unlocked priority delivery, monthly delivery credits, exclusive product drops, and show ticket rewards. Show the QR code below when you check in.`
     : `Your membership is now active. Show the QR code below when you check in.`;
 
   const tierBadge = isLevia
     ? `<p style="text-align: center; margin-bottom: 16px;"><span style="display: inline-block; padding: 4px 16px; background: #0d9488; color: #fff; border-radius: 20px; font-size: 13px; font-weight: 600;">Levia Member</span></p>`
+    : isZyprun
+    ? `<p style="text-align: center; margin-bottom: 16px;"><span style="display: inline-block; padding: 4px 16px; background: #2F72B5; color: #fff; border-radius: 20px; font-size: 13px; font-weight: 600;">Zyp Run Member</span></p>`
     : "";
 
   const msg = {
