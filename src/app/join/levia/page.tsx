@@ -14,7 +14,7 @@ const tierOptions = [
     product: "1 Bottle of 500mg Drops",
     price: "$40/mo",
     ticketPerk: "50% Off Tickets",
-    merchDiscount: "15% Off Merch",
+    merchDiscount: "10% Off Merch",
     color: "teal",
   },
   {
@@ -22,8 +22,8 @@ const tierOptions = [
     name: "Premium",
     product: "12-Pack",
     price: "$70/mo",
-    ticketPerk: "1 Free Ticket / Week",
-    merchDiscount: "20% Off Merch",
+    ticketPerk: "BOGO Tickets",
+    merchDiscount: "15% Off Merch",
     color: "purple",
   },
   {

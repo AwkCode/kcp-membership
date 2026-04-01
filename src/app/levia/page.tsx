@@ -15,7 +15,7 @@ const tiers = [
     perks: [
       { title: "50% Off Tickets", desc: "Half off all KCB show tickets" },
       { title: "Free Coffee", desc: "Complimentary coffee at the coffee shop" },
-      { title: "15% Off Merch", desc: "Discount on all KCB merchandise" },
+      { title: "10% Off Merch", desc: "Discount on all KCB merchandise" },
       { title: "Early Show Access", desc: "Get in before the general public" },
       { title: "Monthly 500mg Drops", desc: "1 bottle of Levia drops every month" },
     ],
@@ -29,9 +29,9 @@ const tiers = [
     price: "$70",
     period: "/mo",
     perks: [
-      { title: "1 Free Ticket / Week", desc: "One complimentary ticket to any KCB show, every week" },
+      { title: "BOGO Tickets", desc: "Buy one, get one free on all KCB show tickets" },
       { title: "Free Coffee", desc: "Complimentary coffee at the coffee shop" },
-      { title: "20% Off Merch", desc: "Discount on all KCB merchandise" },
+      { title: "15% Off Merch", desc: "Discount on all KCB merchandise" },
       { title: "Early Show Access", desc: "Get in before the general public" },
       { title: "Monthly 12-Pack", desc: "Levia 12-pack delivered every month" },
     ],
@@ -344,7 +344,7 @@ export default function LeviaMembershipPortal() {
             <div className="grid grid-cols-4 border-b border-white/[0.04]">
               <div className="p-4 sm:p-6 text-white/50 text-sm">Ticket Perk</div>
               <div className="p-4 sm:p-6 text-center text-white/70 text-sm">50% Off</div>
-              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">1 Free / Week</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">BOGO</div>
               <div className="p-4 sm:p-6 text-center text-white/70 text-sm">1 Free / Week</div>
             </div>
 
@@ -363,8 +363,8 @@ export default function LeviaMembershipPortal() {
             {/* Merch Discount row */}
             <div className="grid grid-cols-4 border-b border-white/[0.04]">
               <div className="p-4 sm:p-6 text-white/50 text-sm">Merch Discount</div>
-              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">15% Off</div>
-              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">20% Off</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">10% Off</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">15% Off</div>
               <div className="p-4 sm:p-6 text-center text-white/70 text-sm">20% Off</div>
             </div>
 
