@@ -12,24 +12,27 @@ const tierOptions = [
     slug: "levia-executive",
     name: "Executive",
     product: "1 Bottle of 500mg Drops",
-    price: "$50/mo",
-    ticketPerk: "BOGO Tickets",
+    price: "$40/mo",
+    ticketPerk: "50% Off Tickets",
+    merchDiscount: "15% Off Merch",
     color: "teal",
   },
   {
     slug: "levia-premium",
     name: "Premium",
     product: "12-Pack",
-    price: "$80/mo",
+    price: "$70/mo",
     ticketPerk: "1 Free Ticket / Week",
+    merchDiscount: "20% Off Merch",
     color: "purple",
   },
   {
     slug: "levia-platinum",
     name: "Platinum",
     product: "24-Pack",
-    price: "$130/mo",
+    price: "$120/mo",
     ticketPerk: "1 Free Ticket / Week",
+    merchDiscount: "20% Off Merch",
     color: "gold",
   },
 ];
@@ -225,7 +228,7 @@ function LeviaJoinForm() {
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
               Join as <span className="levia-gradient-text">{currentTier.name}</span>
             </h1>
-            <p className="text-white/35 text-sm">{currentTier.product} + {currentTier.ticketPerk} + 10% Off Levia</p>
+            <p className="text-white/35 text-sm">{currentTier.product} + {currentTier.ticketPerk} + Free Coffee</p>
           </div>
 
           {/* Tier Selector */}
@@ -269,12 +272,12 @@ function LeviaJoinForm() {
               <p className="text-white/25 text-[10px] mt-0.5">KCB Shows</p>
             </div>
             <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-white/70 text-[11px] font-medium">10% Off</p>
-              <p className="text-white/25 text-[10px] mt-0.5">All Levia</p>
+              <p className="text-white/70 text-[11px] font-medium">Free Coffee</p>
+              <p className="text-white/25 text-[10px] mt-0.5">Coffee Shop</p>
             </div>
             <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-white/70 text-[11px] font-medium">Monthly Drop</p>
-              <p className="text-white/25 text-[10px] mt-0.5">{currentTier.product}</p>
+              <p className="text-white/70 text-[11px] font-medium">{currentTier.merchDiscount}</p>
+              <p className="text-white/25 text-[10px] mt-0.5">Merchandise</p>
             </div>
           </div>
 
