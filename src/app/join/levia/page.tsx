@@ -13,8 +13,8 @@ const tierOptions = [
     name: "Executive",
     product: "1 Bottle of 500mg Drops",
     price: "$40/mo",
-    ticketPerk: "50% Off Tickets",
-    merchDiscount: "10% Off Merch",
+    topPerk: "50% Off Coffee",
+    secondPerk: "After Party",
     color: "teal",
   },
   {
@@ -22,8 +22,8 @@ const tierOptions = [
     name: "Premium",
     product: "12-Pack",
     price: "$70/mo",
-    ticketPerk: "BOGO Tickets",
-    merchDiscount: "15% Off Merch",
+    topPerk: "BOGO Tickets",
+    secondPerk: "After Party",
     color: "purple",
   },
   {
@@ -31,8 +31,8 @@ const tierOptions = [
     name: "Platinum",
     product: "24-Pack",
     price: "$120/mo",
-    ticketPerk: "1 Free Ticket / Week",
-    merchDiscount: "20% Off Merch",
+    topPerk: "BOGO Tickets",
+    secondPerk: "After Party",
     color: "gold",
   },
 ];
@@ -226,9 +226,9 @@ function LeviaJoinForm() {
               <Image src="/levia-logo.png" alt="Levia" width={110} height={44} className="object-contain levia-logo-glow h-12 sm:h-14 w-auto" />
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
-              Join as <span className="levia-gradient-text">{currentTier.name}</span>
+              KC Premium <span className="levia-gradient-text">{currentTier.name}</span>
             </h1>
-            <p className="text-white/35 text-sm">{currentTier.product} + {currentTier.ticketPerk} + Free Coffee</p>
+            <p className="text-white/35 text-sm">{currentTier.product} + {currentTier.topPerk} + {currentTier.secondPerk}</p>
           </div>
 
           {/* Tier Selector */}
@@ -268,16 +268,16 @@ function LeviaJoinForm() {
             }`}
           >
             <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-white/70 text-[11px] font-medium">{currentTier.ticketPerk}</p>
+              <p className="text-white/70 text-[11px] font-medium">{currentTier.topPerk}</p>
               <p className="text-white/25 text-[10px] mt-0.5">KCB Shows</p>
             </div>
             <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-white/70 text-[11px] font-medium">Free Coffee</p>
+              <p className="text-white/70 text-[11px] font-medium">50% Off Coffee</p>
               <p className="text-white/25 text-[10px] mt-0.5">Coffee Shop</p>
             </div>
             <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-white/70 text-[11px] font-medium">{currentTier.merchDiscount}</p>
-              <p className="text-white/25 text-[10px] mt-0.5">Merchandise</p>
+              <p className="text-white/70 text-[11px] font-medium">After Party</p>
+              <p className="text-white/25 text-[10px] mt-0.5">Free Entry</p>
             </div>
           </div>
 

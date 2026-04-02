@@ -29,13 +29,13 @@ export async function sendMembershipEmail({
   const base64Data = qrImageBase64.replace(/^data:image\/png;base64,/, "");
 
   const subject = isLevia
-    ? `Welcome to Kings Court — Levia ${leviaTierName} Membership`.replace(/  /g, " ")
+    ? `Welcome to KC Premium${leviaTierName ? ` ${leviaTierName}` : ""} × Levia`
     : isZyprun
     ? "Welcome to Kings Court — Zyp Run Membership"
     : "Welcome to Kings Court — Your Membership Card";
 
   const welcomeText = isLevia
-    ? `Your Levia membership is now active. You've unlocked exclusive perks including locker access, monthly product allotments, coworking hours, and more. Show the QR code below when you check in.`
+    ? `Your KC Premium${leviaTierName ? ` ${leviaTierName}` : ""} membership is now active. You've unlocked exclusive perks including BOGO tickets, 50% off coffee, After Party access, and monthly Levia products. Show the QR code below when you check in.`
     : isZyprun
     ? `Your Zyp Run membership is now active. You've unlocked priority delivery, monthly delivery credits, exclusive product drops, and show ticket rewards. Show the QR code below when you check in.`
     : `Your membership is now active. Show the QR code below when you check in.`;

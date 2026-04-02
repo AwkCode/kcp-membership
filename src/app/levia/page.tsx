@@ -1,4 +1,4 @@
-// Kings Court Boston × Levia — 3-Tier Membership Portal
+// KC Premium Member × Levia — 3-Tier Membership Portal
 "use client";
 
 import { useState, useEffect } from "react";
@@ -13,10 +13,8 @@ const tiers = [
     price: "$40",
     period: "/mo",
     perks: [
-      { title: "50% Off Tickets", desc: "Half off all KCB show tickets" },
-      { title: "Free Coffee", desc: "Complimentary coffee at the coffee shop" },
-      { title: "10% Off Merch", desc: "Discount on all KCB merchandise" },
-      { title: "Early Show Access", desc: "Get in before the general public" },
+      { title: "50% Off Coffee", desc: "Half off at the Kings Court coffee shop" },
+      { title: "After Party Access", desc: "Free entry to The After Party" },
       { title: "Monthly 500mg Drops", desc: "1 bottle of Levia drops every month" },
     ],
     highlight: false,
@@ -30,9 +28,8 @@ const tiers = [
     period: "/mo",
     perks: [
       { title: "BOGO Tickets", desc: "Buy one, get one free on all KCB show tickets" },
-      { title: "Free Coffee", desc: "Complimentary coffee at the coffee shop" },
-      { title: "15% Off Merch", desc: "Discount on all KCB merchandise" },
-      { title: "Early Show Access", desc: "Get in before the general public" },
+      { title: "50% Off Coffee", desc: "Half off at the Kings Court coffee shop" },
+      { title: "After Party Access", desc: "Free entry to The After Party" },
       { title: "Monthly 12-Pack", desc: "Levia 12-pack delivered every month" },
     ],
     highlight: true,
@@ -45,10 +42,9 @@ const tiers = [
     price: "$120",
     period: "/mo",
     perks: [
-      { title: "1 Free Ticket / Week", desc: "One complimentary ticket to any KCB show, every week" },
-      { title: "Free Coffee", desc: "Complimentary coffee at the coffee shop" },
-      { title: "20% Off Merch", desc: "Discount on all KCB merchandise" },
-      { title: "Early Show Access", desc: "Get in before the general public" },
+      { title: "BOGO Tickets", desc: "Buy one, get one free on all KCB show tickets" },
+      { title: "50% Off Coffee", desc: "Half off at the Kings Court coffee shop" },
+      { title: "After Party Access", desc: "Free entry to The After Party" },
       { title: "Monthly 24-Pack", desc: "Levia 24-pack delivered every month" },
     ],
     highlight: false,
@@ -58,7 +54,7 @@ const tiers = [
 
 const stats = [
   { value: "3", label: "Membership Tiers" },
-  { value: "Free", label: "Coffee & Shows" },
+  { value: "BOGO", label: "Show Tickets" },
   { value: "Live", label: "Comedy & Music" },
   { value: "420", label: "Friendly Always" },
 ];
@@ -166,7 +162,7 @@ export default function LeviaMembershipPortal() {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            Three tiers of Levia-powered perks. Pick the one that fits your vibe.
+            KC Premium membership powered by Levia. Pick the tier that fits your vibe.
           </p>
 
           {/* CTA */}
@@ -228,7 +224,7 @@ export default function LeviaMembershipPortal() {
               Pick Your <span className="levia-gradient-text">Tier</span>
             </h2>
             <p className="text-white/35 text-base max-w-md mx-auto font-light">
-              Every tier includes free coffee, merch discounts, early show access, and monthly Levia products.
+              BOGO tickets, 50% off coffee, After Party access, and monthly Levia products.
             </p>
           </div>
 
@@ -340,17 +336,25 @@ export default function LeviaMembershipPortal() {
               ))}
             </div>
 
-            {/* Ticket Perk row */}
+            {/* BOGO Tickets row */}
             <div className="grid grid-cols-4 border-b border-white/[0.04]">
-              <div className="p-4 sm:p-6 text-white/50 text-sm">Ticket Perk</div>
-              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">50% Off</div>
-              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">BOGO</div>
-              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">1 Free / Week</div>
+              <div className="p-4 sm:p-6 text-white/50 text-sm">BOGO Tickets</div>
+              <div className="p-4 sm:p-6 text-center text-white/30 text-sm">—</div>
+              <div className="p-4 sm:p-6 text-center bg-white/[0.02]">
+                <svg className="w-5 h-5 text-teal-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div className="p-4 sm:p-6 text-center">
+                <svg className="w-5 h-5 text-teal-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
             </div>
 
-            {/* Free Coffee row */}
+            {/* 50% Off Coffee row */}
             <div className="grid grid-cols-4 border-b border-white/[0.04]">
-              <div className="p-4 sm:p-6 text-white/50 text-sm">Free Coffee</div>
+              <div className="p-4 sm:p-6 text-white/50 text-sm">50% Off Coffee</div>
               {[0, 1, 2].map((i) => (
                 <div key={i} className={`p-4 sm:p-6 text-center ${i === 1 ? "bg-white/[0.02]" : ""}`}>
                   <svg className="w-5 h-5 text-teal-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -360,17 +364,9 @@ export default function LeviaMembershipPortal() {
               ))}
             </div>
 
-            {/* Merch Discount row */}
+            {/* After Party row */}
             <div className="grid grid-cols-4 border-b border-white/[0.04]">
-              <div className="p-4 sm:p-6 text-white/50 text-sm">Merch Discount</div>
-              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">10% Off</div>
-              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">15% Off</div>
-              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">20% Off</div>
-            </div>
-
-            {/* Early Show Access row */}
-            <div className="grid grid-cols-4 border-b border-white/[0.04]">
-              <div className="p-4 sm:p-6 text-white/50 text-sm">Early Show Access</div>
+              <div className="p-4 sm:p-6 text-white/50 text-sm">After Party Access</div>
               {[0, 1, 2].map((i) => (
                 <div key={i} className={`p-4 sm:p-6 text-center ${i === 1 ? "bg-white/[0.02]" : ""}`}>
                   <svg className="w-5 h-5 text-teal-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
