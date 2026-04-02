@@ -14,6 +14,7 @@ const tiers = [
     period: "/mo",
     perks: [
       { title: "50% Off Coffee", desc: "Half off at the Kings Court coffee shop" },
+      { title: "10% Off Merch", desc: "Discount on all KCB merchandise" },
       { title: "After Party Access", desc: "Free entry to The After Party" },
       { title: "Monthly 500mg Drops", desc: "1 bottle of Levia drops every month" },
     ],
@@ -27,8 +28,9 @@ const tiers = [
     price: "$70",
     period: "/mo",
     perks: [
-      { title: "BOHO Tickets", desc: "Buy one, get one half off on all KCB show tickets" },
+      { title: "BOHO Tickets", desc: "Buy one, get one half off — once per week" },
       { title: "50% Off Coffee", desc: "Half off at the Kings Court coffee shop" },
+      { title: "15% Off Merch", desc: "Discount on all KCB merchandise" },
       { title: "After Party Access", desc: "Free entry to The After Party" },
       { title: "Monthly 12-Pack", desc: "Levia 12-pack delivered every month" },
     ],
@@ -42,8 +44,9 @@ const tiers = [
     price: "$120",
     period: "/mo",
     perks: [
-      { title: "BOGO Tickets", desc: "Buy one, get one free on all KCB show tickets" },
+      { title: "BOGO Tickets", desc: "Buy one, get one free — once per week" },
       { title: "50% Off Coffee", desc: "Half off at the Kings Court coffee shop" },
+      { title: "20% Off Merch", desc: "Discount on all KCB merchandise" },
       { title: "After Party Access", desc: "Free entry to The After Party" },
       { title: "Monthly 24-Pack", desc: "Levia 24-pack delivered every month" },
     ],
@@ -354,6 +357,14 @@ export default function LeviaMembershipPortal() {
                   </svg>
                 </div>
               ))}
+            </div>
+
+            {/* Merch Discount row */}
+            <div className="grid grid-cols-4 border-b border-white/[0.04]">
+              <div className="p-4 sm:p-6 text-white/50 text-sm">Merch Discount</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">10% Off</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">15% Off</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">20% Off</div>
             </div>
 
             {/* After Party row */}

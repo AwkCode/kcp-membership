@@ -14,7 +14,7 @@ const tierOptions = [
     product: "1 Bottle of 500mg Drops",
     price: "$40/mo",
     topPerk: "50% Off Coffee",
-    secondPerk: "After Party",
+    secondPerk: "10% Off Merch",
     color: "teal",
   },
   {
@@ -23,7 +23,7 @@ const tierOptions = [
     product: "12-Pack",
     price: "$70/mo",
     topPerk: "BOHO Tickets",
-    secondPerk: "After Party",
+    secondPerk: "15% Off Merch",
     color: "purple",
   },
   {
@@ -32,7 +32,7 @@ const tierOptions = [
     product: "24-Pack",
     price: "$120/mo",
     topPerk: "BOGO Tickets",
-    secondPerk: "After Party",
+    secondPerk: "20% Off Merch",
     color: "gold",
   },
 ];
