@@ -38,7 +38,7 @@ export default function Header() {
             Join
           </Link>
           <Link href="/levia" className="hover:text-white transition text-teal-200/90">
-            Levia
+            Premium
           </Link>
           <Link href="/zyprun" className="hover:text-white transition text-sky-200/90">
             Zyp Run

@@ -199,21 +199,7 @@ export default function LeviaMembershipPortal() {
         </div>
       </section>
 
-      {/* ─── STATS BAR ─── */}
-      <section className="relative z-10 py-16 border-y border-white/[0.04]">
-        <div className="max-w-4xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat, i) => (
-            <div key={i} className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold levia-gradient-text mb-1">
-                {stat.value}
-              </div>
-              <div className="text-white/30 text-xs tracking-wider uppercase">
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Stats bar removed — info covered in tier cards + comparison table */}
 
       {/* ─── TIER COMPARISON ─── */}
       <section id="tiers" className="relative z-10 py-24 px-6">

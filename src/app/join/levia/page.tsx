@@ -13,8 +13,12 @@ const tierOptions = [
     name: "Executive",
     product: "1 Bottle of 500mg Drops",
     price: "$40/mo",
-    topPerk: "50% Off Coffee",
-    secondPerk: "10% Off Merch",
+    perks: [
+      "50% Off Coffee",
+      "10% Off Merch",
+      "After Party Access",
+      "Monthly 500mg Drops",
+    ],
     color: "teal",
   },
   {
@@ -22,8 +26,13 @@ const tierOptions = [
     name: "Premium",
     product: "12-Pack",
     price: "$70/mo",
-    topPerk: "BOHO Tickets",
-    secondPerk: "15% Off Merch",
+    perks: [
+      "BOHO Tickets (1x/week)",
+      "50% Off Coffee",
+      "15% Off Merch",
+      "After Party Access",
+      "Monthly 12-Pack",
+    ],
     color: "purple",
   },
   {
@@ -31,8 +40,13 @@ const tierOptions = [
     name: "Platinum",
     product: "24-Pack",
     price: "$120/mo",
-    topPerk: "BOGO Tickets",
-    secondPerk: "20% Off Merch",
+    perks: [
+      "BOGO Tickets (1x/week)",
+      "50% Off Coffee",
+      "20% Off Merch",
+      "After Party Access",
+      "Monthly 24-Pack",
+    ],
     color: "gold",
   },
 ];
@@ -228,7 +242,7 @@ function LeviaJoinForm() {
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
               KC Premium <span className="levia-gradient-text">{currentTier.name}</span>
             </h1>
-            <p className="text-white/35 text-sm">{currentTier.product} + {currentTier.topPerk} + {currentTier.secondPerk}</p>
+            <p className="text-white/35 text-sm">{currentTier.price} — powered by Levia</p>
           </div>
 
           {/* Tier Selector */}
@@ -261,23 +275,26 @@ function LeviaJoinForm() {
             ))}
           </div>
 
-          {/* Perks preview */}
+          {/* Perks list */}
           <div
-            className={`grid grid-cols-3 gap-2 mb-8 transition-all duration-1000 delay-300 ${
+            className={`mb-8 transition-all duration-1000 delay-300 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-white/70 text-[11px] font-medium">{currentTier.topPerk}</p>
-              <p className="text-white/25 text-[10px] mt-0.5">KCB Shows</p>
-            </div>
-            <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-white/70 text-[11px] font-medium">50% Off Coffee</p>
-              <p className="text-white/25 text-[10px] mt-0.5">Coffee Shop</p>
-            </div>
-            <div className="text-center py-3 px-2 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <p className="text-white/70 text-[11px] font-medium">After Party</p>
-              <p className="text-white/25 text-[10px] mt-0.5">Free Entry</p>
+            <div className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-4">
+              <p className="text-white/30 text-[10px] uppercase tracking-wider mb-3">Included Perks</p>
+              <ul className="space-y-2">
+                {currentTier.perks.map((perk, i) => (
+                  <li key={i} className="flex items-center gap-2.5">
+                    <div className="w-4 h-4 rounded-full bg-teal-500/15 flex items-center justify-center shrink-0">
+                      <svg className="w-2.5 h-2.5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-white/70 text-sm">{perk}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
