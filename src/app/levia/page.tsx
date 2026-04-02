@@ -30,7 +30,7 @@ const tiers = [
     period: "/mo",
     perks: [
       { title: "BOHO Tickets", desc: "Buy one, get one half off — once per week" },
-      { title: "50% Off Coffee", desc: "Half off at the Kings Court coffee shop" },
+      { title: "Free Coffee", desc: "Complimentary coffee at the Kings Court coffee shop" },
       { title: "15% Off Merch", desc: "Discount on all KCB merchandise" },
       { title: "After Party Access", desc: "Free entry to The After Party" },
       { title: "Monthly 12-Pack", desc: "Levia 12-pack delivered every month" },
@@ -46,7 +46,7 @@ const tiers = [
     period: "/mo",
     perks: [
       { title: "BOGO Tickets", desc: "Buy one, get one free — once per week" },
-      { title: "50% Off Coffee", desc: "Half off at the Kings Court coffee shop" },
+      { title: "Free Coffee", desc: "Complimentary coffee at the Kings Court coffee shop" },
       { title: "20% Off Merch", desc: "Discount on all KCB merchandise" },
       { title: "After Party Access", desc: "Free entry to The After Party" },
       { title: "Monthly 24-Pack", desc: "Levia 24-pack delivered every month" },
@@ -336,16 +336,12 @@ export default function LeviaMembershipPortal() {
               <div className="p-4 sm:p-6 text-center text-white/70 text-sm">BOGO</div>
             </div>
 
-            {/* 50% Off Coffee row */}
+            {/* Coffee row */}
             <div className="grid grid-cols-4 border-b border-white/[0.04]">
-              <div className="p-4 sm:p-6 text-white/50 text-sm">50% Off Coffee</div>
-              {[0, 1, 2].map((i) => (
-                <div key={i} className={`p-4 sm:p-6 text-center ${i === 1 ? "bg-white/[0.02]" : ""}`}>
-                  <svg className="w-5 h-5 text-teal-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-              ))}
+              <div className="p-4 sm:p-6 text-white/50 text-sm">Coffee</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">50% Off</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">Free</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">Free</div>
             </div>
 
             {/* Merch Discount row */}

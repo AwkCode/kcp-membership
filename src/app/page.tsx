@@ -226,7 +226,7 @@ export default function Home() {
                     <span className="text-white/30 text-sm">/mo</span>
                   </div>
                   <ul className="space-y-2 mb-6">
-                    {["BOHO Tickets (1x/week)", "50% Off Coffee", "15% Off Merch", "After Party Access", "Monthly 12-Pack"].map((perk) => (
+                    {["BOHO Tickets (1x/week)", "Free Coffee", "15% Off Merch", "After Party Access", "Monthly 12-Pack"].map((perk) => (
                       <li key={perk} className="flex items-center gap-2">
                         <svg className="w-3.5 h-3.5 text-kc-purple-light shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
@@ -252,7 +252,7 @@ export default function Home() {
                     <span className="text-white/30 text-sm">/mo</span>
                   </div>
                   <ul className="space-y-2 mb-6">
-                    {["BOGO Tickets (1x/week)", "50% Off Coffee", "20% Off Merch", "After Party Access", "Monthly 24-Pack"].map((perk) => (
+                    {["BOGO Tickets (1x/week)", "Free Coffee", "20% Off Merch", "After Party Access", "Monthly 24-Pack"].map((perk) => (
                       <li key={perk} className="flex items-center gap-2">
                         <svg className="w-3.5 h-3.5 text-kc-purple-light shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />

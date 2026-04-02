@@ -28,7 +28,7 @@ const tierOptions = [
     price: "$70/mo",
     perks: [
       "BOHO Tickets (1x/week)",
-      "50% Off Coffee",
+      "Free Coffee",
       "15% Off Merch",
       "After Party Access",
       "Monthly 12-Pack",
@@ -42,7 +42,7 @@ const tierOptions = [
     price: "$120/mo",
     perks: [
       "BOGO Tickets (1x/week)",
-      "50% Off Coffee",
+      "Free Coffee",
       "20% Off Merch",
       "After Party Access",
       "Monthly 24-Pack",
