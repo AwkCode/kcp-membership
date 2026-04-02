@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Header from "@/components/Header";
 
 const tiers = [
   {
@@ -75,6 +76,8 @@ export default function LeviaMembershipPortal() {
 
   return (
     <div className="min-h-screen bg-[#040208] text-white overflow-hidden">
+      <Header />
+
       {/* Animated gradient orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="levia-orb levia-orb-1" />
