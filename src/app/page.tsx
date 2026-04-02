@@ -167,46 +167,107 @@ export default function Home() {
                 href="/join"
                 className="px-8 py-3.5 bg-white text-black rounded-lg font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm btn-glow"
               >
-                Become a Member
-              </Link>
-              <Link
-                href="/perks"
-                className="px-8 py-3.5 bg-white/[0.06] text-white border border-kc-purple/20 rounded-lg font-semibold hover:bg-kc-purple/10 hover:border-kc-purple/30 transition text-center text-sm"
-              >
-                View Perks
+                Become a Free Member
               </Link>
             </div>
 
-            {/* About cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl w-full px-4 sm:px-0 mt-16 sm:mt-24">
-              <div className="bg-white/[0.04] rounded-2xl p-5 sm:p-6 border border-kc-purple/10 text-center hover:border-kc-purple/20 hover:bg-kc-purple/[0.04] transition">
-                <div className="w-11 h-11 bg-kc-purple/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 mx-auto">
-                  <svg className="w-5 h-5 text-kc-purple-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M5.636 18.364a9 9 0 010-12.728M8.464 15.536a5 5 0 010-7.072M12 12h.01" />
-                  </svg>
+            {/* KC Premium Tier Cards */}
+            <div className="w-full max-w-5xl px-4 sm:px-0 mt-16 sm:mt-24">
+              <div className="text-center mb-10">
+                <div className="flex items-center justify-center gap-4 sm:gap-5 mb-5">
+                  <Image src="/kc-logo-v3.png" alt="Kings Court" width={40} height={40} className="rounded-lg w-9 h-9 sm:w-10 sm:h-10" />
+                  <span className="text-xl sm:text-2xl font-bold text-kc-purple-light select-none">&times;</span>
+                  <Image src="/levia-logo.png" alt="Levia" width={80} height={32} className="object-contain h-9 sm:h-10 w-auto" />
                 </div>
-                <h3 className="font-medium text-white mb-1.5 text-sm">Live Events</h3>
-                <p className="text-white/40 text-xs leading-relaxed">Stand-up, live music, DJs, and late-night creative culture. Every week.</p>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-2">
+                  KC Premium Membership
+                </h2>
+                <p className="text-white/40 text-sm max-w-md mx-auto font-light">
+                  Upgrade to Premium for ticket deals, coffee discounts, merch perks, and monthly Levia products.
+                </p>
               </div>
 
-              <div className="bg-white/[0.04] rounded-2xl p-5 sm:p-6 border border-kc-purple/10 text-center hover:border-kc-purple/20 hover:bg-kc-purple/[0.04] transition">
-                <div className="w-11 h-11 bg-kc-purple/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 mx-auto">
-                  <svg className="w-5 h-5 text-kc-purple-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+              <div className="grid md:grid-cols-3 gap-4 sm:gap-5">
+                {/* Executive */}
+                <div className="bg-white/[0.04] rounded-2xl border border-kc-purple/10 p-6 hover:border-kc-purple/20 hover:bg-kc-purple/[0.04] transition">
+                  <h3 className="text-teal-300 font-bold text-base mb-1">Executive</h3>
+                  <p className="text-white/40 text-xs mb-4">1 Bottle of 500mg Drops</p>
+                  <div className="mb-5">
+                    <span className="text-3xl font-bold text-white">$40</span>
+                    <span className="text-white/30 text-sm">/mo</span>
+                  </div>
+                  <ul className="space-y-2 mb-6">
+                    {["50% Off Coffee", "10% Off Merch", "After Party Access", "Monthly 500mg Drops"].map((perk) => (
+                      <li key={perk} className="flex items-center gap-2">
+                        <svg className="w-3.5 h-3.5 text-kc-purple-light shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="text-white/60 text-xs">{perk}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/join/levia?tier=levia-executive"
+                    className="block w-full text-center py-3 rounded-xl font-semibold text-sm bg-white/[0.06] border border-white/[0.08] text-white hover:bg-white/[0.1] transition"
+                  >
+                    Get Executive
+                  </Link>
                 </div>
-                <h3 className="font-medium text-white mb-1.5 text-sm">Community First</h3>
-                <p className="text-white/40 text-xs leading-relaxed">Built by artists, for artists. A home for Boston&apos;s underground creative scene.</p>
-              </div>
 
-              <div className="bg-white/[0.04] rounded-2xl p-5 sm:p-6 border border-kc-purple/10 text-center hover:border-kc-purple/20 hover:bg-kc-purple/[0.04] transition">
-                <div className="w-11 h-11 bg-kc-purple/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 mx-auto">
-                  <svg className="w-5 h-5 text-kc-purple-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                  </svg>
+                {/* Premium — highlighted */}
+                <div className="relative bg-white/[0.04] rounded-2xl border border-kc-purple/25 p-6 hover:border-kc-purple/40 hover:bg-kc-purple/[0.06] transition shadow-lg shadow-kc-purple/5">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-kc-purple rounded-full text-[10px] font-semibold uppercase tracking-wider text-white">
+                    Most Popular
+                  </div>
+                  <h3 className="text-kc-purple-light font-bold text-base mb-1">Premium</h3>
+                  <p className="text-white/40 text-xs mb-4">12-Pack</p>
+                  <div className="mb-5">
+                    <span className="text-3xl font-bold text-white">$70</span>
+                    <span className="text-white/30 text-sm">/mo</span>
+                  </div>
+                  <ul className="space-y-2 mb-6">
+                    {["BOHO Tickets (1x/week)", "50% Off Coffee", "15% Off Merch", "After Party Access", "Monthly 12-Pack"].map((perk) => (
+                      <li key={perk} className="flex items-center gap-2">
+                        <svg className="w-3.5 h-3.5 text-kc-purple-light shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="text-white/60 text-xs">{perk}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/join/levia?tier=levia-premium"
+                    className="block w-full text-center py-3 rounded-xl font-semibold text-sm bg-kc-purple text-white hover:bg-kc-purple-light transition btn-glow"
+                  >
+                    Get Premium
+                  </Link>
                 </div>
-                <h3 className="font-medium text-white mb-1.5 text-sm">Members-Only Access</h3>
-                <p className="text-white/40 text-xs leading-relaxed">Skip the line, unlock member perks, and hit exclusive events before anyone else.</p>
+
+                {/* Platinum */}
+                <div className="bg-white/[0.04] rounded-2xl border border-kc-purple/10 p-6 hover:border-kc-purple/20 hover:bg-kc-purple/[0.04] transition">
+                  <h3 className="text-amber-300 font-bold text-base mb-1">Platinum</h3>
+                  <p className="text-white/40 text-xs mb-4">24-Pack</p>
+                  <div className="mb-5">
+                    <span className="text-3xl font-bold text-white">$120</span>
+                    <span className="text-white/30 text-sm">/mo</span>
+                  </div>
+                  <ul className="space-y-2 mb-6">
+                    {["BOGO Tickets (1x/week)", "50% Off Coffee", "20% Off Merch", "After Party Access", "Monthly 24-Pack"].map((perk) => (
+                      <li key={perk} className="flex items-center gap-2">
+                        <svg className="w-3.5 h-3.5 text-kc-purple-light shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="text-white/60 text-xs">{perk}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/join/levia?tier=levia-platinum"
+                    className="block w-full text-center py-3 rounded-xl font-semibold text-sm bg-white/[0.06] border border-white/[0.08] text-white hover:bg-white/[0.1] transition"
+                  >
+                    Get Platinum
+                  </Link>
+                </div>
               </div>
             </div>
           </>
