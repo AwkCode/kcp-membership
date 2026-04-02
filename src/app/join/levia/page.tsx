@@ -22,7 +22,7 @@ const tierOptions = [
     name: "Premium",
     product: "12-Pack",
     price: "$70/mo",
-    topPerk: "BOGO Tickets",
+    topPerk: "BOHO Tickets",
     secondPerk: "After Party",
     color: "purple",
   },

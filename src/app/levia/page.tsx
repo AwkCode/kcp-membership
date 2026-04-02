@@ -27,7 +27,7 @@ const tiers = [
     price: "$70",
     period: "/mo",
     perks: [
-      { title: "BOGO Tickets", desc: "Buy one, get one free on all KCB show tickets" },
+      { title: "BOHO Tickets", desc: "Buy one, get one half off on all KCB show tickets" },
       { title: "50% Off Coffee", desc: "Half off at the Kings Court coffee shop" },
       { title: "After Party Access", desc: "Free entry to The After Party" },
       { title: "Monthly 12-Pack", desc: "Levia 12-pack delivered every month" },
@@ -336,20 +336,12 @@ export default function LeviaMembershipPortal() {
               ))}
             </div>
 
-            {/* BOGO Tickets row */}
+            {/* Ticket Perk row */}
             <div className="grid grid-cols-4 border-b border-white/[0.04]">
-              <div className="p-4 sm:p-6 text-white/50 text-sm">BOGO Tickets</div>
+              <div className="p-4 sm:p-6 text-white/50 text-sm">Ticket Perk</div>
               <div className="p-4 sm:p-6 text-center text-white/30 text-sm">—</div>
-              <div className="p-4 sm:p-6 text-center bg-white/[0.02]">
-                <svg className="w-5 h-5 text-teal-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <div className="p-4 sm:p-6 text-center">
-                <svg className="w-5 h-5 text-teal-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm bg-white/[0.02]">BOHO</div>
+              <div className="p-4 sm:p-6 text-center text-white/70 text-sm">BOGO</div>
             </div>
 
             {/* 50% Off Coffee row */}
