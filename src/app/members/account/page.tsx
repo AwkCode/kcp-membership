@@ -237,12 +237,6 @@ export default function MemberAccountPage() {
               {member.status === "vip" ? "VIP" : member.status}
             </span>
 
-            {member.tier === "levia" && (
-              <span className="inline-block mt-1 ml-1 px-3 py-1 rounded-full text-[10px] font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">
-                Levia
-              </span>
-            )}
-
             {member.tier === "zyprun" && (
               <span className="inline-block mt-1 ml-1 px-3 py-1 rounded-full text-[10px] font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
                 Zyp Run
@@ -435,9 +429,7 @@ export default function MemberAccountPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-white/40">Tier</span>
                   <span className="text-sm text-white">
-                    {member.tier === "levia" ? (
-                      <span className="text-teal-400">Levia</span>
-                    ) : member.tier === "zyprun" ? (
+                    {member.tier === "zyprun" ? (
                       <span className="text-sky-400">Zyp Run</span>
                     ) : (
                       "Free"

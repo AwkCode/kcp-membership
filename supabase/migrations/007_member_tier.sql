@@ -1,6 +1,6 @@
 -- Add membership tier column
 ALTER TABLE members ADD COLUMN tier TEXT NOT NULL DEFAULT 'free'
-  CHECK (tier IN ('free', 'levia'));
+  CHECK (tier IN ('free'));
 
 -- Fix outdated status CHECK constraint
 -- Original migration only allowed (active, suspended, cancelled)

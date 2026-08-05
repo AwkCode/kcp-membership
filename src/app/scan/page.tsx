@@ -172,14 +172,6 @@ export default function ScanPage() {
                   </p>
                 )}
 
-                {member.tier === "levia" && (
-                  <p className="text-center mt-1">
-                    <span className="inline-block px-3 py-0.5 rounded-full text-xs font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">
-                      Levia Member
-                    </span>
-                  </p>
-                )}
-
                 {member.visit_count > 0 && (
                   <p className="text-center text-white/50 text-sm mt-2">
                     Visit #{member.visit_count + 1}

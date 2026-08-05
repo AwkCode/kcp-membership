@@ -72,15 +72,7 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
     subheader: {
       defaultValue: {
         language: "en-US",
-        value: member.tier === "levia-executive"
-          ? "Levia Executive"
-          : member.tier === "levia-premium"
-          ? "Levia Premium"
-          : member.tier === "levia-platinum"
-          ? "Levia Platinum"
-          : member.tier === "levia"
-          ? "Levia Member"
-          : member.tier === "zyprun"
+        value: member.tier === "zyprun"
           ? "Zyp Run Member"
           : statusDisplay[member.status] || member.status,
       },
@@ -113,15 +105,7 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
         body: statusDisplay[member.status] || member.status,
         id: "status",
       },
-      ...(member.tier === "levia-executive"
-        ? [{ header: "TIER", body: "Levia Executive", id: "tier" }]
-        : member.tier === "levia-premium"
-        ? [{ header: "TIER", body: "Levia Premium", id: "tier" }]
-        : member.tier === "levia-platinum"
-        ? [{ header: "TIER", body: "Levia Platinum", id: "tier" }]
-        : member.tier === "levia"
-        ? [{ header: "TIER", body: "Levia", id: "tier" }]
-        : member.tier === "zyprun"
+      ...(member.tier === "zyprun"
         ? [{ header: "TIER", body: "Zyp Run", id: "tier" }]
         : []),
       {

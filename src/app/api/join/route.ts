@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     const memberTier = tier || "free";
-    if (!["free", "levia", "levia-executive", "levia-premium", "levia-platinum", "zyprun"].includes(memberTier)) {
+    if (!["free", "zyprun"].includes(memberTier)) {
       return NextResponse.json(
         { error: "Invalid membership tier" },
         { status: 400 }
