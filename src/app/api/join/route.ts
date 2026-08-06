@@ -8,18 +8,22 @@ import { sendMembershipSMS } from "@/lib/sms";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { first_name, last_name, email, password, phone, tier } = body;
+    const { first_name, last_name, email, phone, tier } = body;
 
-    if (!first_name || !last_name || !email || !password) {
+    const normalizedEmail = email?.trim() ? email.trim().toLowerCase() : null;
+    const normalizedPhone = phone?.trim() || null;
+
+    if (!first_name || !last_name) {
       return NextResponse.json(
-        { error: "First name, last name, email, and password are required" },
+        { error: "First and last name are required" },
         { status: 400 }
       );
     }
 
-    if (password.length < 6) {
+    // Members join with a phone or an email (at least one) — no login account.
+    if (!normalizedEmail && !normalizedPhone) {
       return NextResponse.json(
-        { error: "Password must be at least 6 characters" },
+        { error: "Enter a phone number or an email so we can send your card" },
         { status: 400 }
       );
     }
@@ -34,58 +38,24 @@ export async function POST(request: NextRequest) {
 
     const token = generateToken();
     const supabase = createSupabaseAdmin();
-    const normalizedEmail = email.trim().toLowerCase();
 
-    // Check if there's already a Supabase Auth user with this email
-    const { data: existingUsers } = await supabase.auth.admin.listUsers();
-    const existingAuth = existingUsers?.users?.find(
-      (u: { email?: string }) => u.email?.toLowerCase() === normalizedEmail
-    );
-
-    let authUserId: string;
-    let createdNewAuth = false;
-
-    if (existingAuth) {
-      // Auth user already exists (staff or artist) — link member to existing account
-      authUserId = existingAuth.id;
-    } else {
-      // Create new Supabase Auth user
-      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-        email: normalizedEmail,
-        password,
-        email_confirm: true,
-        user_metadata: { role: "member" },
-      });
-
-      if (authError) {
-        throw authError;
-      }
-
-      authUserId = authData.user.id;
-      createdNewAuth = true;
-    }
-
-    // Create member record
+    // Create the member record. Members no longer have login accounts — they
+    // receive a membership card (QR + link) by text and/or email.
     const { data: member, error } = await supabase
       .from("members")
       .insert({
         first_name: first_name.trim(),
         last_name: last_name.trim(),
         email: normalizedEmail,
-        phone: phone?.trim() || null,
+        phone: normalizedPhone,
         membership_token: token,
         status: "active",
         tier: memberTier,
-        auth_id: authUserId,
       })
       .select()
       .single();
 
     if (error) {
-      // Clean up auth user if we just created it and member insert failed
-      if (createdNewAuth) {
-        await supabase.auth.admin.deleteUser(authUserId);
-      }
       if (error.code === "23505") {
         return NextResponse.json(
           { error: "A member with this email already exists" },
@@ -99,16 +69,23 @@ export async function POST(request: NextRequest) {
     const scanUrl = `${baseUrl}/scan/m/${token}`;
     const qrDataUrl = await generateQRDataURL(scanUrl);
 
-    await sendMembershipEmail({
-      to: member.email,
-      firstName: member.first_name,
-      lastName: member.last_name,
-      token,
-      qrImageBase64: qrDataUrl,
-      tier: memberTier,
-    });
+    // Email the card if an email was provided (non-blocking).
+    if (member.email) {
+      try {
+        await sendMembershipEmail({
+          to: member.email,
+          firstName: member.first_name,
+          lastName: member.last_name,
+          token,
+          qrImageBase64: qrDataUrl,
+          tier: memberTier,
+        });
+      } catch (emailErr) {
+        console.error("Email send failed (non-blocking):", emailErr);
+      }
+    }
 
-    // Send SMS if phone number provided and Twilio is configured
+    // Text the card if a phone was provided and Twilio is configured (non-blocking).
     if (member.phone && process.env.TWILIO_ACCOUNT_SID) {
       try {
         await sendMembershipSMS({
@@ -119,7 +96,6 @@ export async function POST(request: NextRequest) {
         });
       } catch (smsErr) {
         console.error("SMS send failed (non-blocking):", smsErr);
-        // Don't fail the whole signup if SMS fails
       }
     }
 

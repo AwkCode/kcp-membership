@@ -12,10 +12,8 @@ export default function JoinPage() {
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
-    email: "",
-    password: "",
-    confirm_password: "",
     phone: "",
+    email: "",
   });
   const [agreed, setAgreed] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -23,20 +21,16 @@ export default function JoinPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus("loading");
     setErrorMsg("");
 
-    if (form.password !== form.confirm_password) {
-      setErrorMsg("Passwords don't match");
+    // Either a phone or an email is required — the member picks.
+    if (!form.phone.trim() && !form.email.trim()) {
+      setErrorMsg("Enter a phone number or an email so we can send your card.");
       setStatus("error");
       return;
     }
 
-    if (form.password.length < 6) {
-      setErrorMsg("Password must be at least 6 characters");
-      setStatus("error");
-      return;
-    }
+    setStatus("loading");
 
     try {
       const res = await fetch("/api/join", {
@@ -45,9 +39,8 @@ export default function JoinPage() {
         body: JSON.stringify({
           first_name: form.first_name,
           last_name: form.last_name,
-          email: form.email,
-          password: form.password,
           phone: form.phone,
+          email: form.email,
         }),
       });
 
@@ -78,13 +71,7 @@ export default function JoinPage() {
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">You&apos;re In!</h1>
             <p className="text-white/50 text-sm">
-              Check your email for your membership QR code and digital card link.
-            </p>
-            <p className="text-white/30 text-xs mt-4">
-              You can always access your card by{" "}
-              <Link href="/members/login" className="text-white/60 underline">
-                logging in
-              </Link>
+              Check your phone and/or email for your membership QR code and digital card link.
             </p>
           </div>
         </main>
@@ -134,61 +121,34 @@ export default function JoinPage() {
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="email" className="block text-xs font-medium text-white/60 mb-1.5">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white placeholder-white/20 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-xs font-medium text-white/60 mb-1.5">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  required
-                  minLength={6}
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white placeholder-white/20 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm"
-                  placeholder="Min 6 characters"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="confirm_password" className="block text-xs font-medium text-white/60 mb-1.5">
-                  Confirm Password
-                </label>
-                <input
-                  id="confirm_password"
-                  type="password"
-                  required
-                  minLength={6}
-                  value={form.confirm_password}
-                  onChange={(e) => setForm({ ...form, confirm_password: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white placeholder-white/20 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm"
-                  placeholder="Re-enter password"
-                />
-              </div>
+              <p className="text-white/40 text-xs">
+                Add a phone number or an email (or both) — we&apos;ll send your membership card there.
+              </p>
 
               <div>
                 <label htmlFor="phone" className="block text-xs font-medium text-white/60 mb-1.5">
-                  Phone <span className="text-white/30">(optional — get a text with your card)</span>
+                  Phone <span className="text-white/30">(we&apos;ll text your card)</span>
                 </label>
                 <input
                   id="phone"
                   type="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  placeholder="(555) 123-4567"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white placeholder-white/20 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-xs font-medium text-white/60 mb-1.5">
+                  Email <span className="text-white/30">(we&apos;ll email your card)</span>
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  placeholder="you@example.com"
                   className="w-full px-3.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-xl text-white placeholder-white/20 focus:ring-2 focus:ring-white/20 focus:border-transparent text-sm"
                 />
               </div>
