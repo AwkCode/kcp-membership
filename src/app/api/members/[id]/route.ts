@@ -17,7 +17,7 @@ export async function PATCH(
     if (status && ["active", "vip", "staff", "comp", "suspended", "cancelled", "expired"].includes(status)) {
       updates.status = status;
     }
-    if (tier && ["free", "zyprun"].includes(tier)) {
+    if (tier && ["free"].includes(tier)) {
       updates.tier = tier;
     }
     if (notes !== undefined) {

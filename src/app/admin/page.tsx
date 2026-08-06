@@ -145,7 +145,6 @@ export default function AdminPage() {
                         className="w-full px-3 py-2 bg-white/[0.06] border border-white/10 rounded-lg text-white text-sm"
                       >
                         <option value="free">Free</option>
-                        <option value="zyprun">Zyp Run</option>
                       </select>
                     </div>
                     <div>
@@ -195,11 +194,6 @@ export default function AdminPage() {
                         >
                           {m.status}
                         </span>
-                        {m.tier === "zyprun" && (
-                          <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
-                            Zyp Run
-                          </span>
-                        )}
                         {m.notes && (
                           <span className="text-white/30 text-xs truncate max-w-[200px]">
                             {m.notes}

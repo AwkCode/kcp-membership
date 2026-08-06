@@ -21,22 +21,14 @@ export async function sendMembershipEmail({
 }: SendMembershipEmailParams) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const cardUrl = `${baseUrl}/m/${token}`;
-  const isZyprun = tier === "zyprun";
-
   // Strip the data:image/png;base64, prefix for attachment
   const base64Data = qrImageBase64.replace(/^data:image\/png;base64,/, "");
 
-  const subject = isZyprun
-    ? "Welcome to Kings Court — Zyp Run Membership"
-    : "Welcome to Kings Court — Your Membership Card";
+  const subject = "Welcome to Kings Court — Your Membership Card";
 
-  const welcomeText = isZyprun
-    ? `Your Zyp Run membership is now active. You've unlocked priority delivery, monthly delivery credits, exclusive product drops, and show ticket rewards. Show the QR code below when you check in.`
-    : `Your membership is now active. Show the QR code below when you check in.`;
+  const welcomeText = `Your membership is now active. Show the QR code below when you check in.`;
 
-  const tierBadge = isZyprun
-    ? `<p style="text-align: center; margin-bottom: 16px;"><span style="display: inline-block; padding: 4px 16px; background: #2F72B5; color: #fff; border-radius: 20px; font-size: 13px; font-weight: 600;">Zyp Run Member</span></p>`
-    : "";
+  const tierBadge = "";
 
   const msg = {
     to,

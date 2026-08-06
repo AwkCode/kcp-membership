@@ -237,11 +237,6 @@ export default function MemberAccountPage() {
               {member.status === "vip" ? "VIP" : member.status}
             </span>
 
-            {member.tier === "zyprun" && (
-              <span className="inline-block mt-1 ml-1 px-3 py-1 rounded-full text-[10px] font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
-                Zyp Run
-              </span>
-            )}
 
             {/* Visit counter */}
             {isActive && (
@@ -429,11 +424,7 @@ export default function MemberAccountPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-white/40">Tier</span>
                   <span className="text-sm text-white">
-                    {member.tier === "zyprun" ? (
-                      <span className="text-sky-400">Zyp Run</span>
-                    ) : (
-                      "Free"
-                    )}
+                    Free
                   </span>
                 </div>
                 <div className="flex justify-between items-center">

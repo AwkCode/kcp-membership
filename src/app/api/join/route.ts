@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     const memberTier = tier || "free";
-    if (!["free", "zyprun"].includes(memberTier)) {
+    if (!["free"].includes(memberTier)) {
       return NextResponse.json(
         { error: "Invalid membership tier" },
         { status: 400 }

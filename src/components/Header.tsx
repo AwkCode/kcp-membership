@@ -37,9 +37,6 @@ export default function Header() {
           <Link href="/join" className="hover:text-white transition">
             Join
           </Link>
-          <Link href="/zyprun" className="hover:text-white transition text-sky-200/90">
-            Zyp Run
-          </Link>
           <Link href="/perks" className="hover:text-white transition">
             Perks
           </Link>

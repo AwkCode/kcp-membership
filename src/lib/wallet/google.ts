@@ -72,9 +72,7 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
     subheader: {
       defaultValue: {
         language: "en-US",
-        value: member.tier === "zyprun"
-          ? "Zyp Run Member"
-          : statusDisplay[member.status] || member.status,
+        value: statusDisplay[member.status] || member.status,
       },
     },
     header: {
@@ -105,9 +103,6 @@ export function generateGoogleWalletUrl(member: MemberPassData): string {
         body: statusDisplay[member.status] || member.status,
         id: "status",
       },
-      ...(member.tier === "zyprun"
-        ? [{ header: "TIER", body: "Zyp Run", id: "tier" }]
-        : []),
       {
         header: "MEMBER SINCE",
         body: memberSinceFormatted,

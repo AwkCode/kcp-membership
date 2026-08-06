@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import Header from "@/components/Header";
 import PageShell from "@/components/PageShell";
 import { MicDoodle, CoffeeDoodle, JointDoodle, LeafDoodle, StarDoodle } from "@/components/Doodles";
@@ -61,15 +60,6 @@ const perks = [
   },
 ];
 
-const zyprunPerks = [
-  { title: "Priority Express Delivery", desc: "Skip the queue. Same-day priority delivery across Greater Boston." },
-  { title: "Monthly Delivery Credits", desc: "Free delivery credits every month — more drops, zero fees." },
-  { title: "Exclusive Product Drops", desc: "First access to limited-edition products and brand collabs delivered to your door." },
-  { title: "Earn Show Tickets", desc: "Every Zyp Run order earns points toward free tickets for live shows." },
-  { title: "Member-Only Deals", desc: "Exclusive pricing on flower, edibles, and concentrates through Zyp Run." },
-  { title: "Private Club Access", desc: "Full access to private membership club events and on-site amenities." },
-];
-
 export default function PerksPage() {
   return (
     <PageShell>
@@ -119,57 +109,19 @@ export default function PerksPage() {
             ))}
           </div>
 
-          {/* Zyp Run Membership Section */}
-          <div className="mt-14">
-            <div className="text-center mb-8">
-              <Image src="/zyprun-logo.png" alt="Zyp Run" width={120} height={48} className="mx-auto mb-4 object-contain" />
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
-                Delivery Perks Unlocked
-              </h2>
-              <p className="text-white/50 text-sm max-w-md mx-auto font-light">
-                Everything in the free tier, plus priority cannabis delivery from Zyp Run.
-              </p>
-            </div>
-
-            <div className="grid gap-3">
-              {zyprunPerks.map((perk, i) => (
-                <div
-                  key={i}
-                  className="bg-sky-500/[0.03] rounded-2xl p-5 border border-sky-500/10 flex items-start gap-4 hover:border-sky-500/20 hover:bg-sky-500/[0.05] transition"
-                >
-                  <div className="w-10 h-10 bg-sky-500/10 rounded-xl flex items-center justify-center text-sky-400 shrink-0">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-white text-sm mb-0.5">{perk.title}</h3>
-                    <p className="text-white/40 text-xs leading-relaxed">{perk.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Triple CTA */}
+          {/* CTA */}
           <div className="mt-14 text-center">
             <div className="bg-white/[0.04] rounded-2xl p-10 border border-kc-purple/10">
               <h2 className="text-2xl font-bold text-white mb-2">Ready to join?</h2>
               <p className="text-white/40 mb-6 text-sm">
-                Start free or get delivered with Zyp Run.
+                Become a free member and unlock your perks.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link
                   href="/join"
                   className="inline-block px-8 py-3 bg-white text-black rounded-full font-semibold hover:bg-white/90 transition text-sm btn-glow"
                 >
-                  Free Membership
-                </Link>
-                <Link
-                  href="/join/zyprun"
-                  className="inline-block px-8 py-3 bg-sky-500 text-white rounded-full font-semibold hover:bg-sky-400 transition text-sm"
-                >
-                  Zyp Run Membership
+                  Become a Free Member
                 </Link>
               </div>
             </div>

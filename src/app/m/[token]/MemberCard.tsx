@@ -68,11 +68,6 @@ export default function MemberCard({ firstName, lastName, status: initialStatus,
           {status === "vip" ? "VIP" : status}
         </span>
 
-        {tier === "zyprun" && (
-          <span className="inline-block mt-1 ml-1 px-3 py-1 rounded-full text-[10px] font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
-            Zyp Run
-          </span>
-        )}
 
         {["active", "vip", "staff", "comp"].includes(status) && (
           <p className="text-white/30 text-xs mt-6">Show this QR code at check-in</p>
