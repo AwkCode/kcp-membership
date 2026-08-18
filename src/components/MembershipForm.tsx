@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { BYLAWS_TEXT } from "@/lib/bylaws";
 
 export default function MembershipForm() {
   const [form, setForm] = useState({
@@ -12,8 +13,21 @@ export default function MembershipForm() {
     email: "",
   });
   const [agreed, setAgreed] = useState(false);
+  const [readTerms, setReadTerms] = useState(false);
+  const termsRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  // If the by-laws fit without scrolling (short viewport/content), unlock immediately.
+  useEffect(() => {
+    const el = termsRef.current;
+    if (el && el.scrollHeight <= el.clientHeight + 4) setReadTerms(true);
+  }, []);
+
+  function handleTermsScroll(e: React.UIEvent<HTMLDivElement>) {
+    const el = e.currentTarget;
+    if (el.scrollHeight - el.scrollTop - el.clientHeight < 24) setReadTerms(true);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -142,17 +156,49 @@ export default function MembershipForm() {
             />
           </div>
 
-          <label className="flex items-start gap-2.5 cursor-pointer">
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-medium text-white/60">
+                Membership By-Laws — please read
+              </label>
+              <Link
+                href="/terms"
+                target="_blank"
+                className="text-white/30 text-[11px] underline hover:text-white/60 transition"
+              >
+                Open full document
+              </Link>
+            </div>
+            <div
+              ref={termsRef}
+              onScroll={handleTermsScroll}
+              className="h-48 overflow-y-auto rounded-xl border border-white/10 bg-black/30 p-3 text-white/50 text-[11px] leading-relaxed whitespace-pre-wrap"
+            >
+              {BYLAWS_TEXT}
+            </div>
+            <p className={`text-[11px] mt-1.5 ${readTerms ? "text-green-400/80" : "text-white/40"}`}>
+              {readTerms
+                ? "✓ You've reached the end of the by-laws — you can accept below."
+                : "Scroll to the bottom of the by-laws to continue."}
+            </p>
+          </div>
+
+          <label
+            className={`flex items-start gap-2.5 ${
+              readTerms ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+            }`}
+          >
             <input
               type="checkbox"
               checked={agreed}
+              disabled={!readTerms}
               onChange={(e) => setAgreed(e.target.checked)}
-              className="mt-0.5 rounded border-white/20 bg-white/[0.06] text-white focus:ring-white/20"
+              className="mt-0.5 rounded border-white/20 bg-white/[0.06] text-white focus:ring-white/20 disabled:cursor-not-allowed"
               required
             />
             <span className="text-white/80 text-xs font-bold uppercase tracking-wide leading-relaxed">
               I am at least 21 years old, and I understand Kings Court is a private membership club,
-              not open to the public. I agree to the{" "}
+              not open to the public. I have read and agree to the{" "}
               <Link href="/terms" target="_blank" className="underline">
                 Membership By-Laws & Terms of Service
               </Link>
