@@ -75,7 +75,9 @@ export default function MembershipForm() {
         <div className="text-center mb-6">
           <Image src="/kc-logo-v3.png" alt="Kings Court" width={64} height={64} className="mx-auto mb-3 rounded" />
           <h1 className="text-2xl font-bold text-white">Join Kings Court</h1>
-          <p className="text-white/40 text-sm mt-1">Get instant check-in access</p>
+          <p className="text-white/50 text-sm mt-1 font-semibold uppercase tracking-wide">
+            A Private Membership Club — Members Only
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -148,11 +150,13 @@ export default function MembershipForm() {
               className="mt-0.5 rounded border-white/20 bg-white/[0.06] text-white focus:ring-white/20"
               required
             />
-            <span className="text-white/40 text-xs leading-relaxed">
-              I am at least 21 years old and agree to the{" "}
-              <Link href="/terms" target="_blank" className="text-white/60 underline">
+            <span className="text-white/80 text-xs font-bold uppercase tracking-wide leading-relaxed">
+              I am at least 21 years old, and I understand Kings Court is a private membership club,
+              not open to the public. I agree to the{" "}
+              <Link href="/terms" target="_blank" className="underline">
                 Membership By-Laws & Terms of Service
               </Link>
+              .
             </span>
           </label>
 
