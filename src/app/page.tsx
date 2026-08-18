@@ -154,7 +154,7 @@ export default function Home() {
             {/* Default / logged-out experience — sign up right here */}
             <MembershipForm />
             <p className="text-white/30 text-xs mt-6 text-center max-w-xs">
-              Boston&apos;s underground home for live comedy, music, and creative culture.
+              Boston&apos;s home for live comedy, music, and creative underground culture.
             </p>
           </>
         )}
