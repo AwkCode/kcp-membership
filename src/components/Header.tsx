@@ -34,9 +34,6 @@ export default function Header() {
           </span>
         </Link>
         <nav className="flex items-center gap-4 sm:gap-6 text-sm font-medium text-white/80">
-          <Link href="/join" className="hover:text-white transition">
-            Join
-          </Link>
           <Link href="/perks" className="hover:text-white transition">
             Perks
           </Link>
