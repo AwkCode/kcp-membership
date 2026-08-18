@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BYLAWS_TEXT } from "@/lib/bylaws";
+import { BYLAWS_SECTIONS } from "@/lib/bylaws";
 
 export default function MembershipForm() {
   const [form, setForm] = useState({
@@ -172,9 +172,21 @@ export default function MembershipForm() {
             <div
               ref={termsRef}
               onScroll={handleTermsScroll}
-              className="h-48 overflow-y-auto rounded-xl border border-white/10 bg-black/30 p-3 text-white/50 text-[11px] leading-relaxed whitespace-pre-wrap"
+              className="h-52 overflow-y-auto rounded-xl border border-white/10 bg-black/30 px-4 py-3.5 text-[11px] leading-relaxed"
             >
-              {BYLAWS_TEXT}
+              {BYLAWS_SECTIONS.map((b, i) => {
+                if (b.t === "title")
+                  return <p key={i} className="text-white font-bold text-[13px] tracking-tight">{b.s}</p>;
+                if (b.t === "meta")
+                  return <p key={i} className="text-white/35 text-[10px] uppercase tracking-wide">{b.s}</p>;
+                if (b.t === "part")
+                  return <p key={i} className="text-kc-purple-light font-bold uppercase tracking-wider text-[11px] mt-5 mb-1">{b.s}</p>;
+                if (b.t === "head")
+                  return <p key={i} className="text-white/80 font-semibold text-[11px] mt-3 mb-0.5">{b.s}</p>;
+                if (b.t === "sub")
+                  return <p key={i} className="text-white/60 font-medium mt-1">{b.s}</p>;
+                return <p key={i} className="text-white/45 mt-1">{b.s}</p>;
+              })}
             </div>
             <p className={`text-[11px] mt-1.5 ${readTerms ? "text-green-400/80" : "text-white/40"}`}>
               {readTerms
