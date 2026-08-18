@@ -64,7 +64,7 @@ export default function PerksPage() {
   return (
     <PageShell>
       <Header />
-      <main className="px-6 pt-12 pb-24">
+      <main className="px-6 pt-24 sm:pt-28 pb-24">
         <div className="max-w-2xl mx-auto relative">
           {/* Doodle art scattered around the page */}
           <div className="absolute -left-4 md:-left-16 top-8 w-12 h-12 md:w-24 md:h-24 text-kc-purple-light pointer-events-none">
