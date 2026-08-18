@@ -90,7 +90,7 @@ export default function MembershipForm() {
           <Image src="/kc-logo-v3.png" alt="Kings Court" width={64} height={64} className="mx-auto mb-3 rounded" />
           <h1 className="text-2xl font-bold text-white">Join Kings Court</h1>
           <p className="text-white/50 text-sm mt-1 font-semibold uppercase tracking-wide">
-            A Private Membership Club — Members Only
+            Private Club — Members Only
           </p>
         </div>
 
