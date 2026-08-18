@@ -137,9 +137,6 @@ export default function Home() {
 
             {/* Quick links for other sections */}
             <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link href="/perks" className="text-white/30 text-xs hover:text-white/60 transition">
-                Perks
-              </Link>
               {!user.isArtist && (
                 <Link href="/artists/join" className="text-white/30 text-xs hover:text-white/60 transition">
                   Artist Sign Up
