@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import PageShell from "@/components/PageShell";
 import { DoodleScatter } from "@/components/Doodles";
 import { createSupabaseBrowser } from "@/lib/supabase/client";
+import MembershipForm from "@/components/MembershipForm";
 
 interface UserInfo {
   displayName: string;
@@ -72,19 +73,18 @@ export default function Home() {
     <PageShell>
       <Header />
       <DoodleScatter variant="home" />
-      <main className="flex flex-col items-center justify-center px-4 sm:px-6 pt-16 sm:pt-20 pb-16 sm:pb-24 min-h-screen">
-        <Image
-          src="/kc-logo-v3.png"
-          alt="Kings Court Boston"
-          width={120}
-          height={120}
-          className="mb-6 sm:mb-8 drop-shadow-2xl w-20 h-20 sm:w-[120px] sm:h-[120px]"
-          priority
-        />
-
+      <main className="flex flex-col items-center justify-center px-4 sm:px-6 pt-12 sm:pt-16 pb-16 sm:pb-24 min-h-screen">
         {!loading && user ? (
           <>
             {/* Logged-in experience */}
+            <Image
+              src="/kc-logo-v3.png"
+              alt="Kings Court Boston"
+              width={120}
+              height={120}
+              className="mb-6 sm:mb-8 drop-shadow-2xl w-20 h-20 sm:w-[120px] sm:h-[120px]"
+              priority
+            />
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-2 text-white tracking-tight">
               Welcome back, {user.displayName}
             </h1>
@@ -154,22 +154,11 @@ export default function Home() {
           </>
         ) : (
           <>
-            {/* Default / logged-out experience */}
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-center mb-3 sm:mb-4 text-white tracking-tight">
-              Kings Court Boston
-            </h1>
-            <p className="text-white/60 text-base sm:text-lg text-center mb-8 sm:mb-12 max-w-md font-light px-4">
+            {/* Default / logged-out experience — sign up right here */}
+            <MembershipForm />
+            <p className="text-white/30 text-xs mt-6 text-center max-w-xs">
               Boston&apos;s underground home for live comedy, music, and creative culture.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0">
-              <Link
-                href="/join"
-                className="px-8 py-3.5 bg-white text-black rounded-lg font-semibold hover:bg-white/90 transition text-center shadow-lg text-sm btn-glow"
-              >
-                Become a Free Member
-              </Link>
-            </div>
           </>
         )}
       </main>
