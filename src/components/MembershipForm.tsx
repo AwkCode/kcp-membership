@@ -230,6 +230,13 @@ export default function MembershipForm() {
             {status === "loading" ? "Joining..." : "Join Now"}
           </button>
         </form>
+
+        <p className="text-center text-white/30 text-xs mt-5">
+          Already a member and lost your card?{" "}
+          <Link href="/card" className="text-white/60 underline hover:text-white transition">
+            Re-send it
+          </Link>
+        </p>
       </div>
     </div>
   );
